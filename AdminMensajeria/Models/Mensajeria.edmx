@@ -1,0 +1,1235 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MensajeriaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="GEN_CODIGOPOSTAL">
+          <Key>
+            <PropertyRef Name="IdCodigoP" />
+          </Key>
+          <Property Name="IdCodigoP" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CodigoPostal" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GEN_COLONIA">
+          <Key>
+            <PropertyRef Name="IdColonia" />
+          </Key>
+          <Property Name="IdColonia" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdCodigoP" Type="int" Nullable="false" />
+          <Property Name="IdMunicipio" Type="int" Nullable="false" />
+          <Property Name="Colonia" Type="varchar" MaxLength="60" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GEN_COMENSUGER">
+          <Key>
+            <PropertyRef Name="IdComenSuger" />
+          </Key>
+          <Property Name="IdComenSuger" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdUsuario" Type="int" Nullable="false" />
+          <Property Name="Asunto" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Cuerpo" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="FechaCreacioComenSuger" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="FechaAtencionComenSuger" Type="nchar" MaxLength="10" />
+          <Property Name="EstatusComenSuger" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GEN_EMAILCONGIF">
+          <Key>
+            <PropertyRef Name="IdEmailConfig" />
+          </Key>
+          <Property Name="IdEmailConfig" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Remitente" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Asunto" Type="varchar" MaxLength="250" />
+          <Property Name="Cuerpo" Type="varchar" MaxLength="500" />
+          <Property Name="ContrasenaEmail" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="SMTPHost" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="SMTPPort" Type="int" Nullable="false" />
+          <Property Name="SSL" Type="bit" Nullable="false" />
+          <Property Name="EstatusEMail" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GEN_ESTADO">
+          <Key>
+            <PropertyRef Name="IdEstado" />
+          </Key>
+          <Property Name="IdEstado" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdPais" Type="int" Nullable="false" />
+          <Property Name="CiudadEstado" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GEN_MUNICIPIO">
+          <Key>
+            <PropertyRef Name="IdMunicipio" />
+          </Key>
+          <Property Name="IdMunicipio" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdEstado" Type="int" Nullable="false" />
+          <Property Name="Municipio" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GEN_PAIS">
+          <Key>
+            <PropertyRef Name="IdPais" />
+          </Key>
+          <Property Name="IdPais" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Pais" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GEN_UNIDAD">
+          <Key>
+            <PropertyRef Name="IdUnidad" />
+          </Key>
+          <Property Name="IdUnidad" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DescripcionUnidad" Type="varchar" MaxLength="50" />
+          <Property Name="Codigo" Type="varchar" MaxLength="50" />
+          <Property Name="Simbolo" Type="varchar" MaxLength="50" />
+          <Property Name="EstatusUnidad" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GEN_USUARIO">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Name="IdUsuario" Type="int" Nullable="false" />
+          <Property Name="IdClientProvee" Type="int" Nullable="false" />
+          <Property Name="TipoUsuario" Type="int" Nullable="false" />
+          <Property Name="NombreUsuario" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Usuario" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Contrasena" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="CorreoUsuario" Type="varchar" MaxLength="100" />
+          <Property Name="EstatusUsuario" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OPE_CLIENTPROVEE">
+          <Key>
+            <PropertyRef Name="IdClientProvee" />
+          </Key>
+          <Property Name="IdClientProvee" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TipoClientProvee" Type="int" />
+          <Property Name="RazonSocial" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="RFC" Type="varchar" MaxLength="20" />
+          <Property Name="ObsClientProvee" Type="varchar" MaxLength="500" />
+          <Property Name="EstatusClientProvee" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OPE_CONTACTO">
+          <Key>
+            <PropertyRef Name="IdContacto" />
+          </Key>
+          <Property Name="IdContacto" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdClientProvee" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" />
+          <Property Name="ApellidoP" Type="varchar" MaxLength="50" />
+          <Property Name="ApellidoM" Type="varchar" MaxLength="50" />
+          <Property Name="Cargo" Type="varchar" MaxLength="50" />
+          <Property Name="Telefono" Type="varchar" MaxLength="20" />
+          <Property Name="Correo" Type="varchar" MaxLength="50" />
+          <Property Name="HoraDe" Type="time" Precision="7" />
+          <Property Name="HoraHa" Type="time" Precision="7" />
+          <Property Name="EstatusContacto" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OPE_GUIA">
+          <Key>
+            <PropertyRef Name="IdGuia" />
+          </Key>
+          <Property Name="IdGuia" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdUsuario" Type="int" />
+          <Property Name="FechaCreacionGuia" Type="datetime" Nullable="false" />
+          <Property Name="FechaProgramadaGuia" Type="datetime" />
+          <Property Name="CompletaGuia" Type="bit" Nullable="false" />
+          <Property Name="EstatusGuia" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OPE_PUNTOENTREC">
+          <Key>
+            <PropertyRef Name="IdPuntoEntRec" />
+          </Key>
+          <Property Name="IdPuntoEntRec" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdClientProvee" Type="int" Nullable="false" />
+          <Property Name="IdColonia" Type="int" Nullable="false" />
+          <Property Name="DescripcionPunto" Type="varchar" MaxLength="100" />
+          <Property Name="TipoPunto" Type="int" Nullable="false" />
+          <Property Name="ContactoPunto" Type="varchar" MaxLength="100" />
+          <Property Name="HoraDePunto" Type="time" Precision="7" />
+          <Property Name="HoraHaPunto" Type="time" Precision="7" />
+          <Property Name="CallePunto" Type="varchar" MaxLength="50" />
+          <Property Name="NoIntPunto" Type="varchar" MaxLength="20" />
+          <Property Name="NoExtPunto" Type="varchar" MaxLength="20" />
+          <Property Name="ObsPunto" Type="varchar" MaxLength="500" />
+          <Property Name="EstatusPunto" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OPE_SOLICITUD">
+          <Key>
+            <PropertyRef Name="IdSolicitud" />
+          </Key>
+          <Property Name="IdSolicitud" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdUsuario" Type="int" Nullable="false" />
+          <Property Name="IdClientProvee" Type="int" Nullable="false" />
+          <Property Name="Folio" Type="varchar" MaxLength="100" />
+          <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
+          <Property Name="Emergencia" Type="bit" Nullable="false" />
+          <Property Name="EstatusSolicitud" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OPE_SOLICITUDPRODUCTO">
+          <Key>
+            <PropertyRef Name="IdSolicitudProducto" />
+          </Key>
+          <Property Name="IdSolicitudProducto" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdSolicitud" Type="int" Nullable="false" />
+          <Property Name="IdUnidad" Type="int" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Cantidad" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Peso" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="ObsProducto" Type="varchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="OPE_SOLICITUDPUNTOSENTREC">
+          <Key>
+            <PropertyRef Name="IdSolicitudPuntosEntRec" />
+          </Key>
+          <Property Name="IdSolicitudPuntosEntRec" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdSolicitud" Type="int" Nullable="false" />
+          <Property Name="IdPuntoEntRec" Type="int" Nullable="false" />
+          <Property Name="IdGuia" Type="int" />
+          <Property Name="TipoPunto" Type="int" Nullable="false" />
+          <Property Name="FechaProgramada" Type="datetime" Nullable="false" />
+          <Property Name="ObsPuntosEntRec" Type="varchar" MaxLength="500" />
+          <Property Name="FechaReal" Type="datetime" />
+          <Property Name="FirmaPuntosEntRec" Type="varchar" MaxLength="1000" />
+          <Property Name="FotoPuntosEntRec" Type="varchar" MaxLength="1000" />
+          <Property Name="Latitud" Type="varchar" MaxLength="1000" />
+          <Property Name="Longitud" Type="varchar" MaxLength="1000" />
+          <Property Name="Problema" Type="bit" Nullable="false" />
+          <Property Name="ObsProblema" Type="varchar" MaxLength="500" />
+          <Property Name="EstatusPuntosEntRec" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_GEN_COLONIA_GEN_CODIGOPOSTAL">
+          <End Role="GEN_CODIGOPOSTAL" Type="Self.GEN_CODIGOPOSTAL" Multiplicity="1" />
+          <End Role="GEN_COLONIA" Type="Self.GEN_COLONIA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_CODIGOPOSTAL">
+              <PropertyRef Name="IdCodigoP" />
+            </Principal>
+            <Dependent Role="GEN_COLONIA">
+              <PropertyRef Name="IdCodigoP" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GEN_COLONIA_GEN_MUNICIPIO">
+          <End Role="GEN_MUNICIPIO" Type="Self.GEN_MUNICIPIO" Multiplicity="1" />
+          <End Role="GEN_COLONIA" Type="Self.GEN_COLONIA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_MUNICIPIO">
+              <PropertyRef Name="IdMunicipio" />
+            </Principal>
+            <Dependent Role="GEN_COLONIA">
+              <PropertyRef Name="IdMunicipio" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GEN_COMENSUGER_GEN_USUARIO">
+          <End Role="GEN_USUARIO" Type="Self.GEN_USUARIO" Multiplicity="1" />
+          <End Role="GEN_COMENSUGER" Type="Self.GEN_COMENSUGER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_USUARIO">
+              <PropertyRef Name="IdUsuario" />
+            </Principal>
+            <Dependent Role="GEN_COMENSUGER">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GEN_ESTADO_GEN_PAIS">
+          <End Role="GEN_PAIS" Type="Self.GEN_PAIS" Multiplicity="1" />
+          <End Role="GEN_ESTADO" Type="Self.GEN_ESTADO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_PAIS">
+              <PropertyRef Name="IdPais" />
+            </Principal>
+            <Dependent Role="GEN_ESTADO">
+              <PropertyRef Name="IdPais" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GEN_MUNICIPIO_GEN_ESTADO">
+          <End Role="GEN_ESTADO" Type="Self.GEN_ESTADO" Multiplicity="1" />
+          <End Role="GEN_MUNICIPIO" Type="Self.GEN_MUNICIPIO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_ESTADO">
+              <PropertyRef Name="IdEstado" />
+            </Principal>
+            <Dependent Role="GEN_MUNICIPIO">
+              <PropertyRef Name="IdEstado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GEN_USUARIO_OPE_CLIENTPROVEE">
+          <End Role="OPE_CLIENTPROVEE" Type="Self.OPE_CLIENTPROVEE" Multiplicity="1" />
+          <End Role="GEN_USUARIO" Type="Self.GEN_USUARIO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPE_CLIENTPROVEE">
+              <PropertyRef Name="IdClientProvee" />
+            </Principal>
+            <Dependent Role="GEN_USUARIO">
+              <PropertyRef Name="IdClientProvee" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_CONTACTO_OPE_CLIENTPROVEE">
+          <End Role="OPE_CLIENTPROVEE" Type="Self.OPE_CLIENTPROVEE" Multiplicity="1" />
+          <End Role="OPE_CONTACTO" Type="Self.OPE_CONTACTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPE_CLIENTPROVEE">
+              <PropertyRef Name="IdClientProvee" />
+            </Principal>
+            <Dependent Role="OPE_CONTACTO">
+              <PropertyRef Name="IdClientProvee" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_GUIA_GEN_USUARIO">
+          <End Role="GEN_USUARIO" Type="Self.GEN_USUARIO" Multiplicity="0..1" />
+          <End Role="OPE_GUIA" Type="Self.OPE_GUIA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_USUARIO">
+              <PropertyRef Name="IdUsuario" />
+            </Principal>
+            <Dependent Role="OPE_GUIA">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_PUNTOENTREC_GEN_COLONIA">
+          <End Role="GEN_COLONIA" Type="Self.GEN_COLONIA" Multiplicity="1" />
+          <End Role="OPE_PUNTOENTREC" Type="Self.OPE_PUNTOENTREC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_COLONIA">
+              <PropertyRef Name="IdColonia" />
+            </Principal>
+            <Dependent Role="OPE_PUNTOENTREC">
+              <PropertyRef Name="IdColonia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_PUNTOENTREC_OPE_CLIENTPROVEE">
+          <End Role="OPE_CLIENTPROVEE" Type="Self.OPE_CLIENTPROVEE" Multiplicity="1" />
+          <End Role="OPE_PUNTOENTREC" Type="Self.OPE_PUNTOENTREC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPE_CLIENTPROVEE">
+              <PropertyRef Name="IdClientProvee" />
+            </Principal>
+            <Dependent Role="OPE_PUNTOENTREC">
+              <PropertyRef Name="IdClientProvee" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_SOLICITUD_GEN_USUARIO">
+          <End Role="GEN_USUARIO" Type="Self.GEN_USUARIO" Multiplicity="1" />
+          <End Role="OPE_SOLICITUD" Type="Self.OPE_SOLICITUD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_USUARIO">
+              <PropertyRef Name="IdUsuario" />
+            </Principal>
+            <Dependent Role="OPE_SOLICITUD">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_SOLICITUD_OPE_CLIENTPROVEE">
+          <End Role="OPE_CLIENTPROVEE" Type="Self.OPE_CLIENTPROVEE" Multiplicity="1" />
+          <End Role="OPE_SOLICITUD" Type="Self.OPE_SOLICITUD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPE_CLIENTPROVEE">
+              <PropertyRef Name="IdClientProvee" />
+            </Principal>
+            <Dependent Role="OPE_SOLICITUD">
+              <PropertyRef Name="IdClientProvee" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD">
+          <End Role="GEN_UNIDAD" Type="Self.GEN_UNIDAD" Multiplicity="1" />
+          <End Role="OPE_SOLICITUDPRODUCTO" Type="Self.OPE_SOLICITUDPRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_UNIDAD">
+              <PropertyRef Name="IdUnidad" />
+            </Principal>
+            <Dependent Role="OPE_SOLICITUDPRODUCTO">
+              <PropertyRef Name="IdUnidad" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_SOLICITUDPRODUCTO_OPE_SOLICITUD">
+          <End Role="OPE_SOLICITUD" Type="Self.OPE_SOLICITUD" Multiplicity="1" />
+          <End Role="OPE_SOLICITUDPRODUCTO" Type="Self.OPE_SOLICITUDPRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPE_SOLICITUD">
+              <PropertyRef Name="IdSolicitud" />
+            </Principal>
+            <Dependent Role="OPE_SOLICITUDPRODUCTO">
+              <PropertyRef Name="IdSolicitud" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA">
+          <End Role="OPE_GUIA" Type="Self.OPE_GUIA" Multiplicity="0..1" />
+          <End Role="OPE_SOLICITUDPUNTOSENTREC" Type="Self.OPE_SOLICITUDPUNTOSENTREC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPE_GUIA">
+              <PropertyRef Name="IdGuia" />
+            </Principal>
+            <Dependent Role="OPE_SOLICITUDPUNTOSENTREC">
+              <PropertyRef Name="IdGuia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_PUNTOENTREC">
+          <End Role="OPE_PUNTOENTREC" Type="Self.OPE_PUNTOENTREC" Multiplicity="1" />
+          <End Role="OPE_SOLICITUDPUNTOSENTREC" Type="Self.OPE_SOLICITUDPUNTOSENTREC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPE_PUNTOENTREC">
+              <PropertyRef Name="IdPuntoEntRec" />
+            </Principal>
+            <Dependent Role="OPE_SOLICITUDPUNTOSENTREC">
+              <PropertyRef Name="IdPuntoEntRec" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD">
+          <End Role="OPE_SOLICITUD" Type="Self.OPE_SOLICITUD" Multiplicity="1" />
+          <End Role="OPE_SOLICITUDPUNTOSENTREC" Type="Self.OPE_SOLICITUDPUNTOSENTREC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPE_SOLICITUD">
+              <PropertyRef Name="IdSolicitud" />
+            </Principal>
+            <Dependent Role="OPE_SOLICITUDPUNTOSENTREC">
+              <PropertyRef Name="IdSolicitud" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MensajeriaModelStoreContainer">
+          <EntitySet Name="GEN_CODIGOPOSTAL" EntityType="Self.GEN_CODIGOPOSTAL" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GEN_COLONIA" EntityType="Self.GEN_COLONIA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GEN_COMENSUGER" EntityType="Self.GEN_COMENSUGER" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GEN_EMAILCONGIF" EntityType="Self.GEN_EMAILCONGIF" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GEN_ESTADO" EntityType="Self.GEN_ESTADO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GEN_MUNICIPIO" EntityType="Self.GEN_MUNICIPIO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GEN_PAIS" EntityType="Self.GEN_PAIS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GEN_UNIDAD" EntityType="Self.GEN_UNIDAD" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GEN_USUARIO" EntityType="Self.GEN_USUARIO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OPE_CLIENTPROVEE" EntityType="Self.OPE_CLIENTPROVEE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OPE_CONTACTO" EntityType="Self.OPE_CONTACTO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OPE_GUIA" EntityType="Self.OPE_GUIA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OPE_PUNTOENTREC" EntityType="Self.OPE_PUNTOENTREC" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OPE_SOLICITUD" EntityType="Self.OPE_SOLICITUD" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OPE_SOLICITUDPRODUCTO" EntityType="Self.OPE_SOLICITUDPRODUCTO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OPE_SOLICITUDPUNTOSENTREC" EntityType="Self.OPE_SOLICITUDPUNTOSENTREC" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_GEN_COLONIA_GEN_CODIGOPOSTAL" Association="Self.FK_GEN_COLONIA_GEN_CODIGOPOSTAL">
+            <End Role="GEN_CODIGOPOSTAL" EntitySet="GEN_CODIGOPOSTAL" />
+            <End Role="GEN_COLONIA" EntitySet="GEN_COLONIA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GEN_COLONIA_GEN_MUNICIPIO" Association="Self.FK_GEN_COLONIA_GEN_MUNICIPIO">
+            <End Role="GEN_MUNICIPIO" EntitySet="GEN_MUNICIPIO" />
+            <End Role="GEN_COLONIA" EntitySet="GEN_COLONIA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GEN_COMENSUGER_GEN_USUARIO" Association="Self.FK_GEN_COMENSUGER_GEN_USUARIO">
+            <End Role="GEN_USUARIO" EntitySet="GEN_USUARIO" />
+            <End Role="GEN_COMENSUGER" EntitySet="GEN_COMENSUGER" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GEN_ESTADO_GEN_PAIS" Association="Self.FK_GEN_ESTADO_GEN_PAIS">
+            <End Role="GEN_PAIS" EntitySet="GEN_PAIS" />
+            <End Role="GEN_ESTADO" EntitySet="GEN_ESTADO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GEN_MUNICIPIO_GEN_ESTADO" Association="Self.FK_GEN_MUNICIPIO_GEN_ESTADO">
+            <End Role="GEN_ESTADO" EntitySet="GEN_ESTADO" />
+            <End Role="GEN_MUNICIPIO" EntitySet="GEN_MUNICIPIO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GEN_USUARIO_OPE_CLIENTPROVEE" Association="Self.FK_GEN_USUARIO_OPE_CLIENTPROVEE">
+            <End Role="OPE_CLIENTPROVEE" EntitySet="OPE_CLIENTPROVEE" />
+            <End Role="GEN_USUARIO" EntitySet="GEN_USUARIO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_CONTACTO_OPE_CLIENTPROVEE" Association="Self.FK_OPE_CONTACTO_OPE_CLIENTPROVEE">
+            <End Role="OPE_CLIENTPROVEE" EntitySet="OPE_CLIENTPROVEE" />
+            <End Role="OPE_CONTACTO" EntitySet="OPE_CONTACTO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_GUIA_GEN_USUARIO" Association="Self.FK_OPE_GUIA_GEN_USUARIO">
+            <End Role="GEN_USUARIO" EntitySet="GEN_USUARIO" />
+            <End Role="OPE_GUIA" EntitySet="OPE_GUIA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_PUNTOENTREC_GEN_COLONIA" Association="Self.FK_OPE_PUNTOENTREC_GEN_COLONIA">
+            <End Role="GEN_COLONIA" EntitySet="GEN_COLONIA" />
+            <End Role="OPE_PUNTOENTREC" EntitySet="OPE_PUNTOENTREC" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_PUNTOENTREC_OPE_CLIENTPROVEE" Association="Self.FK_OPE_PUNTOENTREC_OPE_CLIENTPROVEE">
+            <End Role="OPE_CLIENTPROVEE" EntitySet="OPE_CLIENTPROVEE" />
+            <End Role="OPE_PUNTOENTREC" EntitySet="OPE_PUNTOENTREC" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_SOLICITUD_GEN_USUARIO" Association="Self.FK_OPE_SOLICITUD_GEN_USUARIO">
+            <End Role="GEN_USUARIO" EntitySet="GEN_USUARIO" />
+            <End Role="OPE_SOLICITUD" EntitySet="OPE_SOLICITUD" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_SOLICITUD_OPE_CLIENTPROVEE" Association="Self.FK_OPE_SOLICITUD_OPE_CLIENTPROVEE">
+            <End Role="OPE_CLIENTPROVEE" EntitySet="OPE_CLIENTPROVEE" />
+            <End Role="OPE_SOLICITUD" EntitySet="OPE_SOLICITUD" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD" Association="Self.FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD">
+            <End Role="GEN_UNIDAD" EntitySet="GEN_UNIDAD" />
+            <End Role="OPE_SOLICITUDPRODUCTO" EntitySet="OPE_SOLICITUDPRODUCTO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_SOLICITUDPRODUCTO_OPE_SOLICITUD" Association="Self.FK_OPE_SOLICITUDPRODUCTO_OPE_SOLICITUD">
+            <End Role="OPE_SOLICITUD" EntitySet="OPE_SOLICITUD" />
+            <End Role="OPE_SOLICITUDPRODUCTO" EntitySet="OPE_SOLICITUDPRODUCTO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA" Association="Self.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA">
+            <End Role="OPE_GUIA" EntitySet="OPE_GUIA" />
+            <End Role="OPE_SOLICITUDPUNTOSENTREC" EntitySet="OPE_SOLICITUDPUNTOSENTREC" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_PUNTOENTREC" Association="Self.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_PUNTOENTREC">
+            <End Role="OPE_PUNTOENTREC" EntitySet="OPE_PUNTOENTREC" />
+            <End Role="OPE_SOLICITUDPUNTOSENTREC" EntitySet="OPE_SOLICITUDPUNTOSENTREC" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD" Association="Self.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD">
+            <End Role="OPE_SOLICITUD" EntitySet="OPE_SOLICITUD" />
+            <End Role="OPE_SOLICITUDPUNTOSENTREC" EntitySet="OPE_SOLICITUDPUNTOSENTREC" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MensajeriaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="GEN_COMENSUGER">
+          <Key>
+            <PropertyRef Name="IdComenSuger" />
+          </Key>
+          <Property Name="IdComenSuger" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="Asunto" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Cuerpo" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FechaCreacioComenSuger" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="FechaAtencionComenSuger" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="EstatusComenSuger" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="GEN_USUARIO" Relationship="Self.FK_GEN_COMENSUGER_GEN_USUARIO" FromRole="GEN_COMENSUGER" ToRole="GEN_USUARIO" />
+        </EntityType>
+        <EntityType Name="GEN_EMAILCONGIF">
+          <Key>
+            <PropertyRef Name="IdEmailConfig" />
+          </Key>
+          <Property Name="IdEmailConfig" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Remitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Asunto" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="Cuerpo" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ContrasenaEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="SMTPHost" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="SMTPPort" Type="Int32" Nullable="false" />
+          <Property Name="SSL" Type="Boolean" Nullable="false" />
+          <Property Name="EstatusEMail" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GEN_ESTADO">
+          <Key>
+            <PropertyRef Name="IdEstado" />
+          </Key>
+          <Property Name="IdEstado" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdPais" Type="Int32" Nullable="false" />
+          <Property Name="CiudadEstado" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="GEN_PAIS" Relationship="Self.FK_GEN_ESTADO_GEN_PAIS" FromRole="GEN_ESTADO" ToRole="GEN_PAIS" />
+          <NavigationProperty Name="GEN_MUNICIPIO" Relationship="Self.FK_GEN_MUNICIPIO_GEN_ESTADO" FromRole="GEN_ESTADO" ToRole="GEN_MUNICIPIO" />
+        </EntityType>
+        <EntityType Name="GEN_MUNICIPIO">
+          <Key>
+            <PropertyRef Name="IdMunicipio" />
+          </Key>
+          <Property Name="IdMunicipio" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdEstado" Type="Int32" Nullable="false" />
+          <Property Name="Municipio" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="GEN_ESTADO" Relationship="Self.FK_GEN_MUNICIPIO_GEN_ESTADO" FromRole="GEN_MUNICIPIO" ToRole="GEN_ESTADO" />
+          <NavigationProperty Name="GEN_COLONIA" Relationship="MensajeriaModel.FK_GEN_COLONIA_GEN_MUNICIPIO" FromRole="GEN_MUNICIPIO" ToRole="GEN_COLONIA" />
+        </EntityType>
+        <EntityType Name="GEN_PAIS">
+          <Key>
+            <PropertyRef Name="IdPais" />
+          </Key>
+          <Property Name="IdPais" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Pais" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="GEN_ESTADO" Relationship="Self.FK_GEN_ESTADO_GEN_PAIS" FromRole="GEN_PAIS" ToRole="GEN_ESTADO" />
+        </EntityType>
+        <EntityType Name="GEN_UNIDAD">
+          <Key>
+            <PropertyRef Name="IdUnidad" />
+          </Key>
+          <Property Name="IdUnidad" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DescripcionUnidad" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Codigo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Simbolo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EstatusUnidad" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="OPE_SOLICITUDPRODUCTO" Relationship="Self.FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD" FromRole="GEN_UNIDAD" ToRole="OPE_SOLICITUDPRODUCTO" />
+        </EntityType>
+        <EntityType Name="GEN_USUARIO">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="IdClientProvee" Type="Int32" Nullable="false" />
+          <Property Name="TipoUsuario" Type="Int32" Nullable="false" />
+          <Property Name="NombreUsuario" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Usuario" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Contrasena" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CorreoUsuario" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="EstatusUsuario" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="GEN_COMENSUGER" Relationship="Self.FK_GEN_COMENSUGER_GEN_USUARIO" FromRole="GEN_USUARIO" ToRole="GEN_COMENSUGER" />
+          <NavigationProperty Name="OPE_CLIENTPROVEE" Relationship="Self.FK_GEN_USUARIO_OPE_CLIENTPROVEE" FromRole="GEN_USUARIO" ToRole="OPE_CLIENTPROVEE" />
+          <NavigationProperty Name="OPE_GUIA" Relationship="Self.FK_OPE_GUIA_GEN_USUARIO" FromRole="GEN_USUARIO" ToRole="OPE_GUIA" />
+          <NavigationProperty Name="OPE_SOLICITUD" Relationship="Self.FK_OPE_SOLICITUD_GEN_USUARIO" FromRole="GEN_USUARIO" ToRole="OPE_SOLICITUD" />
+        </EntityType>
+        <EntityType Name="OPE_CLIENTPROVEE">
+          <Key>
+            <PropertyRef Name="IdClientProvee" />
+          </Key>
+          <Property Name="IdClientProvee" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TipoClientProvee" Type="Int32" />
+          <Property Name="RazonSocial" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="RFC" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ObsClientProvee" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="EstatusClientProvee" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="GEN_USUARIO" Relationship="Self.FK_GEN_USUARIO_OPE_CLIENTPROVEE" FromRole="OPE_CLIENTPROVEE" ToRole="GEN_USUARIO" />
+          <NavigationProperty Name="OPE_CONTACTO" Relationship="Self.FK_OPE_CONTACTO_OPE_CLIENTPROVEE" FromRole="OPE_CLIENTPROVEE" ToRole="OPE_CONTACTO" />
+          <NavigationProperty Name="OPE_SOLICITUD" Relationship="Self.FK_OPE_SOLICITUD_OPE_CLIENTPROVEE" FromRole="OPE_CLIENTPROVEE" ToRole="OPE_SOLICITUD" />
+          <NavigationProperty Name="OPE_PUNTOENTREC" Relationship="MensajeriaModel.FK_OPE_PUNTOENTREC_OPE_CLIENTPROVEE" FromRole="OPE_CLIENTPROVEE" ToRole="OPE_PUNTOENTREC" />
+        </EntityType>
+        <EntityType Name="OPE_CONTACTO">
+          <Key>
+            <PropertyRef Name="IdContacto" />
+          </Key>
+          <Property Name="IdContacto" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdClientProvee" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ApellidoP" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ApellidoM" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Cargo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Telefono" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Correo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="HoraDe" Type="Time" Precision="7" />
+          <Property Name="HoraHa" Type="Time" Precision="7" />
+          <Property Name="EstatusContacto" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="OPE_CLIENTPROVEE" Relationship="Self.FK_OPE_CONTACTO_OPE_CLIENTPROVEE" FromRole="OPE_CONTACTO" ToRole="OPE_CLIENTPROVEE" />
+        </EntityType>
+        <EntityType Name="OPE_GUIA">
+          <Key>
+            <PropertyRef Name="IdGuia" />
+          </Key>
+          <Property Name="IdGuia" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdUsuario" Type="Int32" />
+          <Property Name="FechaCreacionGuia" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FechaProgramadaGuia" Type="DateTime" Precision="3" />
+          <Property Name="CompletaGuia" Type="Boolean" Nullable="false" />
+          <Property Name="EstatusGuia" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="GEN_USUARIO" Relationship="Self.FK_OPE_GUIA_GEN_USUARIO" FromRole="OPE_GUIA" ToRole="GEN_USUARIO" />
+          <NavigationProperty Name="OPE_SOLICITUDPUNTOSENTREC" Relationship="Self.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA" FromRole="OPE_GUIA" ToRole="OPE_SOLICITUDPUNTOSENTREC" />
+        </EntityType>
+        <EntityType Name="OPE_SOLICITUD">
+          <Key>
+            <PropertyRef Name="IdSolicitud" />
+          </Key>
+          <Property Name="IdSolicitud" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="IdClientProvee" Type="Int32" Nullable="false" />
+          <Property Name="Folio" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Emergencia" Type="Boolean" Nullable="false" />
+          <Property Name="EstatusSolicitud" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="GEN_USUARIO" Relationship="Self.FK_OPE_SOLICITUD_GEN_USUARIO" FromRole="OPE_SOLICITUD" ToRole="GEN_USUARIO" />
+          <NavigationProperty Name="OPE_CLIENTPROVEE" Relationship="Self.FK_OPE_SOLICITUD_OPE_CLIENTPROVEE" FromRole="OPE_SOLICITUD" ToRole="OPE_CLIENTPROVEE" />
+          <NavigationProperty Name="OPE_SOLICITUDPRODUCTO" Relationship="Self.FK_OPE_SOLICITUDPRODUCTO_OPE_SOLICITUD" FromRole="OPE_SOLICITUD" ToRole="OPE_SOLICITUDPRODUCTO" />
+          <NavigationProperty Name="OPE_SOLICITUDPUNTOSENTREC" Relationship="Self.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD" FromRole="OPE_SOLICITUD" ToRole="OPE_SOLICITUDPUNTOSENTREC" />
+        </EntityType>
+        <EntityType Name="OPE_SOLICITUDPRODUCTO">
+          <Key>
+            <PropertyRef Name="IdSolicitudProducto" />
+          </Key>
+          <Property Name="IdSolicitudProducto" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdSolicitud" Type="Int32" Nullable="false" />
+          <Property Name="IdUnidad" Type="Int32" Nullable="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Cantidad" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Peso" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="ObsProducto" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="GEN_UNIDAD" Relationship="Self.FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD" FromRole="OPE_SOLICITUDPRODUCTO" ToRole="GEN_UNIDAD" />
+          <NavigationProperty Name="OPE_SOLICITUD" Relationship="Self.FK_OPE_SOLICITUDPRODUCTO_OPE_SOLICITUD" FromRole="OPE_SOLICITUDPRODUCTO" ToRole="OPE_SOLICITUD" />
+        </EntityType>
+        <EntityType Name="OPE_SOLICITUDPUNTOSENTREC">
+          <Key>
+            <PropertyRef Name="IdSolicitudPuntosEntRec" />
+          </Key>
+          <Property Name="IdSolicitudPuntosEntRec" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdSolicitud" Type="Int32" Nullable="false" />
+          <Property Name="IdPuntoEntRec" Type="Int32" Nullable="false" />
+          <Property Name="IdGuia" Type="Int32" />
+          <Property Name="TipoPunto" Type="Int32" Nullable="false" />
+          <Property Name="FechaProgramada" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ObsPuntosEntRec" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="FechaReal" Type="DateTime" Precision="3" />
+          <Property Name="FirmaPuntosEntRec" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="FotoPuntosEntRec" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Latitud" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Longitud" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Problema" Type="Boolean" Nullable="false" />
+          <Property Name="ObsProblema" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="EstatusPuntosEntRec" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="OPE_GUIA" Relationship="Self.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA" FromRole="OPE_SOLICITUDPUNTOSENTREC" ToRole="OPE_GUIA" />
+          <NavigationProperty Name="OPE_SOLICITUD" Relationship="Self.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD" FromRole="OPE_SOLICITUDPUNTOSENTREC" ToRole="OPE_SOLICITUD" />
+          <NavigationProperty Name="OPE_PUNTOENTREC" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_PUNTOENTREC" FromRole="OPE_SOLICITUDPUNTOSENTREC" ToRole="OPE_PUNTOENTREC" />
+        </EntityType>
+        <Association Name="FK_GEN_COMENSUGER_GEN_USUARIO">
+          <End Role="GEN_USUARIO" Type="Self.GEN_USUARIO" Multiplicity="1" />
+          <End Role="GEN_COMENSUGER" Type="Self.GEN_COMENSUGER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_USUARIO">
+              <PropertyRef Name="IdUsuario" />
+            </Principal>
+            <Dependent Role="GEN_COMENSUGER">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GEN_ESTADO_GEN_PAIS">
+          <End Role="GEN_PAIS" Type="Self.GEN_PAIS" Multiplicity="1" />
+          <End Role="GEN_ESTADO" Type="Self.GEN_ESTADO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_PAIS">
+              <PropertyRef Name="IdPais" />
+            </Principal>
+            <Dependent Role="GEN_ESTADO">
+              <PropertyRef Name="IdPais" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GEN_MUNICIPIO_GEN_ESTADO">
+          <End Role="GEN_ESTADO" Type="Self.GEN_ESTADO" Multiplicity="1" />
+          <End Role="GEN_MUNICIPIO" Type="Self.GEN_MUNICIPIO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_ESTADO">
+              <PropertyRef Name="IdEstado" />
+            </Principal>
+            <Dependent Role="GEN_MUNICIPIO">
+              <PropertyRef Name="IdEstado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD">
+          <End Role="GEN_UNIDAD" Type="Self.GEN_UNIDAD" Multiplicity="1" />
+          <End Role="OPE_SOLICITUDPRODUCTO" Type="Self.OPE_SOLICITUDPRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_UNIDAD">
+              <PropertyRef Name="IdUnidad" />
+            </Principal>
+            <Dependent Role="OPE_SOLICITUDPRODUCTO">
+              <PropertyRef Name="IdUnidad" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GEN_USUARIO_OPE_CLIENTPROVEE">
+          <End Role="OPE_CLIENTPROVEE" Type="Self.OPE_CLIENTPROVEE" Multiplicity="1" />
+          <End Role="GEN_USUARIO" Type="Self.GEN_USUARIO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPE_CLIENTPROVEE">
+              <PropertyRef Name="IdClientProvee" />
+            </Principal>
+            <Dependent Role="GEN_USUARIO">
+              <PropertyRef Name="IdClientProvee" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_GUIA_GEN_USUARIO">
+          <End Role="GEN_USUARIO" Type="Self.GEN_USUARIO" Multiplicity="0..1" />
+          <End Role="OPE_GUIA" Type="Self.OPE_GUIA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_USUARIO">
+              <PropertyRef Name="IdUsuario" />
+            </Principal>
+            <Dependent Role="OPE_GUIA">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_SOLICITUD_GEN_USUARIO">
+          <End Role="GEN_USUARIO" Type="Self.GEN_USUARIO" Multiplicity="1" />
+          <End Role="OPE_SOLICITUD" Type="Self.OPE_SOLICITUD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_USUARIO">
+              <PropertyRef Name="IdUsuario" />
+            </Principal>
+            <Dependent Role="OPE_SOLICITUD">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_CONTACTO_OPE_CLIENTPROVEE">
+          <End Role="OPE_CLIENTPROVEE" Type="Self.OPE_CLIENTPROVEE" Multiplicity="1" />
+          <End Role="OPE_CONTACTO" Type="Self.OPE_CONTACTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPE_CLIENTPROVEE">
+              <PropertyRef Name="IdClientProvee" />
+            </Principal>
+            <Dependent Role="OPE_CONTACTO">
+              <PropertyRef Name="IdClientProvee" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_SOLICITUD_OPE_CLIENTPROVEE">
+          <End Role="OPE_CLIENTPROVEE" Type="Self.OPE_CLIENTPROVEE" Multiplicity="1" />
+          <End Role="OPE_SOLICITUD" Type="Self.OPE_SOLICITUD" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPE_CLIENTPROVEE">
+              <PropertyRef Name="IdClientProvee" />
+            </Principal>
+            <Dependent Role="OPE_SOLICITUD">
+              <PropertyRef Name="IdClientProvee" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA">
+          <End Role="OPE_GUIA" Type="Self.OPE_GUIA" Multiplicity="0..1" />
+          <End Role="OPE_SOLICITUDPUNTOSENTREC" Type="Self.OPE_SOLICITUDPUNTOSENTREC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPE_GUIA">
+              <PropertyRef Name="IdGuia" />
+            </Principal>
+            <Dependent Role="OPE_SOLICITUDPUNTOSENTREC">
+              <PropertyRef Name="IdGuia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_SOLICITUDPRODUCTO_OPE_SOLICITUD">
+          <End Role="OPE_SOLICITUD" Type="Self.OPE_SOLICITUD" Multiplicity="1" />
+          <End Role="OPE_SOLICITUDPRODUCTO" Type="Self.OPE_SOLICITUDPRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPE_SOLICITUD">
+              <PropertyRef Name="IdSolicitud" />
+            </Principal>
+            <Dependent Role="OPE_SOLICITUDPRODUCTO">
+              <PropertyRef Name="IdSolicitud" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD">
+          <End Role="OPE_SOLICITUD" Type="Self.OPE_SOLICITUD" Multiplicity="1" />
+          <End Role="OPE_SOLICITUDPUNTOSENTREC" Type="Self.OPE_SOLICITUDPUNTOSENTREC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPE_SOLICITUD">
+              <PropertyRef Name="IdSolicitud" />
+            </Principal>
+            <Dependent Role="OPE_SOLICITUDPUNTOSENTREC">
+              <PropertyRef Name="IdSolicitud" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MensajeriaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="GEN_COMENSUGER" EntityType="Self.GEN_COMENSUGER" />
+          <EntitySet Name="GEN_EMAILCONGIF" EntityType="Self.GEN_EMAILCONGIF" />
+          <EntitySet Name="GEN_ESTADO" EntityType="Self.GEN_ESTADO" />
+          <EntitySet Name="GEN_MUNICIPIO" EntityType="Self.GEN_MUNICIPIO" />
+          <EntitySet Name="GEN_PAIS" EntityType="Self.GEN_PAIS" />
+          <EntitySet Name="GEN_UNIDAD" EntityType="Self.GEN_UNIDAD" />
+          <EntitySet Name="GEN_USUARIO" EntityType="Self.GEN_USUARIO" />
+          <EntitySet Name="OPE_CLIENTPROVEE" EntityType="Self.OPE_CLIENTPROVEE" />
+          <EntitySet Name="OPE_CONTACTO" EntityType="Self.OPE_CONTACTO" />
+          <EntitySet Name="OPE_GUIA" EntityType="Self.OPE_GUIA" />
+          <EntitySet Name="OPE_SOLICITUD" EntityType="Self.OPE_SOLICITUD" />
+          <EntitySet Name="OPE_SOLICITUDPRODUCTO" EntityType="Self.OPE_SOLICITUDPRODUCTO" />
+          <EntitySet Name="OPE_SOLICITUDPUNTOSENTREC" EntityType="Self.OPE_SOLICITUDPUNTOSENTREC" />
+          <AssociationSet Name="FK_GEN_COMENSUGER_GEN_USUARIO" Association="Self.FK_GEN_COMENSUGER_GEN_USUARIO">
+            <End Role="GEN_USUARIO" EntitySet="GEN_USUARIO" />
+            <End Role="GEN_COMENSUGER" EntitySet="GEN_COMENSUGER" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GEN_ESTADO_GEN_PAIS" Association="Self.FK_GEN_ESTADO_GEN_PAIS">
+            <End Role="GEN_PAIS" EntitySet="GEN_PAIS" />
+            <End Role="GEN_ESTADO" EntitySet="GEN_ESTADO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GEN_MUNICIPIO_GEN_ESTADO" Association="Self.FK_GEN_MUNICIPIO_GEN_ESTADO">
+            <End Role="GEN_ESTADO" EntitySet="GEN_ESTADO" />
+            <End Role="GEN_MUNICIPIO" EntitySet="GEN_MUNICIPIO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD" Association="Self.FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD">
+            <End Role="GEN_UNIDAD" EntitySet="GEN_UNIDAD" />
+            <End Role="OPE_SOLICITUDPRODUCTO" EntitySet="OPE_SOLICITUDPRODUCTO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GEN_USUARIO_OPE_CLIENTPROVEE" Association="Self.FK_GEN_USUARIO_OPE_CLIENTPROVEE">
+            <End Role="OPE_CLIENTPROVEE" EntitySet="OPE_CLIENTPROVEE" />
+            <End Role="GEN_USUARIO" EntitySet="GEN_USUARIO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_GUIA_GEN_USUARIO" Association="Self.FK_OPE_GUIA_GEN_USUARIO">
+            <End Role="GEN_USUARIO" EntitySet="GEN_USUARIO" />
+            <End Role="OPE_GUIA" EntitySet="OPE_GUIA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_SOLICITUD_GEN_USUARIO" Association="Self.FK_OPE_SOLICITUD_GEN_USUARIO">
+            <End Role="GEN_USUARIO" EntitySet="GEN_USUARIO" />
+            <End Role="OPE_SOLICITUD" EntitySet="OPE_SOLICITUD" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_CONTACTO_OPE_CLIENTPROVEE" Association="Self.FK_OPE_CONTACTO_OPE_CLIENTPROVEE">
+            <End Role="OPE_CLIENTPROVEE" EntitySet="OPE_CLIENTPROVEE" />
+            <End Role="OPE_CONTACTO" EntitySet="OPE_CONTACTO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_SOLICITUD_OPE_CLIENTPROVEE" Association="Self.FK_OPE_SOLICITUD_OPE_CLIENTPROVEE">
+            <End Role="OPE_CLIENTPROVEE" EntitySet="OPE_CLIENTPROVEE" />
+            <End Role="OPE_SOLICITUD" EntitySet="OPE_SOLICITUD" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA" Association="Self.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA">
+            <End Role="OPE_GUIA" EntitySet="OPE_GUIA" />
+            <End Role="OPE_SOLICITUDPUNTOSENTREC" EntitySet="OPE_SOLICITUDPUNTOSENTREC" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_SOLICITUDPRODUCTO_OPE_SOLICITUD" Association="Self.FK_OPE_SOLICITUDPRODUCTO_OPE_SOLICITUD">
+            <End Role="OPE_SOLICITUD" EntitySet="OPE_SOLICITUD" />
+            <End Role="OPE_SOLICITUDPRODUCTO" EntitySet="OPE_SOLICITUDPRODUCTO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD" Association="Self.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD">
+            <End Role="OPE_SOLICITUD" EntitySet="OPE_SOLICITUD" />
+            <End Role="OPE_SOLICITUDPUNTOSENTREC" EntitySet="OPE_SOLICITUDPUNTOSENTREC" />
+          </AssociationSet>
+          <EntitySet Name="GEN_CODIGOPOSTAL" EntityType="MensajeriaModel.GEN_CODIGOPOSTAL" />
+          <EntitySet Name="GEN_COLONIA" EntityType="MensajeriaModel.GEN_COLONIA" />
+          <EntitySet Name="OPE_PUNTOENTREC" EntityType="MensajeriaModel.OPE_PUNTOENTREC" />
+          <AssociationSet Name="FK_GEN_COLONIA_GEN_CODIGOPOSTAL" Association="MensajeriaModel.FK_GEN_COLONIA_GEN_CODIGOPOSTAL">
+            <End Role="GEN_CODIGOPOSTAL" EntitySet="GEN_CODIGOPOSTAL" />
+            <End Role="GEN_COLONIA" EntitySet="GEN_COLONIA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GEN_COLONIA_GEN_MUNICIPIO" Association="MensajeriaModel.FK_GEN_COLONIA_GEN_MUNICIPIO">
+            <End Role="GEN_MUNICIPIO" EntitySet="GEN_MUNICIPIO" />
+            <End Role="GEN_COLONIA" EntitySet="GEN_COLONIA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_PUNTOENTREC_GEN_COLONIA" Association="MensajeriaModel.FK_OPE_PUNTOENTREC_GEN_COLONIA">
+            <End Role="GEN_COLONIA" EntitySet="GEN_COLONIA" />
+            <End Role="OPE_PUNTOENTREC" EntitySet="OPE_PUNTOENTREC" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_PUNTOENTREC_OPE_CLIENTPROVEE" Association="MensajeriaModel.FK_OPE_PUNTOENTREC_OPE_CLIENTPROVEE">
+            <End Role="OPE_CLIENTPROVEE" EntitySet="OPE_CLIENTPROVEE" />
+            <End Role="OPE_PUNTOENTREC" EntitySet="OPE_PUNTOENTREC" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_PUNTOENTREC" Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_PUNTOENTREC">
+            <End Role="OPE_PUNTOENTREC" EntitySet="OPE_PUNTOENTREC" />
+            <End Role="OPE_SOLICITUDPUNTOSENTREC" EntitySet="OPE_SOLICITUDPUNTOSENTREC" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="GEN_CODIGOPOSTAL">
+          <Key>
+            <PropertyRef Name="IdCodigoP" />
+          </Key>
+          <Property Name="IdCodigoP" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CodigoPostal" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="GEN_COLONIA" Relationship="MensajeriaModel.FK_GEN_COLONIA_GEN_CODIGOPOSTAL" FromRole="GEN_CODIGOPOSTAL" ToRole="GEN_COLONIA" />
+        </EntityType>
+        <EntityType Name="GEN_COLONIA">
+          <Key>
+            <PropertyRef Name="IdColonia" />
+          </Key>
+          <Property Name="IdColonia" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdCodigoP" Type="Int32" Nullable="false" />
+          <Property Name="IdMunicipio" Type="Int32" Nullable="false" />
+          <Property Name="Colonia" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="GEN_CODIGOPOSTAL" Relationship="MensajeriaModel.FK_GEN_COLONIA_GEN_CODIGOPOSTAL" FromRole="GEN_COLONIA" ToRole="GEN_CODIGOPOSTAL" />
+          <NavigationProperty Name="GEN_MUNICIPIO" Relationship="MensajeriaModel.FK_GEN_COLONIA_GEN_MUNICIPIO" FromRole="GEN_COLONIA" ToRole="GEN_MUNICIPIO" />
+          <NavigationProperty Name="OPE_PUNTOENTREC" Relationship="MensajeriaModel.FK_OPE_PUNTOENTREC_GEN_COLONIA" FromRole="GEN_COLONIA" ToRole="OPE_PUNTOENTREC" />
+        </EntityType>
+        <EntityType Name="OPE_PUNTOENTREC">
+          <Key>
+            <PropertyRef Name="IdPuntoEntRec" />
+          </Key>
+          <Property Name="IdPuntoEntRec" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdClientProvee" Type="Int32" Nullable="false" />
+          <Property Name="IdColonia" Type="Int32" Nullable="false" />
+          <Property Name="DescripcionPunto" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="TipoPunto" Type="Int32" Nullable="false" />
+          <Property Name="ContactoPunto" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="HoraDePunto" Type="Time" Precision="7" />
+          <Property Name="HoraHaPunto" Type="Time" Precision="7" />
+          <Property Name="CallePunto" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NoIntPunto" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="NoExtPunto" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ObsPunto" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="EstatusPunto" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="GEN_COLONIA" Relationship="MensajeriaModel.FK_OPE_PUNTOENTREC_GEN_COLONIA" FromRole="OPE_PUNTOENTREC" ToRole="GEN_COLONIA" />
+          <NavigationProperty Name="OPE_CLIENTPROVEE" Relationship="MensajeriaModel.FK_OPE_PUNTOENTREC_OPE_CLIENTPROVEE" FromRole="OPE_PUNTOENTREC" ToRole="OPE_CLIENTPROVEE" />
+          <NavigationProperty Name="OPE_SOLICITUDPUNTOSENTREC" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_PUNTOENTREC" FromRole="OPE_PUNTOENTREC" ToRole="OPE_SOLICITUDPUNTOSENTREC" />
+        </EntityType>
+        <Association Name="FK_GEN_COLONIA_GEN_CODIGOPOSTAL">
+          <End Type="MensajeriaModel.GEN_CODIGOPOSTAL" Role="GEN_CODIGOPOSTAL" Multiplicity="1" />
+          <End Type="MensajeriaModel.GEN_COLONIA" Role="GEN_COLONIA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_CODIGOPOSTAL">
+              <PropertyRef Name="IdCodigoP" />
+            </Principal>
+            <Dependent Role="GEN_COLONIA">
+              <PropertyRef Name="IdCodigoP" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GEN_COLONIA_GEN_MUNICIPIO">
+          <End Type="MensajeriaModel.GEN_MUNICIPIO" Role="GEN_MUNICIPIO" Multiplicity="1" />
+          <End Type="MensajeriaModel.GEN_COLONIA" Role="GEN_COLONIA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_MUNICIPIO">
+              <PropertyRef Name="IdMunicipio" />
+            </Principal>
+            <Dependent Role="GEN_COLONIA">
+              <PropertyRef Name="IdMunicipio" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_PUNTOENTREC_GEN_COLONIA">
+          <End Type="MensajeriaModel.GEN_COLONIA" Role="GEN_COLONIA" Multiplicity="1" />
+          <End Type="MensajeriaModel.OPE_PUNTOENTREC" Role="OPE_PUNTOENTREC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_COLONIA">
+              <PropertyRef Name="IdColonia" />
+            </Principal>
+            <Dependent Role="OPE_PUNTOENTREC">
+              <PropertyRef Name="IdColonia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_PUNTOENTREC_OPE_CLIENTPROVEE">
+          <End Type="MensajeriaModel.OPE_CLIENTPROVEE" Role="OPE_CLIENTPROVEE" Multiplicity="1" />
+          <End Type="MensajeriaModel.OPE_PUNTOENTREC" Role="OPE_PUNTOENTREC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPE_CLIENTPROVEE">
+              <PropertyRef Name="IdClientProvee" />
+            </Principal>
+            <Dependent Role="OPE_PUNTOENTREC">
+              <PropertyRef Name="IdClientProvee" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_PUNTOENTREC">
+          <End Type="MensajeriaModel.OPE_PUNTOENTREC" Role="OPE_PUNTOENTREC" Multiplicity="1" />
+          <End Type="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC" Role="OPE_SOLICITUDPUNTOSENTREC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPE_PUNTOENTREC">
+              <PropertyRef Name="IdPuntoEntRec" />
+            </Principal>
+            <Dependent Role="OPE_SOLICITUDPUNTOSENTREC">
+              <PropertyRef Name="IdPuntoEntRec" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MensajeriaModelStoreContainer" CdmEntityContainer="MensajeriaEntities">
+          <EntitySetMapping Name="GEN_COMENSUGER">
+            <EntityTypeMapping TypeName="MensajeriaModel.GEN_COMENSUGER">
+              <MappingFragment StoreEntitySet="GEN_COMENSUGER">
+                <ScalarProperty Name="IdComenSuger" ColumnName="IdComenSuger" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="Asunto" ColumnName="Asunto" />
+                <ScalarProperty Name="Cuerpo" ColumnName="Cuerpo" />
+                <ScalarProperty Name="FechaCreacioComenSuger" ColumnName="FechaCreacioComenSuger" />
+                <ScalarProperty Name="FechaAtencionComenSuger" ColumnName="FechaAtencionComenSuger" />
+                <ScalarProperty Name="EstatusComenSuger" ColumnName="EstatusComenSuger" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_EMAILCONGIF">
+            <EntityTypeMapping TypeName="MensajeriaModel.GEN_EMAILCONGIF">
+              <MappingFragment StoreEntitySet="GEN_EMAILCONGIF">
+                <ScalarProperty Name="IdEmailConfig" ColumnName="IdEmailConfig" />
+                <ScalarProperty Name="Remitente" ColumnName="Remitente" />
+                <ScalarProperty Name="Asunto" ColumnName="Asunto" />
+                <ScalarProperty Name="Cuerpo" ColumnName="Cuerpo" />
+                <ScalarProperty Name="ContrasenaEmail" ColumnName="ContrasenaEmail" />
+                <ScalarProperty Name="SMTPHost" ColumnName="SMTPHost" />
+                <ScalarProperty Name="SMTPPort" ColumnName="SMTPPort" />
+                <ScalarProperty Name="SSL" ColumnName="SSL" />
+                <ScalarProperty Name="EstatusEMail" ColumnName="EstatusEMail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_ESTADO">
+            <EntityTypeMapping TypeName="MensajeriaModel.GEN_ESTADO">
+              <MappingFragment StoreEntitySet="GEN_ESTADO">
+                <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
+                <ScalarProperty Name="IdPais" ColumnName="IdPais" />
+                <ScalarProperty Name="CiudadEstado" ColumnName="CiudadEstado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_MUNICIPIO">
+            <EntityTypeMapping TypeName="MensajeriaModel.GEN_MUNICIPIO">
+              <MappingFragment StoreEntitySet="GEN_MUNICIPIO">
+                <ScalarProperty Name="IdMunicipio" ColumnName="IdMunicipio" />
+                <ScalarProperty Name="IdEstado" ColumnName="IdEstado" />
+                <ScalarProperty Name="Municipio" ColumnName="Municipio" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_PAIS">
+            <EntityTypeMapping TypeName="MensajeriaModel.GEN_PAIS">
+              <MappingFragment StoreEntitySet="GEN_PAIS">
+                <ScalarProperty Name="IdPais" ColumnName="IdPais" />
+                <ScalarProperty Name="Pais" ColumnName="Pais" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_UNIDAD">
+            <EntityTypeMapping TypeName="MensajeriaModel.GEN_UNIDAD">
+              <MappingFragment StoreEntitySet="GEN_UNIDAD">
+                <ScalarProperty Name="IdUnidad" ColumnName="IdUnidad" />
+                <ScalarProperty Name="DescripcionUnidad" ColumnName="DescripcionUnidad" />
+                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
+                <ScalarProperty Name="Simbolo" ColumnName="Simbolo" />
+                <ScalarProperty Name="EstatusUnidad" ColumnName="EstatusUnidad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_USUARIO">
+            <EntityTypeMapping TypeName="MensajeriaModel.GEN_USUARIO">
+              <MappingFragment StoreEntitySet="GEN_USUARIO">
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="IdClientProvee" ColumnName="IdClientProvee" />
+                <ScalarProperty Name="TipoUsuario" ColumnName="TipoUsuario" />
+                <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
+                <ScalarProperty Name="Usuario" ColumnName="Usuario" />
+                <ScalarProperty Name="Contrasena" ColumnName="Contrasena" />
+                <ScalarProperty Name="CorreoUsuario" ColumnName="CorreoUsuario" />
+                <ScalarProperty Name="EstatusUsuario" ColumnName="EstatusUsuario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OPE_CLIENTPROVEE">
+            <EntityTypeMapping TypeName="MensajeriaModel.OPE_CLIENTPROVEE">
+              <MappingFragment StoreEntitySet="OPE_CLIENTPROVEE">
+                <ScalarProperty Name="IdClientProvee" ColumnName="IdClientProvee" />
+                <ScalarProperty Name="TipoClientProvee" ColumnName="TipoClientProvee" />
+                <ScalarProperty Name="RazonSocial" ColumnName="RazonSocial" />
+                <ScalarProperty Name="RFC" ColumnName="RFC" />
+                <ScalarProperty Name="ObsClientProvee" ColumnName="ObsClientProvee" />
+                <ScalarProperty Name="EstatusClientProvee" ColumnName="EstatusClientProvee" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OPE_CONTACTO">
+            <EntityTypeMapping TypeName="MensajeriaModel.OPE_CONTACTO">
+              <MappingFragment StoreEntitySet="OPE_CONTACTO">
+                <ScalarProperty Name="IdContacto" ColumnName="IdContacto" />
+                <ScalarProperty Name="IdClientProvee" ColumnName="IdClientProvee" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="ApellidoP" ColumnName="ApellidoP" />
+                <ScalarProperty Name="ApellidoM" ColumnName="ApellidoM" />
+                <ScalarProperty Name="Cargo" ColumnName="Cargo" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="HoraDe" ColumnName="HoraDe" />
+                <ScalarProperty Name="HoraHa" ColumnName="HoraHa" />
+                <ScalarProperty Name="EstatusContacto" ColumnName="EstatusContacto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OPE_GUIA">
+            <EntityTypeMapping TypeName="MensajeriaModel.OPE_GUIA">
+              <MappingFragment StoreEntitySet="OPE_GUIA">
+                <ScalarProperty Name="IdGuia" ColumnName="IdGuia" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="FechaCreacionGuia" ColumnName="FechaCreacionGuia" />
+                <ScalarProperty Name="FechaProgramadaGuia" ColumnName="FechaProgramadaGuia" />
+                <ScalarProperty Name="CompletaGuia" ColumnName="CompletaGuia" />
+                <ScalarProperty Name="EstatusGuia" ColumnName="EstatusGuia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OPE_SOLICITUD">
+            <EntityTypeMapping TypeName="MensajeriaModel.OPE_SOLICITUD">
+              <MappingFragment StoreEntitySet="OPE_SOLICITUD">
+                <ScalarProperty Name="IdSolicitud" ColumnName="IdSolicitud" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="IdClientProvee" ColumnName="IdClientProvee" />
+                <ScalarProperty Name="Folio" ColumnName="Folio" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+                <ScalarProperty Name="Emergencia" ColumnName="Emergencia" />
+                <ScalarProperty Name="EstatusSolicitud" ColumnName="EstatusSolicitud" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OPE_SOLICITUDPRODUCTO">
+            <EntityTypeMapping TypeName="MensajeriaModel.OPE_SOLICITUDPRODUCTO">
+              <MappingFragment StoreEntitySet="OPE_SOLICITUDPRODUCTO">
+                <ScalarProperty Name="IdSolicitudProducto" ColumnName="IdSolicitudProducto" />
+                <ScalarProperty Name="IdSolicitud" ColumnName="IdSolicitud" />
+                <ScalarProperty Name="IdUnidad" ColumnName="IdUnidad" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+                <ScalarProperty Name="Peso" ColumnName="Peso" />
+                <ScalarProperty Name="ObsProducto" ColumnName="ObsProducto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OPE_SOLICITUDPUNTOSENTREC">
+            <EntityTypeMapping TypeName="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC">
+              <MappingFragment StoreEntitySet="OPE_SOLICITUDPUNTOSENTREC">
+                <ScalarProperty Name="IdSolicitudPuntosEntRec" ColumnName="IdSolicitudPuntosEntRec" />
+                <ScalarProperty Name="IdSolicitud" ColumnName="IdSolicitud" />
+                <ScalarProperty Name="IdPuntoEntRec" ColumnName="IdPuntoEntRec" />
+                <ScalarProperty Name="IdGuia" ColumnName="IdGuia" />
+                <ScalarProperty Name="TipoPunto" ColumnName="TipoPunto" />
+                <ScalarProperty Name="FechaProgramada" ColumnName="FechaProgramada" />
+                <ScalarProperty Name="ObsPuntosEntRec" ColumnName="ObsPuntosEntRec" />
+                <ScalarProperty Name="FechaReal" ColumnName="FechaReal" />
+                <ScalarProperty Name="FirmaPuntosEntRec" ColumnName="FirmaPuntosEntRec" />
+                <ScalarProperty Name="FotoPuntosEntRec" ColumnName="FotoPuntosEntRec" />
+                <ScalarProperty Name="Latitud" ColumnName="Latitud" />
+                <ScalarProperty Name="Longitud" ColumnName="Longitud" />
+                <ScalarProperty Name="Problema" ColumnName="Problema" />
+                <ScalarProperty Name="ObsProblema" ColumnName="ObsProblema" />
+                <ScalarProperty Name="EstatusPuntosEntRec" ColumnName="EstatusPuntosEntRec" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_CODIGOPOSTAL">
+            <EntityTypeMapping TypeName="MensajeriaModel.GEN_CODIGOPOSTAL">
+              <MappingFragment StoreEntitySet="GEN_CODIGOPOSTAL">
+                <ScalarProperty Name="CodigoPostal" ColumnName="CodigoPostal" />
+                <ScalarProperty Name="IdCodigoP" ColumnName="IdCodigoP" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_COLONIA">
+            <EntityTypeMapping TypeName="MensajeriaModel.GEN_COLONIA">
+              <MappingFragment StoreEntitySet="GEN_COLONIA">
+                <ScalarProperty Name="Colonia" ColumnName="Colonia" />
+                <ScalarProperty Name="IdMunicipio" ColumnName="IdMunicipio" />
+                <ScalarProperty Name="IdCodigoP" ColumnName="IdCodigoP" />
+                <ScalarProperty Name="IdColonia" ColumnName="IdColonia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OPE_PUNTOENTREC">
+            <EntityTypeMapping TypeName="MensajeriaModel.OPE_PUNTOENTREC">
+              <MappingFragment StoreEntitySet="OPE_PUNTOENTREC">
+                <ScalarProperty Name="EstatusPunto" ColumnName="EstatusPunto" />
+                <ScalarProperty Name="ObsPunto" ColumnName="ObsPunto" />
+                <ScalarProperty Name="NoExtPunto" ColumnName="NoExtPunto" />
+                <ScalarProperty Name="NoIntPunto" ColumnName="NoIntPunto" />
+                <ScalarProperty Name="CallePunto" ColumnName="CallePunto" />
+                <ScalarProperty Name="HoraHaPunto" ColumnName="HoraHaPunto" />
+                <ScalarProperty Name="HoraDePunto" ColumnName="HoraDePunto" />
+                <ScalarProperty Name="ContactoPunto" ColumnName="ContactoPunto" />
+                <ScalarProperty Name="TipoPunto" ColumnName="TipoPunto" />
+                <ScalarProperty Name="DescripcionPunto" ColumnName="DescripcionPunto" />
+                <ScalarProperty Name="IdColonia" ColumnName="IdColonia" />
+                <ScalarProperty Name="IdClientProvee" ColumnName="IdClientProvee" />
+                <ScalarProperty Name="IdPuntoEntRec" ColumnName="IdPuntoEntRec" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
