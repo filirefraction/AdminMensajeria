@@ -1,0 +1,103 @@
+﻿@model IEnumerable<AdminMensajeria.Models.GEN_COLONIA>
+
+<table id="ColoniaTable" class="ui celled table compact">
+    <thead>
+        <tr>
+            <th class="col-md-2"></th>
+            <th class="col-md-4">
+                @Html.DisplayNameFor(model => model.Colonia)
+            </th>
+            <th class="col-md-3">
+                @Html.DisplayNameFor(model => model.GEN_CODIGOPOSTAL.CodigoPostal)
+            </th>
+            <th class="col-md-3">
+                @Html.DisplayNameFor(model => model.GEN_MUNICIPIO.Municipio)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <button onclick="EditarColonia(@item.IdColonia)" data-toggle="tooltip" title="Editar Colonia" class="btn btn-default btn-sm">
+                        <span class='glyphicon glyphicon-edit'></span>
+                    </button>
+                    <button onclick="EliminarColonia(@item.IdColonia)" data-toggle="tooltip" title="Eliminar Colonia" class="btn btn-default btn-sm">
+                        <span class='glyphicon glyphicon-trash'></span>
+                    </button>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Colonia)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GEN_CODIGOPOSTAL.CodigoPostal)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GEN_MUNICIPIO.Municipio)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+        $('#ColoniaTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            }
+        });
+    });
+
+    function EditarColonia(id) {
+        $("#OperTitle").html('');
+        $("#OperTitle").append('Editar Colonia')
+        $("#OperBody").html('');
+        $("#OperBody").load('@Url.Action("Edit", "Colonia")' + '/' + id);
+        $('#OperModal').modal('show');
+    }
+
+    function EliminarColonia(id) {
+        $('#ConfirmTitle').html('');
+        var title = "Confirme para eliminar Colonia"
+        $('#ConfirmTitle').append(title);
+        $('#ConfirmBody').html('');
+        var body = '<button onclick="ConfirmaEliminarColonia(' + id + ')" type="button" class="btn btn-danger" id="modal-btn-si">Si</button>' +
+                   '<button onclick="CancelaEliminar()" type="button" class="btn btn-primary" id="modal-btn-no">No</button>';
+        $('#ConfirmBody').append(body);
+        $('#ConfirmModal').modal('show');
+
+    }
+
+    function ConfirmaEliminarColonia(id) {
+        $.ajax({
+            url: '@Url.Action("DeleteColonia", "Colonia")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                if (Data.Result == true) {
+                    $("#VistaColonias").html('');
+                    $("#VistaColonias").load('@Url.Action("Colonias", "Colonia")');
+                    CancelaEliminar();
+                }
+                else {
+                    $("#ErrorMSG").html('');
+                    $("#ErrorMSG").append(Data.Mensaje);
+                    $('#ConfirmModal').modal('hide');
+                    $('#ModalErrorMSG').modal('show')
+                }
+            },
+            error: function (data) {
+                console.log("ocurrio un error al Eliminar");
+            }
+        });
+    }
+
+    function CancelaEliminar() {
+        $('#ConfirmTitle').html('');
+        $('#ConfirmBody').html('');
+        $('#ConfirmModal').modal('hide');
+    }
+</script>

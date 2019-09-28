@@ -16,22 +16,38 @@ namespace AdminMensajeria.Models
     {
         public int IdSolicitudPuntosEntRec { get; set; }
         public int IdSolicitud { get; set; }
-        public int IdPuntoEntRec { get; set; }
+        public Nullable<int> IdPuntoEntRec { get; set; }
         public Nullable<int> IdGuia { get; set; }
+        public Nullable<int> IdColonia { get; set; }
         public int TipoPunto { get; set; }
-        public System.DateTime FechaProgramada { get; set; }
+        public Nullable<System.DateTime> FechaProgramada { get; set; }
+        public string DestinatarioPuntoEntRec { get; set; }
+        public string DescripcionPuntoEntRec { get; set; }
+        public string ContactoPuntoEntRec { get; set; }
+        public string CallePuntosEntRec { get; set; }
+        public string NoExtPuntosEntRec { get; set; }
+        public string NoIntPuntosEntRec { get; set; }
+        public string ReferenciaPuntosEntRec { get; set; }
+        public string ColoniaPuntosEntRec { get; set; }
+        public string CodigoPostalPuntosEntRec { get; set; }
+        public string MunicipioPuntosEntRec { get; set; }
+        public string EstadoPuntosEntRec { get; set; }
+        public string PaisPuntosEntRec { get; set; }
         public string ObsPuntosEntRec { get; set; }
         public Nullable<System.DateTime> FechaReal { get; set; }
+        public string NombrePuntosEntRec { get; set; }
         public string FirmaPuntosEntRec { get; set; }
         public string FotoPuntosEntRec { get; set; }
         public string Latitud { get; set; }
         public string Longitud { get; set; }
         public bool Problema { get; set; }
         public string ObsProblema { get; set; }
+        public string RefExtPuntosEntRec { get; set; }
         public bool EstatusPuntosEntRec { get; set; }
     
+        public virtual GEN_COLONIA GEN_COLONIA { get; set; }
         public virtual OPE_GUIA OPE_GUIA { get; set; }
-        public virtual OPE_SOLICITUD OPE_SOLICITUD { get; set; }
         public virtual OPE_PUNTOENTREC OPE_PUNTOENTREC { get; set; }
+        public virtual OPE_SOLICITUD OPE_SOLICITUD { get; set; }
     }
 }

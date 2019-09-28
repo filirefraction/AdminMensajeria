@@ -1,0 +1,266 @@
+﻿@using (AdminMensajeria.Models.MensajeriaEntities db = new AdminMensajeria.Models.MensajeriaEntities())
+{
+    int IdGuia = ViewBag.idguia;
+
+    var Solicitud = (from s in db.OPE_SOLICITUD
+                     join p in db.OPE_SOLICITUDPRODUCTO on s.IdSolicitud equals p.IdSolicitud
+                     join e in db.OPE_SOLICITUDPUNTOSENTREC on s.IdSolicitud equals e.IdSolicitud
+                     where e.IdGuia == IdGuia && e.TipoPunto == 2
+                     select new { s, p, e }).ToList();
+    <div class="form-group">
+        <div class="col-md-3">
+            <div class="field">
+                <input type="number" id="NoSeguimientoRec" class="form-control input-sm" placeholder="# Envío" />
+                <label for="NoSeguimientoRec">Ingrese Numero de Envío (*)</label>
+            </div>
+            <span class="AlertaDanger" id="NoSeguimientoRecVal"></span>
+        </div>
+        <div class="col-md-3" style="margin-top: 20px;">
+            <div class="field">
+                <button id="btnReferencia" onclick="AsingaReferencias()" type="button" class="btn btn-default btn-sm ">
+                    <span class="glyphicon glyphicon-info-sign"></span> Asignar con Referencia
+                </button>
+                <label for="btnReferencia"> </label>
+            </div>
+
+        </div>
+    </div>
+
+    <table id="EntregasTable" class="ui celled table compact">
+        <thead>
+            <tr>
+                <th>
+                    # Solicitud
+                </th>
+                <th>
+                    Producto
+                </th>
+                <th>
+                    Referencia Externa
+                </th>
+                <th>
+                    Fecha Estimada
+                </th>
+                <th>
+                    Dirección
+                </th>
+                <th>
+                    Requiere Acuse
+                </th>
+                <th>
+                    Estatus
+                </th>
+                <th class="col-md-2"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Solicitud)
+                {
+                <tr>
+                    <td style="word-break:break-word">
+                        @Html.DisplayFor(modelItem => item.s.IdSolicitud)
+                    </td>
+                    <td style="word-break:break-word">
+                        @item.p.Cantidad - @item.p.Descripcion
+                    </td>
+                    <td style="word-break:break-word">
+                        @item.e.RefExtPuntosEntRec
+                    </td>
+                    <td style="word-break:break-word">
+                        @item.e.FechaProgramada
+                    </td>
+                    <td style="word-break:break-word">
+                        @if (item.e.IdPuntoEntRec != null)
+                    {
+                            <p>
+                                @item.e.OPE_PUNTOENTREC.CallePunto, @item.e.OPE_PUNTOENTREC.NoExtPunto, @item.e.OPE_PUNTOENTREC.NoIntPunto,
+                                @item.e.OPE_PUNTOENTREC.GEN_COLONIA.Colonia, @item.e.OPE_PUNTOENTREC.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal,
+                                @item.e.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.Municipio, @item.e.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado,
+                                @item.e.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais, @item.e.OPE_PUNTOENTREC.Referencia
+                            </p>
+                        }
+                        else
+                        {
+                            if (item.e.IdColonia != null)
+                            {
+                                <p>
+                                    @item.e.CallePuntosEntRec, @item.e.NoExtPuntosEntRec, @item.e.NoIntPuntosEntRec,
+                                    @item.e.GEN_COLONIA.Colonia, @item.e.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal,
+                                    @item.e.GEN_COLONIA.GEN_MUNICIPIO.Municipio, @item.e.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado,
+                                    @item.e.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais, @item.e.ReferenciaPuntosEntRec
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    @item.e.CallePuntosEntRec, @item.e.NoExtPuntosEntRec, @item.e.NoIntPuntosEntRec,
+                                    @item.e.ColoniaPuntosEntRec, @item.e.CodigoPostalPuntosEntRec,
+                                    @item.e.MunicipioPuntosEntRec, @item.e.EstadoPuntosEntRec,
+                                    @item.e.PaisPuntosEntRec, @item.e.ReferenciaPuntosEntRec
+                                </p>
+                            }
+                        }
+                    </td>
+                    <td>
+                        @if (item.s.RequiereAcuse)
+                        {
+                            <p>Si</p>
+                        }
+                        else
+                        {
+                            <p>No</p>
+                        }
+                    </td>
+                    <td>
+                        @switch (item.s.EstatusSolicitud)
+                        {
+                            case 1: <p>Pendiente</p>; break;
+                            case 2: <p>Recibido en Mensajería</p>; break;
+                            case 3: <p>En ruta</p>; break;
+                            case 4: <p>Entregado</p>; break;
+                            case 5: <p>Cancelado</p>; break;
+                            default:
+                                break;
+                        }
+                    </td>
+                    <td>
+                        <button onclick="EditarReferencia(@item.e.IdSolicitudPuntosEntRec)" data-toggle="tooltip" title="Referencia Externa" class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </button>
+                        <button onclick="QuitarEntrega(@item.e.IdSolicitudPuntosEntRec)" data-toggle="tooltip" title="Quitar Entrega" class="btn btn-default btn-sm">
+                            <span class='glyphicon glyphicon-trash'></span>
+                        </button>
+                        <button onclick="Entrega(@item.s.IdSolicitud)" data-toggle="tooltip" title="Reportar Entrega" class="btn btn-success btn-sm">
+                            <span class='glyphicon glyphicon-ok-sign'></span>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+        <script>
+            $(document).ready(function () {
+                $('#EntregasTable').DataTable({
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                    }
+                });
+
+                $("#NoSeguimientoRec").focus();
+
+
+                $('#NoSeguimientoRec').keyup(function () {
+                    $('#NoSeguimientoRecVal').html('');
+                });
+
+                ///////////////////////////////////////////////////////////////
+                $("#NoSeguimientoRec").change(function () {
+                    var NoSeguimientoRec = $('#NoSeguimientoRec').val();
+
+                    if (NoSeguimientoRec.length != 0) {
+
+                        $.ajax({
+                            url: '@Url.Action("AsignarEntrega", "Asignacion")',
+                            type: "POST",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            data: JSON.stringify({
+                                "id": NoSeguimientoRec,
+                                "IdGuia": @IdGuia
+                                }),
+                            success: function (data) {
+                                if (data.Result == true) {
+                                    window.location = '@Url.Action("Edit", "Asignacion", new { id = IdGuia })';
+                                    console.log(data.Mensaje);
+                                }
+                                else {
+                                    $("#ErrorMSG").html('');
+                                    $("#ErrorMSG").append(data.Mensaje);
+                                    $('#ConfirmModal').modal('hide');
+                                    $('#ModalErrorMSG').modal('show')
+                                }
+                            },
+                            error: function () {
+                                console.log("No pudo acceder al Metodo");
+                            }
+                        });
+
+                    }
+                    $('#NoSeguimientoRec').val('');
+                    $("#NoSeguimientoRec").focus();
+                });
+            });
+
+            function QuitarEntrega(id) {
+                $('#ConfirmTitle').html('');
+                var title = "Confirme para Quitar Este Envío"
+                $('#ConfirmTitle').append(title);
+                $('#ConfirmBody').html('');
+                var body = '<button onclick="ConfirmaQuitar(' + id + ')" type="button" class="btn btn-danger" id="modal-btn-si">Si</button>' +
+                           '<button onclick="CancelaEliminar()" type="button" class="btn btn-primary" id="modal-btn-no">No</button>';
+                $('#ConfirmBody').append(body);
+                $('#ConfirmModal').modal('show');
+            }
+
+            function ConfirmaQuitar(id) {
+                $.ajax({
+                    url: '@Url.Action("QuitarEntrega", "Asignacion")' + '/' + id,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.Result == true) {
+                            window.location = '@Url.Action("Edit", "Asignacion", new { id = IdGuia })';
+                            console.log(data.Mensaje);
+                        }
+                        else {
+                            $("#ErrorMSG").html('');
+                            $("#ErrorMSG").append(data.Mensaje);
+                            $('#ConfirmModal').modal('hide');
+                            $('#ModalErrorMSG').modal('show')
+                        }
+                    },
+                    error: function () {
+                        console.log("No pudo acceder al Metodo");
+                    }
+                });
+            }
+
+            function EditarReferencia(id) {
+                $("#OperTitle").html('');
+                $("#OperTitle").append('Informar Referencia Externa')
+                $("#OperBody").html('');
+                $("#OperBody").load('@Url.Action("Referencia", "Asignacion")' + '/' + id);
+                $('#OperModal').modal('show');
+            }
+
+            function CancelaEliminar() {
+                $('#ConfirmTitle').html('');
+                $('#ConfirmBody').html('');
+                $('#ConfirmModal').modal('hide');
+            }
+
+            function AsingaReferencias() {
+                $("#OperTitle").html('');
+                $("#OperTitle").append('Asirnar Envios con Referencia')
+                $("#OperBody").html('');
+                $("#OperBody").load('@Url.Action("AsignaReferencia", "Asignacion")' + '/' + @IdGuia );
+                $('#OperModal').modal('show');
+            }
+
+            function Entrega(id) {
+                $("#OperTitle").html('');
+                $("#OperTitle").append('Reportar Entrega de Envío')
+                $("#OperBody").html('');
+                $("#OperBody").load('@Url.Action("ReportaEntrega", "solicitud")' + '/' + id);
+                $('#OperModal').modal('show');
+            }
+
+            function Redirecciona() {
+                window.location = '@Url.Action("Edit", "Asignacion")' + '/' + @IdGuia;
+            }
+        </script>
+
+}

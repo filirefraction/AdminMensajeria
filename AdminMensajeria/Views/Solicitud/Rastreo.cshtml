@@ -1,0 +1,191 @@
+﻿@model AdminMensajeria.Models.OPE_SOLICITUD
+@using (AdminMensajeria.Models.MensajeriaEntities db = new AdminMensajeria.Models.MensajeriaEntities())
+{
+    var Solicitud = (from s in db.OPE_SOLICITUD where s.IdSolicitud == Model.IdSolicitud select s).FirstOrDefault();
+    var Producto = (from p in db.OPE_SOLICITUDPRODUCTO where p.IdSolicitud == Model.IdSolicitud select p).FirstOrDefault();
+    var Remitente = (from r in db.OPE_SOLICITUDPUNTOSENTREC where r.IdSolicitud == Model.IdSolicitud && r.TipoPunto == 1 select r).FirstOrDefault();
+    var Destinatario = (from d in db.OPE_SOLICITUDPUNTOSENTREC where d.IdSolicitud == Model.IdSolicitud && d.TipoPunto == 2 select d).FirstOrDefault();
+
+    <div class="form-horizontal">
+        <table class="ui celled table compact">
+            <thead>
+                <tr>
+                    <th># Envio</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Unidad</th>
+                    <th>Peso kg</th>
+                    <th>Solicitante</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@Solicitud.IdSolicitud</td>
+                    <td>@Producto.Descripcion </td>
+                    <td> @Producto.Cantidad </td>
+                    <td>
+                        @if (Producto.IdUnidad != null)
+                        {@Producto.GEN_UNIDAD.DescripcionUnidad}
+                    </td>
+                    <td>  @Producto.Peso </td>
+                    <td>  @Solicitud.GEN_USUARIO.NombreUsuario </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="ui celled table compact">
+            <thead>
+                <tr>
+                    <th id="enc1" class="col-md-3" style="background-color:#85C1E9;color:white">1.- Pendiente</th>
+                    <th id="enc2" class="col-md-3 hidden" style="background-color:#5DADE2;color:white">2.- Recibido en Mensajería</th>
+                    <th id="enc3" class="col-md-3 hidden" style="background-color:#3498DB;color:white">3.- En Ruta</th>
+                    <th id="enc4" class="col-md-3 hidden" style="background-color:#2E86C1;color:white">4.- Entregado</th>
+                </tr>
+            </thead>
+            @if (Solicitud.EstatusSolicitud != 5)
+            {
+                <tbody>
+                    <tr>
+                        <td id="bod1" style="word-break:break-word">
+                            <label>Fecha de Solicitud: </label> <p>@Solicitud.FechaCreacion</p>
+                            <label for="RemitenteDireccion">Dirección Remitente:</label>
+                            @if (Remitente.IdPuntoEntRec != null)
+                    {
+                                <p>
+                                    @Remitente.OPE_PUNTOENTREC.CallePunto, @Remitente.OPE_PUNTOENTREC.NoExtPunto, @Remitente.OPE_PUNTOENTREC.NoIntPunto,
+                                    @Remitente.OPE_PUNTOENTREC.GEN_COLONIA.Colonia, @Remitente.OPE_PUNTOENTREC.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal,
+                                    @Remitente.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.Municipio, @Remitente.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado,
+                                    @Remitente.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais, @Remitente.OPE_PUNTOENTREC.Referencia
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    @Remitente.CallePuntosEntRec, @Remitente.NoExtPuntosEntRec, @Remitente.NoIntPuntosEntRec,
+                                    @Remitente.GEN_COLONIA.Colonia, @Remitente.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal,
+                                    @Remitente.GEN_COLONIA.GEN_MUNICIPIO.Municipio, @Remitente.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado,
+                                    @Remitente.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais, @Remitente.ReferenciaPuntosEntRec
+                                </p>
+                            }
+                        </td>
+                        <td id="bod2" class="hidden" style="word-break:break-word">
+                            <p>
+                                Se recibió el paquete en oficina de Mensajeria el @Producto.FechaRecepcion
+                            </p>
+                            <label>Recibio: </label> <p>@Producto.Receptor</p>
+                        </td>
+                        <td id="bod3" class="hidden" style="word-break:break-word">
+                            <label>Fecha Estimada de Entrega: </label> <p>@Destinatario.FechaProgramada</p>
+                            <label>Información de Mensajero: </label>
+                            @if (Destinatario.IdGuia != null)
+                    {
+                                <p>
+                                    @Destinatario.OPE_GUIA.GEN_USUARIO.NombreUsuario
+                                </p>
+                            }
+                            <p><b># Seguimiento Ext</b><a href="http://www.dhl.com.mx/es/express/rastreo.html?AWB=@Destinatario.RefExtPuntosEntRec" target="_blank"> @Destinatario.RefExtPuntosEntRec</a> </p>
+                            <label for="RemitenteDireccion">Dirección de Entrega:</label>
+                            @if (Destinatario.IdPuntoEntRec != null)
+                    {
+                                <p>
+                                    @Destinatario.OPE_PUNTOENTREC.CallePunto, @Destinatario.OPE_PUNTOENTREC.NoExtPunto, @Destinatario.OPE_PUNTOENTREC.NoIntPunto,
+                                    @Destinatario.OPE_PUNTOENTREC.GEN_COLONIA.Colonia, @Destinatario.OPE_PUNTOENTREC.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal,
+                                    @Destinatario.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.Municipio, @Destinatario.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado,
+                                    @Destinatario.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais, @Destinatario.OPE_PUNTOENTREC.Referencia
+                                </p>
+                            }
+                            else
+                            {
+                                if (Destinatario.IdColonia != null)
+                                {
+                                    <p>
+                                        @Destinatario.CallePuntosEntRec, @Destinatario.NoExtPuntosEntRec, @Destinatario.NoIntPuntosEntRec,
+                                        @Destinatario.GEN_COLONIA.Colonia, @Destinatario.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal,
+                                        @Destinatario.GEN_COLONIA.GEN_MUNICIPIO.Municipio, @Destinatario.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado,
+                                        @Destinatario.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais, @Destinatario.ReferenciaPuntosEntRec
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p>
+                                        @Destinatario.CallePuntosEntRec, @Destinatario.NoExtPuntosEntRec, @Destinatario.NoIntPuntosEntRec,
+                                        @Destinatario.ColoniaPuntosEntRec, @Destinatario.CodigoPostalPuntosEntRec,
+                                        @Destinatario.MunicipioPuntosEntRec, @Destinatario.EstadoPuntosEntRec,
+                                        @Destinatario.PaisPuntosEntRec, @Destinatario.ReferenciaPuntosEntRec
+                                    </p>
+                                }
+
+                            }
+                        </td>
+
+                        @if (Destinatario.Problema == true)
+                        {
+                            <td id="bod4" class="hidden" style="word-break:break-word">
+                                <label style="color:red;">Problema Reportado en la Entrega:</label>
+                                <p style="color:red"> @Destinatario.ObsProblema</p>
+                            </td>
+                        }
+                        else
+                        {
+                            <td id="bod4" class="hidden" style="word-break:break-word">
+                                <label>Fecha Real de Entrega: </label> <p>@Destinatario.FechaReal</p>
+                                <label>Receptor: </label>
+                                <p>
+                                    @Destinatario.NombrePuntosEntRec
+                                </p>
+                                <label>Comprobantes:</label>
+                                <br />
+                                <a href="#" data-toggle="tooltip" title="Ver Firma" class="btn btn-default btn-sm">
+                                    <span class='glyphicon glyphicon-pencil'></span>
+                                </a>
+                                <a href="#" data-toggle="tooltip" title="Ver foto" class="btn btn-default btn-sm">
+                                    <span class='glyphicon glyphicon-camera'></span>
+                                </a>
+                                <a href="#" data-toggle="tooltip" title="Ver Ubicación" class="btn btn-default btn-sm">
+                                    <span class='glyphicon glyphicon-map-marker'></span>
+                                </a>
+                            </td>
+                        }
+                    </tr>
+                </tbody>
+            }
+            else
+            {
+                <tbody>
+                    <tr>
+                        <td style="background-color:red;color:white;text-align:center" colspan="4">Cancelado</td>
+                    </tr>
+                </tbody>
+            }
+        </table>
+
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            switch (@Model.EstatusSolicitud) {
+                case 2:
+                    $('#enc2').removeClass('hidden');
+                    $('#bod2').removeClass('hidden');
+                    break;
+                case 3:
+                    $('#enc2').removeClass('hidden');
+                    $('#bod2').removeClass('hidden');
+                    $('#enc3').removeClass('hidden');
+                    $('#bod3').removeClass('hidden');
+                    break;
+                case 4:
+                    $('#enc2').removeClass('hidden');
+                    $('#bod2').removeClass('hidden');
+                    $('#enc3').removeClass('hidden');
+                    $('#bod3').removeClass('hidden');
+                    $('#enc4').removeClass('hidden');
+                    $('#bod4').removeClass('hidden');
+                    break;
+                default:
+
+            }
+        });
+    </script>
+
+}

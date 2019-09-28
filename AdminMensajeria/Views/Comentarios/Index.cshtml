@@ -1,0 +1,144 @@
+﻿@model IEnumerable<AdminMensajeria.Models.GEN_COMENSUGER>
+
+@{
+    ViewBag.Title = "Comentarios y Sugerencias";
+}
+
+<h2>Comentarios y Sugerencias</h2>
+
+<div class="form-horizontal">
+    <div class="form-group row">
+        <div class="col-md-2">
+            <button onclick="NuevoComentario()" data-toggle="tooltip" title="Nuevo País" type="button" class="btn btn-default btn-sm ">
+                <span class="glyphicon glyphicon-plus"></span> Nuevo
+            </button>
+        </div>
+        <div class="col-md-9">&nbsp;</div>
+        <div class="col-md-1">
+                <a href="@Url.Action("Estandar", "Home")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Menu">
+                    <span class="glyphicon glyphicon-home"></span> Volver
+                </a>
+        </div>
+    </div>
+
+    <table id="ComentarioTable" class="ui celled table compact">
+        <thead>
+            <tr>
+                <th class="col-md-1">#</th>
+                <th class="col-md-2">@Html.DisplayNameFor(model => model.Asunto) </th>
+                <th class="col-md-5">Comentario</th>
+                <th class="col-md-1">Estatus </th>
+                <th class="col-md-1">Usuario</th>
+                <th class="col-md-2"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdComenSuger)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Asunto)
+                    </td>
+                    <td style="word-break:break-word">
+                        @Html.DisplayFor(modelItem => item.Cuerpo)
+                    </td>
+                    <td>
+                        @if (item.EstatusComenSuger == false)
+                        {
+                            <p>Respuesta Pendiente</p>
+                        }
+                        else
+                        {
+                            <p>Respondido</p>
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GEN_USUARIO.NombreUsuario)
+                    </td>
+                    <td>
+                        <button onclick="EditarComentario(@item.IdComenSuger)" data-toggle="tooltip" title="Ver Respuesta de Comentario" class="btn btn-default btn-sm">
+                            <span class='glyphicon glyphicon-edit'></span>
+                        </button>
+                        <button onclick="EliminarComentario(@item.IdComenSuger)" data-toggle="tooltip" title="Eliminar Comentario" class="btn btn-default btn-sm">
+                            <span class='glyphicon glyphicon-trash'></span>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+
+<script>
+            $(document).ready(function () {
+                $('#ComentarioTable').DataTable({
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                    },
+                    "order": [[0, "desc"]]
+                });
+            });
+
+            function NuevoComentario() {
+                $("#OperTitle").html('');
+                $("#OperTitle").append('Nuevo Comentario o Sugerencia')
+                $("#OperBody").html('');
+                $("#OperBody").load('@Url.Action("Create", "Comentarios")');
+                $('#OperModal').modal('show');
+            }
+
+            function EditarComentario(id) {
+                $("#OperTitle").html('');
+                $("#OperTitle").append('Editar Comentario o Sugerencia')
+                $("#OperBody").html('');
+                $("#OperBody").load('@Url.Action("Edit", "Comentarios")' + '/' + id);
+                $('#OperModal').modal('show');
+            }
+
+            function EliminarComentario(id) {
+                $('#ConfirmTitle').html('');
+                var title = "Confirme para eliminar Comentario o Sugerencia"
+                $('#ConfirmTitle').append(title);
+                $('#ConfirmBody').html('');
+                var body = '<button onclick="ConfirmaEliminarComentario(' + id + ')" type="button" class="btn btn-danger" id="modal-btn-si">Si</button>' +
+                           '<button onclick="CancelaEliminar()" type="button" class="btn btn-primary" id="modal-btn-no">No</button>';
+                $('#ConfirmBody').append(body);
+                $('#ConfirmModal').modal('show');
+
+            }
+
+            function ConfirmaEliminarComentario(id) {
+                $.ajax({
+                    url: '@Url.Action("DeleteComentario", "Comentarios")' + '/' + id,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (Data) {
+                        if (Data.Result == true) {
+                            window.location = '@Url.Action("Index", "Comentarios")';
+                        }
+                        else {
+                            $("#ErrorMSG").html('');
+                            $("#ErrorMSG").append(Data.Mensaje);
+                            $('#ConfirmModal').modal('hide');
+                            $('#ModalErrorMSG').modal('show')
+                        }
+                    },
+                    error: function (data) {
+                        console.log("ocurrio un error al Eliminar");
+                    }
+                });
+            }
+
+            function CancelaEliminar() {
+                $('#ConfirmTitle').html('');
+                $('#ConfirmBody').html('');
+                $('#ConfirmModal').modal('hide');
+            }
+
+</script>

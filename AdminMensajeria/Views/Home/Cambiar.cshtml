@@ -1,0 +1,123 @@
+﻿
+<div class="form-horizontal">
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                <input type="password" id="ps1" class="form-control input-sm"  placeholder="Indique Contraseña" maxlength="100"/>
+                <label for="ps1">Constraseña (*)</label>
+            </div>
+            <span class="AlertaDanger" id="ps1Val"></span>
+        </div>
+        <div class="col-md-6">
+            <div class="field">
+                <input type="password" id="ps2" class="form-control input-sm" placeholder="Confirme Contraseña" maxlength="100" />
+                <label for="ps2">Confirme Constraseña (*)</label>
+            </div>
+            <span class="AlertaDanger" id="ps2Val"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-2">
+            <button id="ValidaPass" type="button" class="btn btn-primary btn-sm ">
+                <span class="glyphicon glyphicon-floppy-disk"></span> Guardar
+            </button>
+        </div>
+        <div class="col-md-7">
+            <span class="AlertaDanger" id="MensajeError"></span>
+        </div>
+        <div class="col-md-2">
+            <button onclick="CerrarModal()" class="btn btn-danger btn-sm">
+                <span class="glyphicon glyphicon-floppy-remove"></span> Cancelar
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#ps1").keyup(function () {
+            $("#ps1Val").html('');
+        });
+
+        $("#ps2").keyup(function () {
+            $("#ps2Val").html('');
+        });
+
+        ///////////////////////////////////////////////////////////////
+        $("#ValidaPass").click(function () {
+            var IdUsuario = @ViewBag.IdUsuario;
+            var ps1 = $("#ps1").val();
+            var ps2 = $("#ps2").val();
+
+
+            ///////////////////////////////////////////////////////////
+            if ($("#ps1").val().length === 0) {
+                $("#ps1Val").html('');
+                $("#ps1Val").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#ps1").val().length > 100) {
+                $("#ps1Val").html('');
+                $("#ps1Val").append('Este Campo es puede contener maximo 100 caracteres');
+            }
+
+            if ($("#ps2").val().length === 0) {
+                $("#ps2Val").html('');
+                $("#ps2Val").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#ps2").val().length > 100) {
+                $("#ps2Val").html('');
+                $("#ps2Val").append('Este Campo es puede contener maximo 100 caracteres');
+            }
+
+            if ($("#ps1").val() != $("#ps2").val()) {
+                $("#ps2Val").html('');
+                $("#ps2Val").append('Las contraseñas no coindicen');
+            }
+
+            //Primero Valida que los campos que siempre van a ser obligatorios//
+            if ($("#ps1").val().length != 0 &&
+                $("#ps1").val().length <= 100 &&
+                $("#ps2").val().length != 0 &&
+                $("#ps2").val().length <= 100 &&
+                $("#ps1").val() == $("#ps2").val()) {
+
+                //inserta sin validar la fecha de egreso//
+                $.ajax({
+                    url: '@Url.Action("EditPass", "Home")',
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "idusuario": IdUsuario,
+                        "ps1": ps1
+                    }),
+                    success: function (data) {
+                        if (data.Result == true) {
+                            window.location = '@Url.Action("Estandar", "Home")';
+                        }
+                        else {
+                            $("#MensajeError").html('');
+                            $("#MensajeError").append(data.Mensaje);
+                        }
+                    },
+                    error: function () {
+                        console.log("No pudo acceder al Metodo");
+                    }
+                });
+            }
+            else {
+                console.log("No se cumplio la validación de datos");
+            }
+        });
+    });
+
+    function CerrarModal() {
+        $("#OperTitle").html('');
+        $("#OperBody").html('');
+        $('#OperModal').modal('hide');
+    }
+</script>

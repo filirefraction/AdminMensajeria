@@ -1,0 +1,79 @@
+﻿@model IEnumerable<AdminMensajeria.Models.OPE_CLIENTPROVEE>
+
+@{
+    ViewBag.Title = "Clientes";
+}
+
+<h2>Clientes / Proveedores</h2>
+
+<div class="form-horizontal">
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            @Html.DropDownList("ListCategoria", (IEnumerable<SelectListItem>)ViewBag.ListCategoria, "Elige Una Catgoria", htmlAttributes: new { @class = "form-control input-sm" })
+            <span class="AlertaDanger" id="ListCategoriaVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-2">
+            <a id="RegistrarCliente" data-toggle="tooltip" title="Nuevo Estado" class="btn btn-default btn-sm ">
+                <span class="glyphicon glyphicon-plus"></span> Nuevo
+            </a>
+        </div>
+        <div class="col-md-9">&nbsp;</div>
+        <div class="col-md-1">
+            <a href="@Url.Action("Estandar", "Home")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Menu">
+                <span class="glyphicon glyphicon-home"></span> Volver
+            </a>
+        </div>
+    </div>
+
+
+    <div id="VistaClientes"></div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ListCategoria').selectpicker({
+            liveSearch: true
+        });
+
+        $("button").addClass("input-sm").css({ "font-size": "12px" });
+
+        $('#ListCategoria').change(function () {
+            if ($('#ListCategoria').val() != '') {
+                var IdCategoria = $('#ListCategoria').val();
+                $("#ListCategoriaVal").html('');
+                $("#VistaClientes").html('');
+                $("#VistaClientes").load('@Url.Action("Clientes", "Cliente")' + '/' + IdCategoria);
+            }
+            else {
+                $("#ListCategoriaVal").html('');
+                $("#ListCategoriaVal").append('Debe elegir un categoría')
+            }
+        });
+
+        $("#RegistrarCliente").click(function () {
+            var IdCategoria = $("#ListCategoria").val();
+
+            if ($('#ListCategoria').val() != '') {
+                NuevoCliente(IdCategoria);
+            }
+            else {
+                $("#ListCategoriaVal").html('');
+                $("#ListCategoriaVal").append('Debe elegir un categoría')
+            }
+        });
+    });
+
+    function NuevoCliente(id) {
+        $("#OperTitle").html('');
+        $("#OperTitle").append('Nuevo Cliente')
+        $("#OperBody").html('');
+        $("#OperBody").load('@Url.Action("Create", "Cliente")' + '/' + id);
+        $('#OperModal').modal('show');
+    }
+
+</script>

@@ -1,0 +1,167 @@
+﻿@model IEnumerable<AdminMensajeria.Models.GEN_USUARIO>
+
+@{
+    ViewBag.Title = "Usuarios";
+}
+
+<h2>Usuarios</h2>
+
+<div class="form-horizontal">
+    <div class="form-group">
+        <div class="col-md-1">
+            <button onclick="NuevoUsuario()" data-toggle="tooltip" title="Nuevo Usuario" class="btn btn-default btn-sm">
+                <span class="glyphicon glyphicon-plus"></span> Nuevo
+            </button>
+        </div>
+        <div class="col-md-8">&nbsp;</div>
+        <div class="col-md-offset-2 col-md-1">
+                <a href="@Url.Action("Configuracion", "Home")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Menu">
+                    <span class="glyphicon glyphicon-home"></span> Volver
+                </a>
+        </div>
+    </div>
+
+    <table id="UsuarioTable" class="ui celled table compact">
+        <thead>
+            <tr>
+                <th>
+                    #
+                </th>
+                <th>
+                    Tipo de Esuario
+                </th>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                    Correo
+                </th>
+                <th>
+                    Estatus
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.OPE_PUNTOENTREC.DescripcionPunto)
+                </th>
+                <th class="col-md-1"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdUsuario)
+                </td>
+                <td>
+                    @switch (item.TipoUsuario)
+                        {
+                            case 1: <p>Administrador</p>; break;
+                            case 2: <p>Solicitante</p>; break;
+                            case 3: <p>Ejecutivo</p>; break;
+                            case 4: <p>Mensajero</p>; break;
+                            default: <p>no Identificado</p>;
+                                break;
+                        }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NombreUsuario)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.CorreoUsuario)
+                </td>
+                <td>
+                    @if (item.EstatusUsuario == true)
+                        {
+                        <p>Activo</p>
+                        }
+                        else
+                        {
+                        <p>Inactivo</p>
+                        }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OPE_PUNTOENTREC.DescripcionPunto)
+                </td>
+                <td>
+                    <button onclick="EditarUsuario(@item.IdUsuario)" data-toggle="tooltip" title="Editar Usuario" class="btn btn-default btn-sm">
+                        <span class='glyphicon glyphicon-edit'></span>
+                    </button>
+                    <button onclick="EliminarUsuario(@item.IdUsuario)" data-toggle="tooltip" title="Eliminar Usuario" class="btn btn-default btn-sm">
+                        <span class='glyphicon glyphicon-trash'></span>
+                    </button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#UsuarioTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            }
+        });
+    });
+
+    function NuevoUsuario() {
+        $("#OperTitle").html('');
+        $("#OperTitle").append('Nuevo Usuario')
+        $("#OperBody").html('');
+        $("#OperBody").load('@Url.Action("Create", "Usuario")');
+        $('#OperModal').modal('show');
+    }
+
+    function EditarUsuario(id) {
+        $("#OperTitle").html('');
+        $("#OperTitle").append('Editar Usuario')
+        $("#OperBody").html('');
+        $("#OperBody").load('@Url.Action("Edit", "Usuario")' + '/' + id);
+        $('#OperModal').modal('show');
+    }
+
+    function EliminarUsuario(id) {
+        $('#ConfirmTitle').html('');
+        var title = "Confirme para eliminar Usuario"
+        $('#ConfirmTitle').append(title);
+        $('#ConfirmBody').html('');
+        var body = '<button onclick="ConfirmaEliminarUsuario(' + id + ')" type="button" class="btn btn-danger" id="modal-btn-si">Si</button>' +
+                   '<button onclick="CancelaEliminar()" type="button" class="btn btn-primary" id="modal-btn-no">No</button>';
+        $('#ConfirmBody').append(body);
+        $('#ConfirmModal').modal('show');
+
+    }
+
+    function ConfirmaEliminarUsuario(id) {
+        $.ajax({
+            url: '@Url.Action("DeleteUsuario", "Usuario")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                if (Data.Result == true) {
+                    window.location = '@Url.Action("Index", "Usuario")';
+                }
+                else {
+                    $("#ErrorMSG").html('');
+                    $("#ErrorMSG").append(Data.Mensaje);
+                    $('#ConfirmModal').modal('hide');
+                    $('#ModalErrorMSG').modal('show')
+                }
+            },
+            error: function (data) {
+                console.log("ocurrio un error al Eliminar");
+            }
+        });
+    }
+
+    function CancelaEliminar() {
+        $('#ConfirmTitle').html('');
+        $('#ConfirmBody').html('');
+        $('#ConfirmModal').modal('hide');
+    }
+
+</script>
+

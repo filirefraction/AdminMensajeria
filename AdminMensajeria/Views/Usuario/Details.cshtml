@@ -1,0 +1,82 @@
+﻿@model AdminMensajeria.Models.GEN_USUARIO
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>GEN_USUARIO</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoUsuario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TipoUsuario)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NombreUsuario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NombreUsuario)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Usuario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Usuario)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Contrasena)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Contrasena)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CorreoUsuario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CorreoUsuario)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CambiarContrasena)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CambiarContrasena)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EstatusUsuario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EstatusUsuario)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OPE_PUNTOENTREC.DescripcionPunto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OPE_PUNTOENTREC.DescripcionPunto)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.IdUsuario }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

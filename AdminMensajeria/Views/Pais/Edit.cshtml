@@ -1,0 +1,95 @@
+﻿@model AdminMensajeria.Models.GEN_PAIS
+
+@{
+    ViewBag.Title = "País";
+}
+
+<div class="form-horizontal">
+  
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.Pais, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "México", @Maxlength = 50 } })
+                <label for="Pais">País (*)</label>
+            </div>
+            <span class="AlertaDanger" id="PaisVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-2">
+            <button id="ValidaPais" type="button" class="btn btn-primary btn-sm ">
+                <span class="glyphicon glyphicon-floppy-disk"></span> Guardar
+            </button>
+        </div>
+        <div class="col-md-7">
+            <span class="AlertaDanger" id="MensajeError"></span>
+        </div>
+        <div id="VolverCliente" class="col-md-2">
+            <a href="@Url.Action("Index","Pais")" class="btn btn-danger btn-sm">
+                <span class="glyphicon glyphicon-floppy-remove"></span> Cancelar
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#Pais").keyup(function () {
+            $("#PaisVal").html('');
+        });
+
+        ///////////////////////////////////////////////////////////////
+        $("#ValidaPais").click(function () {
+            var IdPais  =  @ViewBag.idpais;
+            var Pais    =  $("#Pais").val();
+
+            ///////////////////////////////////////////////////////////
+            if ($("#Pais").val().length === 0) {
+                $("#PaisVal").html('');
+                $("#PaisVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#Pais").val().length > 50) {
+                $("#PaisVal").html('');
+                $("#PaisVal").append('Este Campo es puede contener maximo 50 caracteres');
+            }
+
+            //Primero Valida que los campos que siempre van a ser obligatorios//
+            if ($("#Pais").val().length != 0 &&
+                $("#Pais").val().length <= 50) {
+
+                console.log("Pais: " + Pais);
+
+                //inserta sin validar la fecha de egreso//
+                $.ajax({
+                    url: '@Url.Action("EditPais", "Pais")',
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "IdPais": IdPais,
+                        "Pais": Pais
+                    }),
+                    success: function (data) {
+                        if (data.Result == true) {
+                            window.location = '@Url.Action("Index", "Pais")';
+                        }
+                        else {
+                            $("#MensajeError").html('');
+                            $("#MensajeError").append(data.Mensaje);
+                        }
+                    },
+                    error: function () {
+                        console.log("No pudo acceder al Metodo");
+                    }
+                });
+            }
+            else {
+                console.log("No se cumplio la validación de datos");
+            }
+        });
+    });
+
+</script>

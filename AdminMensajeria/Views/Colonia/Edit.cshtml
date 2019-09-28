@@ -1,0 +1,354 @@
+﻿@model AdminMensajeria.Models.GEN_COLONIA
+
+@{
+    ViewBag.Title = "Colonia";
+}
+
+<div class="form-horizontal">
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                @Html.DropDownList("Paises", (IEnumerable<SelectListItem>)ViewBag.ListPais, "Elige Un País", htmlAttributes: new { @class = "form-control input-sm" })
+                <label for="Paises">País (*)</label>
+            </div>
+            <span class="AlertaDanger" id="PaisesVal"></span>
+        </div>
+        <div class="col-md-6">
+            <div class="field">
+                @Html.DropDownList("Estados", (IEnumerable<SelectListItem>)ViewBag.ListEstado, "Elige un Estado", htmlAttributes: new { @class = "form-control" })
+                <label for="Estados">Estado (*)</label>
+            </div>
+            <span class="AlertaDanger" id="EstadosVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                @Html.DropDownList("Municipios", (IEnumerable<SelectListItem>)ViewBag.ListMunicipio, "Elige un Municpio", htmlAttributes: new { @class = "form-control" })
+                <label for="Municipios">Municipio (*)</label>
+            </div>
+            <span class="AlertaDanger" id="MunicipiosVal"></span>
+        </div>
+        <div class="col-md-6">
+            <div class="field">
+                <input type="text" name="ca" id="ca" class="form-control input-sm" value="@ViewBag.colonia" maxlength="60" placeholder="San Juan" />
+                <label for="ca">Colonia (*)</label>
+            </div>
+            <span class="AlertaDanger" id="caVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                <input type="text" name="cl" id="cl" value="@ViewBag.codigopostal" class="form-control input-sm" maxlength="20" placeholder="09300" />
+                <label for="cl">Código Postal (*)</label>
+            </div>
+            <span class="AlertaDanger" id="clVal"></span>
+        </div>
+        <div class="col-md-6">
+            <input type="text" name="IdCodigoP" id="IdCodigoP" value="@ViewBag.idcodigop" style="display:none" class="form-control input-sm" />
+            <span id="VerificarCPVal"></span>
+            <button id="btnRegistraCP" onclick="RegistraCP()" style="display:none" data-toggle="tooltip" title="Registrar Código Postal" class="btn btn-primary btn-sm"> Registrar C.P. </button>
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <div class="col-md-2">
+            <button id="ValidaColonia" type="button" class="btn btn-primary btn-sm ">
+                <span class="glyphicon glyphicon-floppy-disk"></span> Crear
+            </button>
+        </div>
+        <div class="col-md-7">
+            <span class="AlertaDanger" id="MensajeError"></span>
+        </div>
+        <div class="col-md-2">
+            <button onclick="CerrarModal()" class="btn btn-danger btn-sm">
+                <span class="glyphicon glyphicon-floppy-remove"></span> Cancelar
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#Municipios option[value=" + @ViewBag.municipio + "]").attr("selected", true);
+        $("#Estados option[value=" + @ViewBag.estado + "]").attr("selected", true);
+        $("#Paises option[value=" + @ViewBag.pais + "]").attr("selected", true);
+
+        $('#Municipios').selectpicker({
+            liveSearch: true
+        });
+
+        $('#Estados').selectpicker({
+            liveSearch: true
+        });
+
+        $('#Paises').selectpicker({
+            liveSearch: true
+        });
+
+        $("button").addClass("input-sm").css({ "font-size": "12px" });
+
+        $('#Paises').change(function () {
+            if ($('#Paises').val() != '') {
+                var IdPais = $('#Paises').val();
+                $("#PaisesVal").html('');
+                ListarEstados(IdPais);
+
+            }
+            else {
+                $("#PaisesVal").html('');
+                $("#PaisesVal").append('Debe elegir un país para ver los estados')
+            }
+        });
+
+    });
+
+    $('#Estados').change(function () {
+        if ($('#Estados').val() != '') {
+            var IdEstado = $('#Estados').val();
+            $("#EstadosVal").html('');
+            ListarMunicipios(IdEstado);
+        }
+        else {
+            $("#EstadosVal").html('');
+            $("#EstadosVal").append('Debe elegir un estado para ver los municipios');
+        }
+    });
+
+    $('#Municipios').change(function () {
+        if ($('#Municipios').val() != '') {
+            $("#MunicipiosVal").html('');
+        }
+        else {
+            $("#MunicipiosVal").html('');
+            $("#MunicipiosVal").append('Debe elegir un municipio');
+        }
+    });
+
+
+        $("#ca").keyup(function () {
+            $("#caVal").html('');
+        });
+
+        $("#cl").keyup(function () {
+            $("#clVal").html('');
+            $("#IdCodigoP").html('');
+            $('#btnRegistraCP').hide();
+        });
+
+        //Metodo para validar y registrar código
+        $("#cl").blur(function () {
+            if ($('#cl').val() != '') {
+                var codigo = $('#cl').val();
+                $('#clVal').html('');
+
+                //Verifica si Existe un Código Postal
+                $.ajax({
+                    url: '@Url.Action("ValidarCodigoPostal", "Colonia")' + '/' + codigo,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.Result == true) {
+                            $("#IdCodigoP").val(data.Valor);
+                            $("#VerificarCPVal").html('');
+                            $("#VerificarCPVal").removeClass('AlertaDanger');
+                            $("#VerificarCPVal").addClass('AlertaSuccess');
+                            $("#VerificarCPVal").append(data.Mensaje);
+                            $('#btnRegistraCP').hide();
+                        }
+                        else {
+                            $("#IdCodigoP").val('');
+                            $("#VerificarCPVal").html('');
+                            $("#VerificarCPVal").removeClass('AlertaSuccess');
+                            $("#VerificarCPVal").addClass('AlertaDanger');
+                            var mensaje = 'Este código no existe en la base de datos, verifique que sea correcto o registre el código postal'
+                            $("#VerificarCPVal").append(mensaje);
+                            $('#btnRegistraCP').show();
+                        }
+                    },
+                    error: function () {
+                        console.log("No pudo acceder al Metodo");
+                    }
+                });
+            }
+            else {
+                $('#clVal').html('');
+                $('#clVal').append('Este Campo es Obligatorio');
+                $("#IdCodigoP").val('');
+                $("#VerificarCPVal").html('');
+                $('#btnRegistraCP').hide();
+            }
+        });
+
+
+        ///////////////////////////////////////////////////////////////
+        $("#ValidaColonia").click(function () {
+            var IdPais = $('#Paises').val();
+            var IdEstado = $('#Estados').val();
+            var IdMunicipio = $("#Municipios").val();
+            var Colonia = $("#ca").val();
+            var IdCodigoP = $("#IdCodigoP").val();
+
+            ///////////////////////////////////////////////////////////
+            if ($("#Paises").val() == '') {
+                $("#PaisesVal").html('');
+                $("#PaisesVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#Estados").val() == '') {
+                $("#EstadosVal").html('');
+                $("#EstadosVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#Municipios").val() == '') {
+                $("#EstadosVal").html('');
+                $("#EstadosVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#ca").val().length > 60) {
+                $("#caVal").html('');
+                $("#caVal").append('Este Campo es puede contener maximo 60 caracteres');
+            }
+
+            if ($("#ca").val().length == 0) {
+                $("#caVal").html('');
+                $("#caVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#IdCodigoP").val() == '') {
+                $("#clVal").html('');
+                $("#clVal").append('Debe Elegir un Código Postal Valido');
+            }
+
+            //Registrar la colonia
+            if ($("#Paises").val() != '' && $("#Estados").val() != '' &&
+                $("#Municipios").val() != '' && $("#ca").val().length <= 60 &&
+                $("#ca").val().length != 0 && $("#IdCodigoP").val() != '') {
+
+                console.log("Colonia: " + Colonia);
+                console.log("Municipio" + IdMunicipio);
+                console.log("IdCodigoPostal" + IdCodigoP);
+
+                $.ajax({
+                    url: '@Url.Action("EditColonia", "Colonia")',
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "IdColonia": @ViewBag.idcolonia,
+                        "IdCodigoP": IdCodigoP,
+                        "IdMunicipio": IdMunicipio,
+                        "Colonia": Colonia
+                    }),
+                    success: function (data) {
+                        if (data.Result == true) {
+                            $("#VistaColonias").html('');
+                            $("#VistaColonias").load('@Url.Action("Colonias", "Colonia")' + '/' + IdMunicipio);
+                            CerrarModal();
+                        }
+                        else {
+                            $("#MensajeError").html('');
+                            $("#MensajeError").append(data.Mensaje);
+                        }
+                    },
+                    error: function () {
+                        console.log("No pudo acceder al Metodo");
+                    }
+                });
+            }
+            else {
+                console.log("No se cumplio la validación de datos");
+            }
+        });
+
+
+
+    function ListarEstados(id) {
+        $.ajax({
+            url: '@Url.Action("ListaEstados", "Colonia")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                $("#Estados").html('');
+                $("#Estados").append('<option value ="">Elige un Estado</option>');
+                $.each(Data,
+                    function (index, propie) {
+                        var content = '<option value="' + propie.idestado + '">' + propie.estado + '</option>';
+                        $("#Estados").append(content);
+                    });
+                $('#Estados').selectpicker('refresh');
+            },
+            error: function () {
+                console.log("No pudo acceder al metodo");
+            }
+        });
+    }
+
+    function ListarMunicipios(id) {
+        $.ajax({
+            url: '@Url.Action("ListaMunicipios", "Colonia")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                $("#Municipios").html('');
+                $("#Municipios").append('<option value =""> 2.- Elige un Municipio</option>');
+                $.each(Data,
+                    function (index, propie) {
+                        var content = '<option value="' + propie.idmunicipio + '">' + propie.municipio + '</option>';
+                        $("#Municipios").append(content);
+                    });
+                $('#Municipios').selectpicker('refresh');
+            },
+            error: function () {
+                console.log("No pudo acceder al metodo");
+            }
+        });
+    }
+
+    function RegistraCP() {
+        var codigo = $('#cl').val();
+        //Registrar si Existe un Código Postal
+        $.ajax({
+            url: '@Url.Action("RegistrarCodigoPostal", "Colonia")' + '/' + codigo,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.Result == true) {
+                    $("#IdCodigoP").val(data.Valor);
+                    $("#VerificarCPVal").html('');
+                    $("#VerificarCPVal").removeClass('AlertaDanger');
+                    $("#VerificarCPVal").addClass('AlertaSuccess');
+                    $("#VerificarCPVal").append(data.Mensaje);
+                    $('#btnRegistraCP').hide();
+                }
+                else {
+                    $("#IdCodigoP").val('');
+                    $("#VerificarCPVal").html('');
+                    $("#VerificarCPVal").removeClass('AlertaSuccess');
+                    $("#VerificarCPVal").addClass('AlertaDanger');
+                    var mensaje = 'No se pudo registrar código postal intente con otro'
+                    $("#VerificarCPVal").append(mensaje);
+                }
+            },
+            error: function () {
+                console.log("No pudo acceder al Metodo");
+            }
+        });
+    }
+
+    function CerrarModal() {
+        $("#OperTitle").html('');
+        $("#OperBody").html('');
+        $('#OperModal').modal('hide');
+    }
+</script>

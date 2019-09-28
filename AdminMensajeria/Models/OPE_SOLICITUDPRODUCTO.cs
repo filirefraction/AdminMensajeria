@@ -16,10 +16,13 @@ namespace AdminMensajeria.Models
     {
         public int IdSolicitudProducto { get; set; }
         public int IdSolicitud { get; set; }
-        public int IdUnidad { get; set; }
+        public Nullable<int> IdUnidad { get; set; }
         public string Descripcion { get; set; }
-        public decimal Cantidad { get; set; }
+        public Nullable<decimal> Cantidad { get; set; }
         public Nullable<decimal> Peso { get; set; }
+        public bool Recibido { get; set; }
+        public string Receptor { get; set; }
+        public Nullable<System.DateTime> FechaRecepcion { get; set; }
         public string ObsProducto { get; set; }
     
         public virtual GEN_UNIDAD GEN_UNIDAD { get; set; }

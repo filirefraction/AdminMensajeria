@@ -1,0 +1,120 @@
+﻿@model IEnumerable<AdminMensajeria.Models.GEN_PAIS>
+
+@{
+    ViewBag.Title = "Países";
+}
+
+<h2>Paises</h2>
+
+<div class="form-horizontal">
+    <div class="form-group row">
+        <div class="col-md-1">
+            <button onclick="NuevoPais()" data-toggle="tooltip" title="Nuevo País" type="button" class="btn btn-default btn-sm ">
+                <span class="glyphicon glyphicon-plus"></span> Nuevo
+            </button>
+        </div>
+        <div class="col-md-8">&nbsp;</div>
+        <div class="col-md-offset-2 col-md-1">
+            <a href="@Url.Action("Configuracion", "Home")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Menu">
+                <span class="glyphicon glyphicon-home"></span> Volver
+            </a>
+        </div>
+    </div>
+
+        <table id="PaisTable" class="ui celled table compact">
+            <thead>
+                <tr>
+                    <th class="col-md-10">
+                        @Html.Label("País")
+                    </th>
+                    <th class="col-md-2"></th>
+                </tr>
+            </thead>
+            <tbody id="listPais">
+                @foreach (var item in Model)
+    {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Pais)
+                </td>
+                <td>
+                    <button onclick="EditarPais(@item.IdPais)" data-toggle="tooltip" title="Editar País" class="btn btn-default btn-sm">
+                        <span class='glyphicon glyphicon-edit'></span>
+                    </button>
+                    <button onclick="EliminarPais(@item.IdPais)" data-toggle="tooltip" title="Eliminar País" class="btn btn-default btn-sm">
+                        <span class='glyphicon glyphicon-trash'></span>
+                    </button>
+                </td>
+            </tr>
+    }
+            </tbody>
+        </table>
+</div>
+
+        <script>
+            $(document).ready(function () {
+                $('#PaisTable').DataTable({
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                    }
+                });
+            });
+
+            function NuevoPais() {
+                $("#OperTitle").html('');
+                $("#OperTitle").append('Nuevo País')
+                $("#OperBody").html('');
+                $("#OperBody").load('@Url.Action("Create", "Pais")');
+                $('#OperModal').modal('show');
+            }
+
+            function EditarPais(id) {
+                $("#OperTitle").html('');
+                $("#OperTitle").append('Editar País')
+                $("#OperBody").html('');
+                $("#OperBody").load('@Url.Action("Edit", "Pais")' + '/' + id);
+                $('#OperModal').modal('show');
+            }
+
+            function EliminarPais(id) {
+                $('#ConfirmTitle').html('');
+                var title = "Confirme para eliminar País"
+                $('#ConfirmTitle').append(title);
+                $('#ConfirmBody').html('');
+                var body = '<button onclick="ConfirmaEliminarPais(' + id + ')" type="button" class="btn btn-danger" id="modal-btn-si">Si</button>' +
+                           '<button onclick="CancelaEliminar()" type="button" class="btn btn-primary" id="modal-btn-no">No</button>';
+                $('#ConfirmBody').append(body);
+                $('#ConfirmModal').modal('show');
+
+            }
+
+            function ConfirmaEliminarPais(id) {
+                $.ajax({
+                    url: '@Url.Action("DeletePais", "Pais")' + '/' + id,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (Data) {
+                        if (Data.Result == true) {
+                            window.location = '@Url.Action("Index", "Pais")';
+                        }
+                        else {
+                            $("#ErrorMSG").html('');
+                            $("#ErrorMSG").append(Data.Mensaje);
+                            $('#ConfirmModal').modal('hide');
+                            $('#ModalErrorMSG').modal('show')
+                        }
+                    },
+                    error: function (data) {
+                        console.log("ocurrio un error al Eliminar");
+                    }
+                });
+            }
+
+            function CancelaEliminar() {
+                $('#ConfirmTitle').html('');
+                $('#ConfirmBody').html('');
+                $('#ConfirmModal').modal('hide');
+            }
+
+        </script>

@@ -1,0 +1,120 @@
+﻿@model AdminMensajeria.Models.OPE_PUNTOENTREC
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>OPE_PUNTOENTREC</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DescripcionPunto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DescripcionPunto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoPunto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TipoPunto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ContactoPunto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ContactoPunto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HoraDePunto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HoraDePunto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HoraHaPunto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HoraHaPunto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CallePunto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CallePunto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NoIntPunto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NoIntPunto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NoExtPunto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NoExtPunto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ObsPunto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ObsPunto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EstatusPunto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EstatusPunto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GEN_COLONIA.Colonia)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GEN_COLONIA.Colonia)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OPE_CLIENTPROVEE.RazonSocial)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OPE_CLIENTPROVEE.RazonSocial)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

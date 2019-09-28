@@ -1,0 +1,130 @@
+﻿@model AdminMensajeria.Models.GEN_ESTADO
+
+@{
+    ViewBag.Title = "Estado";
+}
+
+<div class="form-horizontal">
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                @Html.DropDownList("IdPais",null, "Elige Pais", htmlAttributes: new { @class = "form-control" })
+                <label for="IdPais">País (*)</label>
+            </div>
+            <span class="AlertaDanger" id="IdPaisVal"></span>
+        </div>
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.CiudadEstado, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Ciudad de México", @Maxlength = 100 } })
+                <label for="CiudadEstado">Estado (*)</label>
+            </div>
+            <span class="AlertaDanger" id="CiudadEstadoVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-2">
+            <button id="ValidaEstado" type="button" class="btn btn-primary btn-sm ">
+                <span class="glyphicon glyphicon-floppy-disk"></span> Crear
+            </button>
+        </div>
+        <div class="col-md-7">
+            <span class="AlertaDanger" id="MensajeError"></span>
+        </div>
+        <div id="VolverCliente" class="col-md-2">
+            <button onclick="CerrarModal()" class="btn btn-danger btn-sm">
+                <span class="glyphicon glyphicon-floppy-remove"></span> Cancelar
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $("#IdPais option[value=" + @ViewBag.pais + "]").attr("selected", true);
+
+
+        $('#IdPais').selectpicker({
+            liveSearch: true
+        });
+
+        $("button").addClass("input-sm").css({ "font-size": "12px" });
+
+        $("#CiudadEstado").keyup(function () {
+            $("#CiudadEstadoVal").html('');
+        });
+
+        $("#IdPais").change(function () {
+            $("#IdPaisVal").html('');
+        });
+
+        ///////////////////////////////////////////////////////////////
+        $("#ValidaEstado").click(function () {
+            var CiudadEstado = $("#CiudadEstado").val();
+            var IdPais = $("#IdPais").val();
+
+
+            ///////////////////////////////////////////////////////////
+            if ($("#CiudadEstado").val().length === 0) {
+                $("#CiudadEstadoVal").html('');
+                $("#CiudadEstadoVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#CiudadEstado").val().length > 100) {
+                $("#CiudadEstadoVal").html('');
+                $("#CiudadEstadoVal").append('Este Campo es puede contener maximo 100 caracteres');
+            }
+
+            if ($("#IdPais").val() ==  '') {
+                $("#IdPaisVal").html('');
+                $("#IdPaisVal").append('Debe Elegir un País');
+            }
+
+            if ($("#CiudadEstado").val().length != 0 &&
+                $("#CiudadEstado").val().length <= 100 &&
+                $("#IdPais").val() !=  '') {
+
+                console.log("CiudadEstado: " + CiudadEstado);
+                console.log("IdPais: " + IdPais);
+
+                $.ajax({
+                    url: '@Url.Action("CreateEstado", "Estado")',
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "IdEstado": null,
+                        "CiudadEstado": CiudadEstado,
+                        "IdPais": IdPais
+                    }),
+                    success: function (data) {
+                        if (data.Result == true) {
+                            $("#VistaEstados").html('');
+                            $("#VistaEstados").load('@Url.Action("Estados", "Estado")' + '/' + IdPais);
+                            CerrarModal();
+                        }
+                        else {
+                            $("#MensajeError").html('');
+                            $("#MensajeError").append(data.Mensaje);
+                        }
+                    },
+                    error: function () {
+                        console.log("No pudo acceder al Metodo");
+                    }
+                });
+            }
+            else {
+                console.log("No se cumplio la validación de datos");
+            }
+        });
+    });
+
+    function CerrarModal() {
+        $("#OperTitle").html('');
+        $("#OperBody").html('');
+        $('#OperModal').modal('hide');
+    }
+</script>
+

@@ -23,14 +23,15 @@ namespace AdminMensajeria.Models
     
         public int IdSolicitud { get; set; }
         public int IdUsuario { get; set; }
-        public int IdClientProvee { get; set; }
+        public Nullable<int> IdClientProvee { get; set; }
         public string Folio { get; set; }
         public System.DateTime FechaCreacion { get; set; }
+        public bool RequiereAcuse { get; set; }
+        public string Acuse { get; set; }
         public bool Emergencia { get; set; }
-        public bool EstatusSolicitud { get; set; }
+        public int EstatusSolicitud { get; set; }
     
         public virtual GEN_USUARIO GEN_USUARIO { get; set; }
-        public virtual OPE_CLIENTPROVEE OPE_CLIENTPROVEE { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OPE_SOLICITUDPRODUCTO> OPE_SOLICITUDPRODUCTO { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

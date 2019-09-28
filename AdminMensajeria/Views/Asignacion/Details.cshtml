@@ -1,0 +1,214 @@
+﻿@model AdminMensajeria.Models.OPE_GUIA
+@using (AdminMensajeria.Models.MensajeriaEntities db = new AdminMensajeria.Models.MensajeriaEntities())
+{
+    ViewBag.Title = "Reporte de Entregas";
+
+    var Destinatario = (from d in db.OPE_SOLICITUDPUNTOSENTREC where d.IdGuia == Model.IdGuia && d.TipoPunto == 2 select d).ToList();
+
+
+    <style media="print">
+        p {
+            font-size: x-small;
+        }
+
+        .col-md-1 {
+            width: 8%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-2 {
+            width: 16%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-3 {
+            width: 25%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-4 {
+            width: 33%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-5 {
+            width: 42%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-6 {
+            width: 50%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-7 {
+            width: 58%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-8 {
+            width: 66%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-9 {
+            width: 75%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-10 {
+            width: 83%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-11 {
+            width: 92%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-12 {
+            width: 100%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .Oculto {
+            display: none;
+        }
+    </style>
+
+    <div class="form-group Oculto" style="height: 20px; margin-top: 30px;">
+        <div class="col-md-2" style="padding-left: 0px;">
+            <a href="@Url.Action("Index", "Asignacion")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Menu">
+                <span class="glyphicon glyphicon-envelope"></span> Asignaciones
+            </a>
+        </div>
+        <div class="col-md-9">
+        </div>
+        <div class="col-md-1">
+            <a href="@Url.Action("Estandar", "Home")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Menu">
+                <span class="glyphicon glyphicon-home"></span> Menu
+            </a>
+        </div>
+    </div>
+
+
+        <div class="form-horizontal">
+
+            <div class="row" style="margin-bottom: 15px;">
+                <div class="col-md-4">
+                    <p><b>Número:</b> @Model.IdGuia</p>
+                </div>
+                <div class="col-md-4">
+                    <p><b>Fecha</b> @Model.FechaCreacionGuia</p>
+                </div>
+                <div class="col-md-4">
+                    <p><b>Entregas Totales</b> @Destinatario.Count()</p>
+                </div>
+                <div class="col-md-4">
+                    <p><b>Responsable:</b> @Model.GEN_USUARIO.NombreUsuario</p>
+                </div>
+            </div>
+
+
+            <div class="row" style="border-style: solid; border-width: 1px; padding-top: 5px;padding-bottom: 5px;">
+                <div class="col-md-1">
+                    <p><b>Envío</b></p>
+                </div>
+                <div class="col-md-4">
+                    <p><b>Producto</b></p>
+                </div>
+                <div class="col-md-4">
+                    <p><b>Destinatario</b></p>
+                </div>
+                <div class="col-md-3">
+                    <p><b>Firma</b></p>
+                </div>
+            </div>
+
+            @foreach (var item in Destinatario)
+                {
+                    var Producto = (from p in db.OPE_SOLICITUDPRODUCTO where p.IdSolicitud == item.IdSolicitud select p).FirstOrDefault();
+
+                <div class="row" style="border-style: solid; border-width: 1px; border-top:none; padding-top: 5px;padding-bottom: 5px; page-break-before: auto">
+                    <div class="col-md-1">
+                        <p>@Producto.IdSolicitud </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p>@Producto.Descripcion @Producto.Cantidad </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p>@item.DestinatarioPuntoEntRec </p>
+                    </div>
+                    <div class="col-md-3">
+                    </div>
+
+                    <div class="col-md-9">
+                        @if (item.IdPuntoEntRec != null)
+                    {
+                            <p>
+                                @item.OPE_PUNTOENTREC.CallePunto, @item.OPE_PUNTOENTREC.NoExtPunto, @item.OPE_PUNTOENTREC.NoIntPunto,
+                                @item.OPE_PUNTOENTREC.GEN_COLONIA.Colonia, @item.OPE_PUNTOENTREC.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal,
+                                @item.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.Municipio, @item.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado,
+                                @item.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais, @item.OPE_PUNTOENTREC.Referencia
+                            </p>
+                        }
+                        else
+                        {
+                            if (item.IdColonia != null)
+                            {
+                                <p>
+                                    @item.CallePuntosEntRec, @item.NoExtPuntosEntRec, @item.NoIntPuntosEntRec,
+                                    @item.GEN_COLONIA.Colonia, @item.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal,
+                                    @item.GEN_COLONIA.GEN_MUNICIPIO.Municipio, @item.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado,
+                                    @item.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais, @item.ReferenciaPuntosEntRec
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+
+                                    @item.CallePuntosEntRec, @item.NoExtPuntosEntRec, @item.NoIntPuntosEntRec,
+                                    @item.ColoniaPuntosEntRec, @item.CodigoPostalPuntosEntRec,
+                                    @item.MunicipioPuntosEntRec, @item.EstadoPuntosEntRec,
+                                    @item.PaisPuntosEntRec, @item.ReferenciaPuntosEntRec
+                                </p>
+                            }
+                        }
+                    </div>
+                    <div class="col-md-3"></div>
+                </div>
+            }
+
+        </div>
+
+        <script>
+        $(document).ready(function () {
+            $("#ContentGral").css("margin-top", "0px");
+            $("#ContentGral").css("margin-bottom", "0px");
+            });
+        </script>
+}

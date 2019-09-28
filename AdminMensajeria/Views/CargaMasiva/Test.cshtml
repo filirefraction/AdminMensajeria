@@ -1,0 +1,63 @@
+﻿
+@{
+    ViewBag.Title = "Test";
+}
+
+<button id="btnRecorrer" class="btn btn-default">Recorer</button>
+
+<table id="CargaTable" class="ui celled table compact">
+    <thead>
+        <tr>
+                <th>Codigo</th>
+                <th>Producto</th>
+                <th>Producto</th>
+                <th>Valido</th>
+
+        </tr>
+    </thead>
+    <tbody>
+
+        <tr><td>1	</td><td>Produto A	</td><td>664 </td> <td></td></tr>
+        <tr><td>2	</td><td>Produto B	</td><td>1349</td> <td></td></tr>
+        <tr><td>3	</td><td>Produto C	</td><td>2034</td> <td></td></tr>
+        <tr><td>4	</td><td>Produto D	</td><td>2719</td> <td></td></tr>
+        <tr><td>5	</td><td>Produto E	</td><td>3404</td> <td></td></tr>
+        <tr><td>6	</td><td></td><td>4089</td>            <td></td></tr> 
+        <tr><td>7	</td><td>Produto G	</td><td>4774</td> <td></td></tr>
+        <tr><td>8	</td><td>Produto H	</td><td>5459</td> <td></td></tr>
+        <tr><td>9	</td><td>Produto I	</td><td>6144</td> <td></td></tr>
+        <tr><td>10	</td><td>Produto J	</td><td>6829</td> <td></td></tr>
+        <tr><td>11	</td><td>Produto K	</td><td>7514</td> <td></td></tr>
+        <tr><td>12	</td><td>Produto L	</td><td>8199</td> <td></td></tr>
+
+
+    </tbody>
+</table>
+
+
+
+<script>
+    $('#btnRecorrer').click(function () {
+        //var cells = [];
+        var cod;
+        var Prod;
+        var Valo;
+        var rows = $("#CargaTable").dataTable().fnGetNodes();
+        for (var i = 0; i < rows.length; i++) {
+            // Get HTML of 3rd column (for example)
+            cod = $(rows[i]).find("td:eq(0)").html();
+            Prod = $(rows[i]).find("td:eq(1)").html();
+            Valo = $(rows[i]).find("td:eq(2)").html();
+            if (Prod == '') {
+                $(rows[i]).find("td:eq(3)").append("Producto Obligaorito");
+            }
+            if (Valo > 2719) {
+                $(rows[i]).find("td:eq(3)").append("Valor maximo 2719");
+            }
+            //cells.push($(rows[i]).find("td:eq(2)").html());
+            console.log( cod + ' - ' + Prod + ' - ' + Valo)
+        }
+        //console.log(cells);
+    });
+
+</script>

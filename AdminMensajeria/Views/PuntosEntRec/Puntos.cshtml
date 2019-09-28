@@ -1,0 +1,170 @@
+﻿@using (AdminMensajeria.Models.MensajeriaEntities db = new AdminMensajeria.Models.MensajeriaEntities())
+{
+    int IdCliente = ViewBag.idclientprovee;
+    var puntos = (from p in db.OPE_PUNTOENTREC
+                  join c in db.GEN_COLONIA on p.IdColonia equals c.IdColonia
+                  join cp in db.GEN_CODIGOPOSTAL on c.IdCodigoP equals cp.IdCodigoP
+                  join m in db.GEN_MUNICIPIO on c.IdMunicipio equals m.IdMunicipio
+                  join e in db.GEN_ESTADO on m.IdEstado equals e.IdEstado
+                  join pa in db.GEN_PAIS on e.IdPais equals pa.IdPais
+                  where p.IdClientProvee == IdCliente
+                  select new {p,c,cp,m,e,pa }).ToList();
+
+<div class="form-horizontal" style="margin-top: 20px;">
+    <div class="form-group row">
+        <div class="col-md-1">
+            <button onclick="NuevoPunto(@ViewBag.idclientprovee)"  data-toggle="tooltip" title="Nuevo Punto" type="button" class="btn btn-default btn-sm ">
+                <span class="glyphicon glyphicon-plus"></span> Nuevo
+            </button>
+        </div>
+    </div>
+    <table id="PuntosTable" class="ui celled table compact">
+        <thead>
+            <tr>
+                <th class="col-md-2">
+                    Descripción
+                </th>
+                <th class="col-md-1">
+                    Tipo
+                </th>
+                <th class="col-md-1">
+                    Contacto
+                </th>
+                <th class="col-md-1">
+                    Horario
+                </th>
+                <th class="col-md-3">
+                    Dirección
+                </th>
+                <th class="col-md-2">
+                    Observaciones
+                </th>
+                <th class="col-md-1">
+                    Activo
+                </th>
+                <th class="col-md-1"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in puntos)
+            {
+                <tr>
+                    <td style="word-break:break-word">
+                        @Html.DisplayFor(modelItem => item.p.DescripcionPunto)
+                    </td>
+                    <td style="word-break:break-word">
+                        @switch (item.p.TipoPunto)
+                   {
+                       case 1: <p>Recolección y Entrega</p>;
+                           break;
+                       case 2: <p>Solo Recolección</p>;
+                           break;
+                       case 3: <p>Solo Entrega</p>;
+                           break;
+                       default:
+                           break;
+                   }
+                    </td>
+                    <td style="word-break:break-word">
+                        @Html.DisplayFor(modelItem => item.p.ContactoPunto)
+                    </td>
+                    <td>
+                        <p>@item.p.HoraDePunto a @item.p.HoraHaPunto</p>
+                    </td>
+                    <td style="word-break:break-word">
+                        <p>@item.p.CallePunto, @item.p.NoExtPunto, @item.p.NoIntPunto,  @item.c.Colonia, @item.cp.CodigoPostal, @item.m.Municipio, @item.e.CiudadEstado, @item.pa.Pais </p>
+                    </td>
+                    <td style="word-break:break-word">
+                        @Html.DisplayFor(modelItem => item.p.ObsPunto)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.p.EstatusPunto)
+                    </td>
+                    <td>
+                        <button onclick="EditarPunto(@item.p.IdPuntoEntRec)" data-toggle="tooltip" title="Editar Cliente" class="btn btn-default btn-sm">
+                            <span class='glyphicon glyphicon-edit'></span>
+                        </button>
+                        <button onclick="EliminarPunto(@item.p.IdPuntoEntRec)" data-toggle="tooltip" title="Eliminar Estado" class="btn btn-default btn-sm">
+                            <span class='glyphicon glyphicon-trash'></span>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#PuntosTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            }
+        });
+    });
+
+    function NuevoPunto(id) {
+        $("#OperTitle").html('');
+        $("#OperTitle").append('Nuevo Punto')
+        $("#OperBody").html('');
+        $("#OperBody").load('@Url.Action("Create", "PuntosEntRec")' + '/' + id);
+        $('#OperModal').modal('show');
+    }
+
+
+    function EditarPunto(id) {
+        $("#OperTitle").html('');
+        $("#OperTitle").append('Editar Punto')
+        $("#OperBody").html('');
+        $("#OperBody").load('@Url.Action("Edit", "PuntosEntRec")' + '/' + id);
+        $('#OperModal').modal('show');
+    }
+
+    function EliminarPunto(id) {
+        $('#ConfirmTitle').html('');
+        var title = "Confirme para eliminar Punto de Entrega o Recolección"
+        $('#ConfirmTitle').append(title);
+        $('#ConfirmBody').html('');
+        var body = '<button onclick="ConfirmaEliminarPunto(' + id + ')" type="button" class="btn btn-danger" id="modal-btn-si">Si</button>' +
+                   '<button onclick="CancelaEliminar()" type="button" class="btn btn-primary" id="modal-btn-no">No</button>';
+        $('#ConfirmBody').append(body);
+        $('#ConfirmModal').modal('show');
+
+    }
+
+    function ConfirmaEliminarPunto(id) {
+        $.ajax({
+            url: '@Url.Action("DeletePunto", "PuntosEntRec")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                if (Data.Result == true) {
+                    $("#direcciones").html('');
+                    $("#direcciones").load('@Url.Action("Puntos", "PuntosEntRec")');
+                    CancelaEliminar();
+                }
+                else {
+                    $("#ErrorMSG").html('');
+                    $("#ErrorMSG").append(Data.Mensaje);
+                    $('#ConfirmModal').modal('hide');
+                    $('#ModalErrorMSG').modal('show')
+                }
+            },
+            error: function (data) {
+                console.log("ocurrio un error al Eliminar");
+            }
+        });
+    }
+
+    function CancelaEliminar() {
+        $('#ConfirmTitle').html('');
+        $('#ConfirmBody').html('');
+        $('#ConfirmModal').modal('hide');
+    }
+
+
+</script>
+
+}

@@ -17,26 +17,27 @@ namespace AdminMensajeria.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public GEN_USUARIO()
         {
-            this.GEN_COMENSUGER = new HashSet<GEN_COMENSUGER>();
             this.OPE_GUIA = new HashSet<OPE_GUIA>();
             this.OPE_SOLICITUD = new HashSet<OPE_SOLICITUD>();
+            this.GEN_COMENSUGER = new HashSet<GEN_COMENSUGER>();
         }
     
         public int IdUsuario { get; set; }
-        public int IdClientProvee { get; set; }
+        public int IdPuntoEntRec { get; set; }
         public int TipoUsuario { get; set; }
         public string NombreUsuario { get; set; }
         public string Usuario { get; set; }
         public string Contrasena { get; set; }
         public string CorreoUsuario { get; set; }
+        public bool CambiarContrasena { get; set; }
         public bool EstatusUsuario { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GEN_COMENSUGER> GEN_COMENSUGER { get; set; }
-        public virtual OPE_CLIENTPROVEE OPE_CLIENTPROVEE { get; set; }
+        public virtual OPE_PUNTOENTREC OPE_PUNTOENTREC { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OPE_GUIA> OPE_GUIA { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OPE_SOLICITUD> OPE_SOLICITUD { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GEN_COMENSUGER> GEN_COMENSUGER { get; set; }
     }
 }

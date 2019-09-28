@@ -1,0 +1,1359 @@
+﻿@model AdminMensajeria.Models.OPE_SOLICITUD
+
+@{
+    ViewBag.Title = "Nuevo Envío";
+}
+
+
+<div class="form-horizontal">
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.RequiereAcuse)
+                <label for="RequiereAcuse">Solicitar Acuse Impreso</label>
+            </div>
+            <span class="AlertaDanger" id="RequiereAcuseVal"></span>
+        </div>
+        <div class="col-md-6">
+        </div>
+    </div>
+
+    <!--Controles de producto de solicitud-->
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                <input id="Descripcion" class="form-control input-sm" PlaceHolder="Sobre con membresía" maxlength="100" />
+                <label for="Descripcion">Descripción de Producto (*)</label>
+            </div>
+            <span class="AlertaDanger" id="DescripcionVal"></span>
+        </div>
+        <div class="col-md-2">
+            <div class="field">
+                <input id="Cantidad" class="form-control input-sm" type="Number" PlaceHolder="1" maxlength="18" />
+                <label for="Cantidad">Cantidad</label>
+            </div>
+            <span class="AlertaDanger" id="CantidadVal"></span>
+        </div>
+
+        <div class="col-md-2">
+            <div class="field">
+                @Html.DropDownList("IdUnidad", (IEnumerable<SelectListItem>)ViewBag.IdUnidad, "Elige una Unidad", htmlAttributes: new { @class = "form-control input-sm", maxlength = "18" })
+                <label for="IdUnidad">Unidad de Medida</label>
+            </div>
+            <span class="AlertaDanger" id="TipoClientProveeVal"></span>
+        </div>
+        <div class="col-md-2">
+            <div class="field">
+                <input id="Peso" class="form-control input-sm" type="Number" PlaceHolder="1.50" maxlength="18" any="any" />
+                <label for="Peso">Peso Kg.</label>
+            </div>
+            <span class="AlertaDanger" id="PesoVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <!--Controles de punto de recolección-->
+        <div class="col-md-6">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#Remitente">Remitente</a></li>
+            </ul>
+            <div class="tab-content" style="margin-top: 10px;">
+                <div id="Remitente" class="tab-pane fade in active">
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <div class="field">
+                                <input type="checkbox" id="OtraDireccionRec1" />
+                                <label for="OtraDireccionRec1">Usar otra dirección</label>
+                            </div>
+                            <span class="AlertaDanger" id="OtraDireccionRec1Val"></span>
+                        </div>
+                        <div class="col-md-6 hidden">
+                            <div class="field">
+                                <input id="IdPuntoRec1" class="form-control input-sm" />
+                                <label for="IdPuntoRec1">IdPuntoEnt</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <div class="field">
+                                <input id="DescripcionPuntoRec1" class="form-control input-sm" placeholder="Sucursal Norte" maxlength="100" />
+                                <label for="DescripcionPuntoRec1">Descripción (*)</label>
+                            </div>
+                            <span class="AlertaDanger" id="DescripcionPuntoRec1Val"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="field">
+                                <input id="ContactoPuntoRec1" class="form-control input-sm" placeholder="Juan Peréz" maxlength="100" />
+                                <label for="ContactoPuntoRec1">Contacto</label>
+                            </div>
+                            <span class="AlertaDanger" id="ContactoPuntoRec1Val"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <div class="field">
+                                <input id="CallePuntosRec1" class="form-control input-sm" placeholder="Lazaro Cardenas" maxlength="100" />
+                                <label for="CallePuntosRec1">Calle (*)</label>
+                            </div>
+                            <span class="AlertaDanger" id="CallePuntosRec1Val"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="field">
+                                <input id="NoExtPuntosRec1" class="form-control input-sm" placeholder="724" maxlength="20" />
+                                <label for="NoExtPuntosRec1"># Exterior (*)</label>
+                            </div>
+                            <span class="AlertaDanger" id="NoExtPuntosRec1Val"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="field">
+                                <input id="NoIntPuntosRec1" class="form-control input-sm" placeholder="14" maxlength="20" />
+                                <label for="NoIntPuntosRec1"># Interior</label>
+                            </div>
+                            <span class="AlertaDanger" id="NoIntPuntosRec1Val"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <div class="field">
+                                <input id="ReferenciaPuntosRec1" class="form-control input-sm" placeholder="Entre Calles A y B" maxlength="100" />
+                                <label for="ReferenciaPuntosRec1">Referencia </label>
+                            </div>
+                            <span class="AlertaDanger" id="ReferenciaPuntosRec1Val"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="field">
+                                <input id="c1Rec1" name="c1Rec1" autocomplete="nope" type="text" class="form-control input-sm" placeholder="09864" maxlength="20" />
+                                <label for="c1Rec1">Código Postal (*)</label>
+                            </div>
+                            <span class="AlertaDanger" id="c1Rec1Val"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="field">
+                                <select id="IdColoniaRec1" class="form-control"></select>
+                                <label for="IdColoniaRec1">Elige Una Colonia (*)</label>
+                            </div>
+                            <span class="AlertaDanger" id="IdColoniaRec1Val"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <div class="field">
+                                <input type="text" disabled="disabled" id="MunicipioRec1" class="form-control input-sm" placeholder="Iztacalco" />
+                                <label for="MunicipioRec1">Municipio</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="field">
+                                <input type="text" disabled="disabled" id="EstadoRec1" class="form-control input-sm" placeholder="Ciudad de México" />
+                                <label for="EstadoRec1">Estado</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="field">
+                                <input type="text" disabled="disabled" id="PaisRec1" class="form-control input-sm" placeholder="México" />
+                                <label for="PaisRec1">País</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <div class="field">
+                                <input id="ObsPuntosRec1" class="form-control input-sm" placeholder="Observaciones" maxlength="500" />
+                                <label for="ObsPuntosRec1">Observaciones</label>
+                            </div>
+                            <span class="AlertaDanger" id="ObsPuntosRec1Val"></span>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <!--Controles de punto de Entrega-->
+        <div class="col-md-6">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#Entrega">Entrega</a></li>
+            </ul>
+            <div class="tab-content" style="margin-top: 10px;">
+                <div id="Entrega" class="tab-pane fade in active">
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <div class="field">
+                                @Html.DropDownList("ListCategoria", (IEnumerable<SelectListItem>)ViewBag.ListCategoria, "Elige una Categoría", htmlAttributes: new { @class = "form-control" })
+                                <label for="ListCategoria">Categoria (*)</label>
+                            </div>
+                            <span class="AlertaDanger" id="ListCategoriaVal"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="field">
+                                <select id="ListCliente" name="ListCliente" class="form-control input-sm">
+                                    <option value="">Elige un Cliente</option>
+                                </select>
+                                <label for="ListCliente">Clientes (*)</label>
+                            </div>
+                            <span class="AlertaDanger" id="ListClienteVal"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <div class="field">
+                                <input type="checkbox" id="OtraDireccionEnt1" />
+                                <label for="OtraDireccionEnt1">Enviar a una dirección no registrada</label>
+                            </div>
+                            <span class="AlertaDanger" id="OtraDireccionEnt1Val"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="field">
+                                <input id="DestinatarioPuntosEnt1" class="form-control input-sm" placeholder="Juan Pérez" maxlength="100" />
+                                <label for="DestinatarioPuntosEnt1">Destinarario</label>
+                            </div>
+                            <span class="AlertaDanger" id="DestinatarioPuntosEnt1Val"></span>
+                        </div>
+                        <div class="col-md-6 hidden">
+                            <div class="field">
+                                <input id="IdPuntoEnt1" class="form-control input-sm" />
+                                <label for="IdPuntoEnt1">IdPuntoEnt</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <div class="field">
+                                <input id="DescripcionPuntoEnt1" class="form-control input-sm" placeholder="Sucursal Norte" maxlength="100" />
+                                <label for="DescripcionPuntoEnt1">Descripción (*)</label>
+                            </div>
+                            <span class="AlertaDanger" id="DescripcionPuntoEnt1Val"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="field">
+                                <input id="ContactoPuntoEnt1" class="form-control input-sm" placeholder="Juan Peréz" maxlength="100" />
+                                <label for="ContactoPuntoEnt1">Contacto</label>
+                            </div>
+                            <span class="AlertaDanger" id="ContactoPuntoEnt1Val"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <div class="field">
+                                <input id="CallePuntosEnt1" class="form-control input-sm" placeholder="Lazaro Cardenas" maxlength="100" />
+                                <label for="CallePuntosEnt1">Calle (*)</label>
+                            </div>
+                            <span class="AlertaDanger" id="CallePuntosEnt1Val"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="field">
+                                <input id="NoExtPuntosEnt1" class="form-control input-sm" placeholder="724" maxlength="20" />
+                                <label for="NoExtPuntosEnt1"># Exterior (*)</label>
+                            </div>
+                            <span class="AlertaDanger" id="NoExtPuntosEnt1Val"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="field">
+                                <input id="NoIntPuntosEnt1" class="form-control input-sm" placeholder="14" maxlength="20" />
+                                <label for="NoIntPuntosEnt1"># Interior</label>
+                            </div>
+                            <span class="AlertaDanger" id="NoIntPuntosEnt1Val"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <div class="field">
+                                <input id="ReferenciaPuntosEnt1" class="form-control input-sm" placeholder="Entre Calles A y B" maxlength="100" />
+                                <label for="ReferenciaPuntosEnt1">Referencia </label>
+                            </div>
+                            <span class="AlertaDanger" id="ReferenciaPuntosEnt1Val"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="field">
+                                <input id="c1Ent1" name="c1Ent1" autocomplete="nope" type="text" class="form-control input-sm" placeholder="09864" maxlength="20" />
+                                <label for="c1Ent1">Código Postal (*)</label>
+                            </div>
+                            <span class="AlertaDanger" id="c1Ent1Val"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="field">
+                                <select id="IdColoniaEnt1" class="form-control"></select>
+                                <label for="IdColoniaEnt1">Elige Una Colonia (*)</label>
+                            </div>
+                            <span class="AlertaDanger" id="IdColoniaEnt1Val"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <div class="field">
+                                <input type="text" disabled="disabled" id="MunicipioEnt1" class="form-control input-sm" placeholder="Iztacalco" />
+                                <label for="MunicipioEnt1">Municipio</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="field">
+                                <input type="text" disabled="disabled" id="EstadoEnt1" class="form-control input-sm" placeholder="Ciudad de México" />
+                                <label for="EstadoEnt1">Estado</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="field">
+                                <input type="text" disabled="disabled" id="PaisEnt1" class="form-control input-sm" placeholder="México" />
+                                <label for="PaisEnt1">País</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <div class="field">
+                                <input id="ObsPuntosEnt1" class="form-control input-sm" placeholder="Observaciones" maxlength="500" />
+                                <label for="ObsPuntosEnt1">Observaciones</label>
+                            </div>
+                            <span class="AlertaDanger" id="ObsPuntosEnt1Val"></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="form-group row">
+        <div class="col-md-2">
+            <button id="ValidaSolicitud" type="button" class="btn btn-primary btn-sm ">
+                <span class="glyphicon glyphicon-floppy-disk"></span> Crear
+            </button>
+        </div>
+        <div class="col-md-9">
+            <span class="AlertaDanger" id="MensajeError"></span>
+        </div>
+        <div id="VolverCliente" class="col-md-1">
+            <a href="@Url.Action("Index", "Solicitud")" class="btn btn-danger btn-sm">
+                <span class="glyphicon glyphicon-floppy-remove"></span> Cancelar
+            </a>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+<!-- scripts generales-->
+<script>
+    $(document).ready(function () {
+        //Funciones que se Cargan desde el principio
+        ElegirPuntoRec1(@ViewBag.idpuntorec);
+        ActivarInputsRec1(true);
+        ActivarInputs(true);
+
+
+        //Acciones para agregar selectpicker
+        $('#IdUnidad, #IdColoniaRec1, #ListCategoria, #ListCliente, #IdColoniaEnt1').selectpicker({
+            liveSearch: true
+        });
+        $("button").addClass("input-sm").css({ "font-size": "12px" });
+
+
+        //Acciones para limpiar mensajes de Validación Producto
+
+        $('#Descripcion').keyup(function () {
+            $('#DescripcionVal').html('');
+        });
+
+        $('#Cantidad').keyup(function () {
+            $('#CantidadVal').html('');
+        });
+
+        $('#Peso').keyup(function () {
+            $('#PesoVal').html('');
+        });
+
+        //Acciones para limpiar mensajes de Validación Punto de recolección
+
+        $('#DescripcionPuntoRec1').keyup(function () {
+            $('#DescripcionPuntoRec1Val').html('');
+        });
+
+        $('#ContactoPuntoRec1').keyup(function () {
+            $('#ContactoPuntoRec1Val').html('');
+        });
+
+        $('#CallePuntosRec1').keyup(function () {
+            $('#CallePuntosRec1Val').html('');
+        });
+
+        $('#NoExtPuntosRec1').keyup(function () {
+            $('#NoExtPuntosRec1Val').html('');
+        });
+
+        $('#NoIntPuntosRec1').keyup(function () {
+            $('#NoIntPuntosRec1Val').html('');
+        });
+
+        $('#ReferenciaPuntosRec1').keyup(function () {
+            $('#ReferenciaPuntosRec1Val').html('');
+        });
+
+        $('#ObsPuntosRec1').keyup(function () {
+            $('#ObsPuntosRec1Val').html('');
+        });
+
+        $('#c1Rec1').keyup(function () {
+            $('#c1Rec1Val').html('');
+            $("#MunicipioRec1").val('');
+            $("#EstadoRec1").val('');
+            $("#PaisRec1").val('');
+        });
+
+        //Acciones para limpiar mensajes de Validación Punto de entrega
+
+        $('#DestinatarioPuntosEnt1').keyup(function () {
+            $('#DestinatarioPuntosEnt1Val').html('');
+        });
+
+        $('#DescripcionPuntoEnt1').keyup(function () {
+            $('#DescripcionPuntoEnt1Val').html('');
+        });
+
+        $('#ContactoPuntoEnt1').keyup(function () {
+            $('#ContactoPuntoEnt1Val').html('');
+        });
+
+        $('#CallePuntosEnt1').keyup(function () {
+            $('#CallePuntosEnt1Val').html('');
+        });
+
+        $('#NoExtPuntosEnt1').keyup(function () {
+            $('#NoExtPuntosEnt1Val').html('');
+        });
+
+        $('#NoIntPuntosEnt1').keyup(function () {
+            $('#NoIntPuntosEnt1Val').html('');
+        });
+
+        $('#ReferenciaPuntosEnt1').keyup(function () {
+            $('#ReferenciaPuntosEnt1Val').html('');
+        });
+
+        $('#ObsPuntosEnt1').keyup(function () {
+            $('#ObsPuntosEnt1Val').html('');
+        });
+
+        $('#c1Ent1').keyup(function () {
+            $('#c1Ent1Val').html('');
+            $("#MunicipioEnt1").val('');
+            $("#EstadoEnt1").val('');
+            $("#PaisEnt1").val('');
+        });
+
+        //Aciones que se disparan mediante eventos jquery Punto de Recolección
+        $('#OtraDireccionRec1').change(function () {
+            if ($("#OtraDireccionRec1").prop("checked") == true) {
+                ActivarInputsRec1(false);
+                LimpiarCamposRec1();
+            }
+            else {
+                ElegirPuntoRec1(@ViewBag.idpuntorec);
+                ActivarInputsRec1(true);
+            }
+        });
+
+        $("#c1Rec1").blur(function () {
+            if ($('#c1Rec1').val() != '') {
+                var codigopostal = $('#c1Rec1').val();
+                $('#c1Rec1Val').html('');
+                ListarColoniasRec1(codigopostal);
+            }
+            else {
+                $('#c1Rec1Val').html('');
+                $('#c1Rec1Val').append('Este Campo es Obligatorio');
+            }
+        });
+
+        $("#IdColoniaRec1").change(function () {
+            var IdColonia = $("#IdColoniaRec1").val();
+            if ($("#IdColoniaRec1").val == 0) {
+                $("#MunicipioRec1").val('');
+                $("#EstadoRec1").val('');
+                $("#PaisRec1").val('');
+                $("#IdColoniaRec1Val").html('Debe Elegir una Colonia');
+            }
+            else {
+                ComplementoDomiclioRec1(IdColonia);
+                $("#IdColoniaRec1Val").html('');
+            }
+        });
+
+        //Aciones que se disparan mediante eventos jquery Punto de Entrega
+
+        $('#ListCategoria').change(function () {
+            if ($('#ListCategoria').val() != '') {
+                var IdCategoria = $('#ListCategoria').val();
+                $("#ListCategoriaVal").html('');
+                ObtenerClientes(IdCategoria);
+            }
+            else {
+                $("#ListCategoriaVal").html('');
+                $("#ListCategoriaVal").append('Debe elegir una Categoría para ver los Clientes');
+            }
+        });
+
+        $('#ListCliente').change(function () {
+            if ($('#ListCliente').val() != '') {
+                var IdCliente = $('#ListCliente').val();
+                $("#ListClienteVal").html('');
+                VerPuntos(IdCliente);
+            }
+            else {
+                $("#ListClienteVal").html('');
+                $("#ListClienteVal").append('Debe elegir un Cliente Para ver los Puntos de Entrega');
+            }
+        });
+
+        $('#OtraDireccionEnt1').change(function () {
+            if ($("#OtraDireccionEnt1").prop("checked") == true) {
+                ActivarInputs(false);
+                LimpiarCampos();
+            }
+            else {
+                ActivarInputs(true);
+                LimpiarCampos();
+            }
+        });
+
+
+        $("#c1Ent1").blur(function () {
+            if ($('#c1Ent1').val() != '') {
+                var codigopostal = $('#c1Ent1').val();
+                $('#c1Ent1Val').html('');
+                ListarColonias(codigopostal);
+            }
+            else {
+                $('#c1Ent1Val').html('');
+                $('#c1Ent1Val').append('Este Campo es Obligatorio');
+            }
+        });
+
+
+        $("#IdColoniaEnt1").change(function () {
+            var IdColonia = $("#IdColoniaEnt1").val();
+            if ($("#IdColoniaEnt1").val == 0) {
+                $("#MunicipioEnt1").val('');
+                $("#EstadoEnt1").val('');
+                $("#PaisEnt1").val('');
+                $("#IdColoniaEnt1Val").html('Debe Elegir una Colonia');
+            }
+            else {
+                ComplementoDomiclio(IdColonia);
+                $("#IdColoniaEnt1Val").html('');
+            }
+        });
+
+
+
+        //Diaparador de boton crear
+        $("#ValidaSolicitud").click(function () {
+
+            //Comienza Validación de datos
+            var ProductoValido = false;
+            var PuntoEntregaValido = false;
+            var PuntoRecoleccionValido = false;
+
+
+            //validación de datos de producto
+            if ($("#Descripcion").val().length == 0) {
+                $("#DescripcionVal").html('');
+                $("#DescripcionVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#Descripcion").val().length > 100) {
+                $("#DescripcionVal").html('');
+                $("#DescripcionVal").append('Este Campo es puede contener maximo 100 caracteres');
+            }
+
+            if ($("#Cantidad").val().length > 18) {
+                $("#CantidadVal").html('');
+                $("#CantidadVal").append('Este Campo es puede contener maximo 18 caracteres');
+            }
+
+            if ($("#Peso").val().length > 18) {
+                $("#PesoVal").html('');
+                $("#PesoVal").append('Este Campo es puede contener maximo 18 caracteres');
+            }
+
+            if ($("#Descripcion").val().length != 0 && $("#Descripcion").val().length <= 100 &&
+                $("#Cantidad").val().length <= 18 && $("#Peso").val().length <= 18) {
+                ProductoValido = true;
+                console.log("Datos de Producto Validos");
+            }
+            else {
+                console.log("Datos de Producto No Validos");
+            }
+
+
+            //validación de datos de Punto Recolección
+
+            if ($('#IdPuntoRec1').val() != '') {
+                //Agrega registro punto de Recoleccion de solicitud con un punto Existente
+
+                if ($('#ObsPuntosRec1').val().length > 500) {
+                    $("#ObsPuntosRec1Val").html('');
+                    $("#ObsPuntosRec1Val").append('Este Campo es puede contener maximo 500 caracteres');
+                }
+
+                if ($('#ObsPuntosRec1').val().length <= 500) {
+                    PuntoRecoleccionValido = true;
+                    console.log("Datos de Punto de Recoleccion con punto Validos");
+                }
+                else {
+                    console.log("Datos de Punto de Recoleccion con punto No Validos");
+                }
+
+            }
+            else {
+                //Agrega registro punto de Recoleccion de solicitud con domicilio particular
+                if ($("#DescripcionPuntoRec1").val().length == 0) {
+                    $("#DescripcionPuntoRec1Val").html('');
+                    $("#DescripcionPuntoRec1Val").append('Este Campo es Obligatorio');
+                }
+
+                if ($("#DescripcionPuntoRec1").val().length > 100) {
+                    $("#DescripcionPuntoRec1Val").html('');
+                    $("#DescripcionPuntoRec1Val").append('Este Campo es puede contener maximo 100 caracteres');
+                }
+
+                if ($("#ContactoPuntoRec1").val().length > 100) {
+                    $("#ContactoPuntoRec1Val").html('');
+                    $("#ContactoPuntoRec1Val").append('Este Campo es puede contener maximo 100 caracteres');
+                }
+
+                if ($("#CallePuntosRec1").val().length == 0) {
+                    $("#CallePuntosRec1Val").html('');
+                    $("#CallePuntosRec1Val").append('Este Campo es Obligatorio');
+                }
+
+                if ($("#CallePuntosRec1").val().length > 100) {
+                    $("#CallePuntosRec1Val").html('');
+                    $("#CallePuntosRec1Val").append('Este Campo es puede contener maximo 100 caracteres');
+                }
+
+                if ($("#NoExtPuntosRec1").val().length == 0) {
+                    $("#NoExtPuntosRec1Val").html('');
+                    $("#NoExtPuntosRec1Val").append('Este Campo es Obligatorio');
+                }
+
+                if ($("#NoExtPuntosRec1").val().length > 20) {
+                    $("#NoExtPuntosRec1Val").html('');
+                    $("#NoExtPuntosRec1Val").append('Este Campo es puede contener maximo 20 caracteres');
+                }
+
+                if ($("#NoIntPuntosRec1").val().length > 20) {
+                    $("#NoIntPuntosRec1Val").html('');
+                    $("#NoIntPuntosRec1Val").append('Este Campo es puede contener maximo 20 caracteres');
+                }
+
+                if ($("#ReferenciaPuntosRec1").val().length > 100) {
+                    $("#ReferenciaPuntosRec1Val").html('');
+                    $("#ReferenciaPuntosRec1Val").append('Este Campo es puede contener maximo 100 caracteres');
+                }
+
+                if ($("#IdColoniaRec1").val() == 0 || $("#IdColoniaRec1").val() == null) {
+                    $("#IdColoniaRec1Val").html('');
+                    $("#IdColoniaRec1Val").append('Debe Elegir una Colonia');
+                }
+
+                if ($('#ObsPuntosRec1').val().length > 500) {
+                    $("#ObsPuntosRec1Val").html('');
+                    $("#ObsPuntosRec1Val").append('Este Campo es puede contener maximo 500 caracteres');
+                }
+
+                if ($("#DescripcionPuntoRec1").val().length != 0 &&
+                    $("#DescripcionPuntoRec1").val().length <= 100 &&
+                    $("#ContactoPuntoRec1").val().length <= 100 &&
+                    $("#CallePuntosRec1").val().length != 0 &&
+                    $("#CallePuntosRec1").val().length <= 100 &&
+                    $("#NoExtPuntosRec1").val().length != 0 &&
+                    $("#NoExtPuntosRec1").val().length <= 20 &&
+                    $("#NoIntPuntosRec1").val().length <= 20 &&
+                    $("#ReferenciaPuntosRec1").val().length <= 100 &&
+                    $("#IdColoniaRec1").val() != 0 &&
+                    $("#IdColoniaRec1").val() != null &&
+                    $('#ObsPuntosRec1').val().length <= 500) {
+                    PuntoRecoleccionValido = true;
+                    console.log("Datos de Punto de Recoleccion sin punto Validos");
+
+                }
+                else {
+                    console.log("Datos de Punto de Recoleccion sin punto No Validos");
+
+                }
+
+            }
+
+            //validación de datos de Punto Recolección
+
+            if ($('#IdPuntoEnt1').val() != '') {
+
+                //Agrega registro punto de entrega de solicitud con un punto Existente
+                if ($("#DestinatarioPuntosEnt1").val().length > 100) {
+                    $("#DestinatarioPuntosEnt1Val").html('');
+                    $("#DestinatarioPuntosEnt1Val").append('Este Campo es puede contener maximo 100 caracteres');
+                }
+
+                if ($('#DestinatarioPuntosEnt1').val().length > 500) {
+                    $("#ObsPuntosEnt1Val").html('');
+                    $("#ObsPuntosEnt1Val").append('Este Campo es puede contener maximo 500 caracteres');
+                }
+
+                if ($('#DestinatarioPuntosEnt1').val().length <= 100 &&
+                    $('#ObsPuntosEnt1').val().length <= 500) {
+                    PuntoEntregaValido = true
+                    console.log("Datos de Punto de Entrega con punto Validos");
+                }
+                else {
+                    console.log("Datos de Punto de Entrega con punto No  Validos");
+                }
+            }
+            else {
+                //Agrega registro punto de entrega de solicitud con domicilio particular
+
+                if ($("#DestinatarioPuntosEnt1").val().length > 100) {
+                    $("#DestinatarioPuntosEnt1Val").html('');
+                    $("#DestinatarioPuntosEnt1Val").append('Este Campo es puede contener maximo 100 caracteres');
+                }
+
+                if ($("#DescripcionPuntoEnt1").val().length == 0) {
+                    $("#DescripcionPuntoEnt1Val").html('');
+                    $("#DescripcionPuntoEnt1Val").append('Este Campo es Obligatorio');
+                }
+
+                if ($("#DescripcionPuntoEnt1").val().length > 100) {
+                    $("#DescripcionPuntoEnt1Val").html('');
+                    $("#DescripcionPuntoEnt1Val").append('Este Campo es puede contener maximo 100 caracteres');
+                }
+
+                if ($("#ContactoPuntoEnt1").val().length > 100) {
+                    $("#ContactoPuntoEnt1Val").html('');
+                    $("#ContactoPuntoEnt1Val").append('Este Campo es puede contener maximo 100 caracteres');
+                }
+
+                if ($("#CallePuntosEnt1").val().length == 0) {
+                    $("#CallePuntosEnt1Val").html('');
+                    $("#CallePuntosEnt1Val").append('Este Campo es Obligatorio');
+                }
+
+                if ($("#CallePuntosEnt1").val().length > 100) {
+                    $("#CallePuntosEnt1Val").html('');
+                    $("#CallePuntosEnt1Val").append('Este Campo es puede contener maximo 100 caracteres');
+                }
+
+                if ($("#NoExtPuntosEnt1").val().length == 0) {
+                    $("#NoExtPuntosEnt1Val").html('');
+                    $("#NoExtPuntosEnt1Val").append('Este Campo es Obligatorio');
+                }
+
+                if ($("#NoExtPuntosEnt1").val().length > 20) {
+                    $("#NoExtPuntosEnt1Val").html('');
+                    $("#NoExtPuntosEnt1Val").append('Este Campo es puede contener maximo 20 caracteres');
+                }
+
+                if ($("#NoIntPuntosEnt1").val().length > 20) {
+                    $("#NoIntPuntosEnt1Val").html('');
+                    $("#NoIntPuntosEnt1Val").append('Este Campo es puede contener maximo 20 caracteres');
+                }
+
+                if ($("#ReferenciaPuntosEnt1").val().length > 100) {
+                    $("#ReferenciaPuntosEnt1Val").html('');
+                    $("#ReferenciaPuntosEnt1Val").append('Este Campo es puede contener maximo 100 caracteres');
+                }
+
+                if ($("#IdColoniaEnt1").val() == 0 || $("#IdColoniaEnt1").val() == null) {
+                    $("#IdColoniaEnt1Val").html('');
+                    $("#IdColoniaEnt1Val").append('Debe Elegir una Colonia');
+                }
+
+                if ($('#ObsPuntosEnt1').val().length > 500) {
+                    $("#ObsPuntosEnt1Val").html('');
+                    $("#ObsPuntosEnt1Val").append('Este Campo es puede contener maximo 500 caracteres');
+                }
+
+                if ($("#DestinatarioPuntosEnt1").val().length <= 100 &&
+                    $("#DescripcionPuntoEnt1").val().length != 0 &&
+                    $("#DescripcionPuntoEnt1").val().length <= 100 &&
+                    $("#ContactoPuntoEnt1").val().length <= 100 &&
+                    $("#CallePuntosEnt1").val().length != 0 &&
+                    $("#CallePuntosEnt1").val().length <= 100 &&
+                    $("#NoExtPuntosEnt1").val().length != 0 &&
+                    $("#NoExtPuntosEnt1").val().length <= 20 &&
+                    $("#NoIntPuntosEnt1").val().length <= 20 &&
+                    $("#ReferenciaPuntosEnt1").val().length <= 100 &&
+                    $("#IdColoniaEnt1").val() != 0 &&
+                    $("#IdColoniaEnt1").val() != null &&
+                    $('#ObsPuntosEnt1').val().length <= 500) {
+                    PuntoEntregaValido = true;
+                    console.log("Datos de Punto de Entrega sin punto Validos");
+                }
+                else {
+                    console.log("Datos de Punto de Entrega sin punto No Validos");
+                }
+
+            }
+
+
+            //Verifica que sea correcta la validación para comensar con la inserción de datos
+            if (ProductoValido == true && PuntoRecoleccionValido == true && PuntoEntregaValido == true) {
+                RegistraSolicitud();
+            }
+            else {
+                console.log("No se Cumplio validación de datos");
+            }
+
+
+        });
+
+    });
+
+    function RegistraSolicitud() {
+        var IdSolicitud = null;
+        var IdUsuario = null;
+        var IdClientProvee = null;
+        var Folio = null;
+        var FechaCreacion = null;
+        var RequiereAcuse = $("#RequiereAcuse").prop("checked");
+        var Emergencia = false;
+        var EstatusSolicitud = 1;
+
+        $.ajax({
+            url: '@Url.Action("CreateSolicitud", "Solicitud")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
+                "IdSolicitud": IdSolicitud,
+                "IdUsuario": IdUsuario,
+                "IdClientProvee": IdClientProvee,
+                "Folio": Folio,
+                "FechaCreacion": FechaCreacion,
+                "RequiereAcuse": RequiereAcuse,
+                "Emergencia": Emergencia,
+                "EstatusSolicitud": EstatusSolicitud
+            }),
+            success: function (data) {
+                if (data.Result == true) {
+                    console.log("Solicitud Registrada Correctamente");
+                    RegistraProducto(data.Valor)
+                }
+                else {
+                    if (data.Redirecciona == true) {
+                        window.location = '@Url.Action("Index", "Home")';
+                    }
+                    else {
+                        var mensaje = "Error al registrar solicitud: " & data.Mensaje;
+                        $("#ErrorMSG").html('');
+                        $("#ErrorMSG").append(mensaje);
+                        $('#ModalErrorMSG').modal('show')
+                    }
+                }
+            },
+            error: function () {
+                console.log("No pudo acceder al Metodo");
+            }
+        });
+    }
+
+    function RegistraProducto(id) {
+        var IdSolicitudProducto = null;
+        var IdSolicitud = id;
+        var IdUnidad = $('#IdUnidad').val();
+        var Descripcion = $('#Descripcion').val();
+        var Cantidad = $('#Cantidad').val();
+        var Peso = $('#Peso').val();
+        var Recibido = false;
+        var ObsProducto = null;
+
+        $.ajax({
+            url: '@Url.Action("CreateProducto", "Solicitud")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
+                "IdSolicitudProducto": IdSolicitudProducto,
+                "IdSolicitud": IdSolicitud,
+                "IdUnidad": IdUnidad,
+                "Descripcion": Descripcion,
+                "Cantidad": Cantidad,
+                "Peso": Peso,
+                "Recibido": Recibido,
+                "ObsProducto": ObsProducto
+            }),
+            success: function (data) {
+                if (data.Result == true) {
+                    console.log("Producto Registrado Correctamente");
+                    if ($('#IdPuntoRec1').val() != '') {
+                        RegistrarRecoleccionConPunto(id)
+                    }
+                    else {
+                        RegistrarRecoleccionSinPunto(id)
+                    }
+                }
+                else {
+                    var mensaje = "Error al registrar producto: " & data.Mensaje;
+                    $("#ErrorMSG").html('');
+                    $("#ErrorMSG").append(mensaje);
+                    $('#ModalErrorMSG').modal('show')
+                }
+            },
+            error: function () {
+                console.log("No pudo acceder al Metodo");
+            }
+        });
+    }
+
+    function RegistrarRecoleccionConPunto(id) {
+        var IdSolicitudPuntosEntRec = null;
+        var IdSolicitud = id;
+        var IdPuntoEntRec = $('#IdPuntoRec1').val();
+        var TipoPunto = 1;
+        var ObsPuntosEntRec = $('#ObsPuntosRec1').val();
+        var Problema = false;
+        var EstatusPuntosEntRec = false;
+
+        $.ajax({
+            url: '@Url.Action("CreateSolicitudPunto", "Solicitud")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
+                "IdSolicitudPuntosEntRec": IdSolicitudPuntosEntRec,
+                "IdSolicitud": IdSolicitud,
+                "IdPuntoEntRec": IdPuntoEntRec,
+                "TipoPunto": TipoPunto,
+                "ObsPuntosEntRec": ObsPuntosEntRec,
+                "Problema": Problema,
+                "EstatusPuntosEntRec": EstatusPuntosEntRec
+            }),
+            success: function (data) {
+                if (data.Result == true) {
+                    console.log("Punto de Recolección Registrado Correctamente");
+                    if ($('#IdPuntoEnt1').val() != '') {
+                        RegistrarEntregaConPunto(id)
+                    }
+                    else {
+                        RegistrarEntregaSinPunto(id)
+                    }
+                }
+                else {
+                    var mensaje = "Error al registrar Punto de recoleccion: " & data.Mensaje;
+                    $("#ErrorMSG").html('');
+                    $("#ErrorMSG").append(mensaje);
+                    $('#ModalErrorMSG').modal('show')
+                }
+            },
+            error: function () {
+                console.log("No pudo acceder al Metodo");
+            }
+        });
+
+    }
+
+    function RegistrarRecoleccionSinPunto(id) {
+        var IdSolicitudPuntosEntRec = null;
+        var IdSolicitud = id;
+        var IdPuntoEntRec = $('#IdPuntoRec1').val();
+        var IdGuia = null;
+        var IdColonia = $('#IdColoniaRec1').val();
+        var TipoPunto = 1;
+        var FechaProgramada = null;
+        var DescripcionPuntoEntRec = $('#DescripcionPuntoRec1').val();
+        var ContactoPuntoEntRec = $('#ContactoPuntoRec1').val();
+        var CallePuntosEntRec = $('#CallePuntosRec1').val();
+        var NoExtPuntosEntRec = $('#NoExtPuntosRec1').val();
+        var NoIntPuntosEntRec = $('#NoIntPuntosRec1').val();
+        var ReferenciaPuntosEntRec = $('#ReferenciaPuntosRec1').val();
+        var ObsPuntosEntRec = $('#ObsPuntosRec1').val();
+        var FechaReal = null;
+        var FirmaPuntosEntRec = null;
+        var FotoPuntosEntRec = null;
+        var Latitud = null;
+        var Longitud = null;
+        var Problema = false;
+        var ObsProblema = null;
+        var EstatusPuntosEntRec = false;
+
+        $.ajax({
+            url: '@Url.Action("CreateSolicitudPunto", "Solicitud")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
+                "IdSolicitudPuntosEntRec": IdSolicitudPuntosEntRec,
+                "IdSolicitud": IdSolicitud,
+                "IdPuntoEntRec": IdPuntoEntRec,
+                "TipoPunto": TipoPunto,
+                "DescripcionPuntoEntRec": DescripcionPuntoEntRec,
+                "ContactoPuntoEntRec": ContactoPuntoEntRec,
+                "CallePuntosEntRec": CallePuntosEntRec,
+                "NoExtPuntosEntRec": NoExtPuntosEntRec,
+                "NoIntPuntosEntRec": NoIntPuntosEntRec,
+                "ReferenciaPuntosEntRec": ReferenciaPuntosEntRec,
+                "IdColonia": IdColonia,
+                "ObsPuntosEntRec": ObsPuntosEntRec,
+                "Problema": Problema,
+                "EstatusPuntosEntRec": EstatusPuntosEntRec
+            }),
+            success: function (data) {
+                if (data.Result == true) {
+                    console.log("Punto de Recolección con Dirección Registrado Correctamente");
+                    if ($('#IdPuntoEnt1').val() != '') {
+                        RegistrarEntregaConPunto(id)
+                    }
+                    else {
+                        RegistrarEntregaSinPunto(id)
+                    }
+                }
+                else {
+                    var mensaje = "Error al registrar Punto de recoleccion: " & data.Mensaje;
+                    $("#ErrorMSG").html('');
+                    $("#ErrorMSG").append(mensaje);
+                    $('#ModalErrorMSG').modal('show')
+                }
+            },
+            error: function () {
+                console.log("No pudo acceder al Metodo");
+            }
+        });
+
+    }
+
+    function RegistrarEntregaConPunto(id) {
+        var IdSolicitudPuntosEntRec = null;
+        var IdSolicitud = id;
+        var IdPuntoEntRec = $('#IdPuntoEnt1').val();
+        var TipoPunto = 2;
+        var DestinatarioPuntoEntRec = $('#DestinatarioPuntosEnt1').val()
+        var ObsPuntosEntRec = $('#ObsPuntosEnt1').val();
+        var Problema = false;
+        var EstatusPuntosEntRec = false;
+
+        if ($('#ObsPuntosEnt1').val().length <= 500) {
+
+            $.ajax({
+                url: '@Url.Action("CreateSolicitudPunto", "Solicitud")',
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({
+                    "IdSolicitudPuntosEntRec": IdSolicitudPuntosEntRec,
+                    "IdSolicitud": IdSolicitud,
+                    "IdPuntoEntRec": IdPuntoEntRec,
+                    "TipoPunto": TipoPunto,
+                    "DestinatarioPuntoEntRec" : DestinatarioPuntoEntRec,
+                    "ObsPuntosEntRec": ObsPuntosEntRec,
+                    "Problema": Problema,
+                    "EstatusPuntosEntRec": EstatusPuntosEntRec
+                }),
+                success: function (data) {
+                    if (data.Result == true) {
+                        console.log("Punto de Entrega Registrado Correctamente");
+                        window.location = '@Url.Action("Details", "Solicitud")' + "/" + id;
+                    }
+                    else {
+                        var mensaje = "Error al registrar Punto de entrega: " & data.Mensaje;
+                        $("#ErrorMSG").html('');
+                        $("#ErrorMSG").append(mensaje);
+                        $('#ModalErrorMSG').modal('show')
+                    }
+                },
+                error: function () {
+                    console.log("No pudo acceder al Metodo");
+                }
+            });
+
+        }
+    }
+
+    function RegistrarEntregaSinPunto(id) {
+        var IdSolicitudPuntosEntRec = null;
+        var IdSolicitud = id;
+        var IdPuntoEntRec = $('#IdPuntoEnt1').val();
+        var IdGuia = null;
+        var IdColonia = $('#IdColoniaEnt1').val();
+        var TipoPunto = 2;
+        var FechaProgramada = null;
+        var DestinatarioPuntoEntRec = $('#DestinatarioPuntosEnt1').val()
+        var DescripcionPuntoEntRec = $('#DescripcionPuntoEnt1').val();
+        var ContactoPuntoEntRec = $('#ContactoPuntoEnt1').val();
+        var CallePuntosEntRec = $('#CallePuntosEnt1').val();
+        var NoExtPuntosEntRec = $('#NoExtPuntosEnt1').val();
+        var NoIntPuntosEntRec = $('#NoIntPuntosEnt1').val();
+        var ReferenciaPuntosEntRec = $('#ReferenciaPuntosEnt1').val();
+        var ObsPuntosEntRec = $('#ObsPuntosEnt1').val();
+        var FechaReal = null;
+        var FirmaPuntosEntRec = null;
+        var FotoPuntosEntRec = null;
+        var Latitud = null;
+        var Longitud = null;
+        var Problema = false;
+        var ObsProblema = null;
+        var EstatusPuntosEntRec = false;
+
+        $.ajax({
+            url: '@Url.Action("CreateSolicitudPunto", "Solicitud")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
+                "IdSolicitudPuntosEntRec": IdSolicitudPuntosEntRec,
+                "IdSolicitud": IdSolicitud,
+                "IdPuntoEntRec": IdPuntoEntRec,
+                "TipoPunto": TipoPunto,
+                "DestinatarioPuntoEntRec": DestinatarioPuntoEntRec,
+                "DescripcionPuntoEntRec": DescripcionPuntoEntRec,
+                "ContactoPuntoEntRec": ContactoPuntoEntRec,
+                "CallePuntosEntRec": CallePuntosEntRec,
+                "NoExtPuntosEntRec": NoExtPuntosEntRec,
+                "NoIntPuntosEntRec": NoIntPuntosEntRec,
+                "ReferenciaPuntosEntRec": ReferenciaPuntosEntRec,
+                "IdColonia": IdColonia,
+                "ObsPuntosEntRec": ObsPuntosEntRec,
+                "Problema": Problema,
+                "EstatusPuntosEntRec": EstatusPuntosEntRec
+
+            }),
+            success: function (data) {
+                if (data.Result == true) {
+                    console.log("Punto de Entrega con Dirección Registrado Correctamente");
+                    window.location = '@Url.Action("Details", "Solicitud")' + "/" + id;
+                }
+                else {
+                    var mensaje = "Error al registrar Punto de entrega: " & data.Mensaje;
+                    $("#ErrorMSG").html('');
+                    $("#ErrorMSG").append(mensaje);
+                    $('#ModalErrorMSG').modal('show')
+                }
+            },
+            error: function () {
+                console.log("No pudo acceder al Metodo");
+            }
+        });
+
+    }
+
+</script>
+
+<!--Scripts Especificos de Punto de Recoleccion-->
+<script>
+    function ElegirPuntoRec1(id) {
+        $.ajax({
+            url: '@Url.Action("InformacionPunto", "Solicitud")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                LimpiarCamposRec1();
+                $("#IdPuntoRec1").val(Data.idpunto);
+                $("#DescripcionPuntoRec1").val(Data.descripcion);
+                $("#ContactoPuntoRec1").val(Data.contacto);
+                $("#CallePuntosRec1").val(Data.calle);
+                $("#NoExtPuntosRec1").val(Data.noext);
+                $("#NoIntPuntosRec1").val(Data.noint);
+                $("#ReferenciaPuntosRec1").val(Data.referencia);
+                $("#c1Rec1").val(Data.cp);
+                $("#MunicipioRec1").val(Data.municipio);
+                $("#EstadoRec1").val(Data.estado);
+                $("#PaisRec1").val(Data.pais);
+                var content = '<option value="' + Data.idcolonia + '">' + Data.colonia + '</option>';
+                $("#IdColoniaRec1").append(content);
+                $('#IdColoniaRec1').selectpicker('refresh');
+                $("#OtraDireccionRec1").prop("checked", false);
+                $(".AlertaDanger").html('');
+                ActivarInputsRec1(true);
+            },
+            error: function () {
+                console.log("No pudo acceder al metodo");
+            }
+        });
+    }
+
+
+
+    function ListarColoniasRec1(id) {
+        $.ajax({
+            url: '@Url.Action("ListaColonias", "Solicitud")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                $("#IdColoniaRec1").html('');
+                $("#IdColoniaRec1").append('<option value ="0">Elige una Colonia</option>');
+                $.each(Data,
+                    function (index, propie) {
+                        var content = '<option value="' + propie.idcolonia + '">' + propie.colonia + '</option>';
+                        $("#IdColoniaRec1").append(content);
+                    });
+                $('#IdColoniaRec1').selectpicker('refresh');
+            },
+            error: function () {
+                console.log("No pudo acceder al metodo");
+            }
+        });
+    }
+
+    function ComplementoDomiclioRec1(id) {
+        $.ajax({
+            url: '@Url.Action("ComplementoDomicilio", "Solicitud")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                $("#MunicipioRec1").val(Data.municipio);
+                $("#EstadoRec1").val(Data.estado);
+                $("#PaisRec1").val(Data.pais);
+            },
+            error: function () {
+                console.log("No pudo acceder al metodo");
+            }
+        });
+    }
+
+    function ActivarInputsRec1(bool) {
+        $("#IdPuntoRec1").prop('disabled', bool);
+        $("#DescripcionPuntoRec1").prop('disabled', bool);
+        $("#ContactoPuntoRec1").prop('disabled', bool);
+        $("#CallePuntosRec1").prop('disabled', bool);
+        $("#NoExtPuntosRec1").prop('disabled', bool);
+        $("#NoIntPuntosRec1").prop('disabled', bool);
+        $("#ReferenciaPuntosRec1").prop('disabled', bool);
+        $("#c1Rec1").prop('disabled', bool);
+    }
+
+    function LimpiarCamposRec1() {
+        $("#IdPuntoRec1").val('');
+        $("#DescripcionPuntoRec1").val('');
+        $("#ContactoPuntoRec1").val('');
+        $("#CallePuntosRec1").val('');
+        $("#NoExtPuntosRec1").val('');
+        $("#NoIntPuntosRec1").val('');
+        $("#ReferenciaPuntosRec1").val('');
+        $("#c1Rec1").val('');
+        $("#IdColoniaRec1").html('');
+        $("#MunicipioRec1").val('');
+        $("#EstadoRec1").val('');
+        $("#PaisRec1").val('');
+        $('#IdColoniaRec1').selectpicker('refresh');
+    }
+</script>
+
+<!--Scripts Especificos de Punto de Recoleccion-->
+<script>
+    function ObtenerClientes(id) {
+        $.ajax({
+            url: '@Url.Action("ListaClientes", "Solicitud")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                $("#ListCliente").html('');
+                $("#ListCliente").append('<option value ="">Elige un Cliente</option>');
+                $.each(Data,
+                    function (index, propie) {
+                        var content = '<option value="' + propie.idcliente + '">' + propie.cliente + '</option>';
+                        $("#ListCliente").append(content);
+                    });
+                $('#ListCliente').selectpicker('refresh');
+            },
+            error: function () {
+                console.log("No pudo acceder al metodo");
+            }
+        });
+    }
+
+    function VerPuntos(id) {
+        $("#OperTitle").html('');
+        $("#OperTitle").append('Lugares de Entrega')
+        $("#OperBody").html('');
+        $("#OperBody").load('@Url.Action("Puntos", "Solicitud")' + '/' + id);
+        $('#OperModal').modal('show');
+    }
+
+    function ListarColonias(id) {
+        $.ajax({
+            url: '@Url.Action("ListaColonias", "Solicitud")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                $("#IdColoniaEnt1").html('');
+                $("#IdColoniaEnt1").append('<option value ="0">Elige una Colonia</option>');
+                $.each(Data,
+                    function (index, propie) {
+                        var content = '<option value="' + propie.idcolonia + '">' + propie.colonia + '</option>';
+                        $("#IdColoniaEnt1").append(content);
+                    });
+                $('#IdColoniaEnt1').selectpicker('refresh');
+            },
+            error: function () {
+                console.log("No pudo acceder al metodo");
+            }
+        });
+    }
+
+    function ComplementoDomiclio(id) {
+        $.ajax({
+            url: '@Url.Action("ComplementoDomicilio", "Solicitud")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                $("#MunicipioEnt1").val(Data.municipio);
+                $("#EstadoEnt1").val(Data.estado);
+                $("#PaisEnt1").val(Data.pais);
+            },
+            error: function () {
+                console.log("No pudo acceder al metodo");
+            }
+        });
+    }
+
+    function ActivarInputs(bool) {
+        $("#IdPuntoEnt1").prop('disabled', bool);
+        $("#DescripcionPuntoEnt1").prop('disabled', bool);
+        $("#ContactoPuntoEnt1").prop('disabled', bool);
+        $("#CallePuntosEnt1").prop('disabled', bool);
+        $("#NoExtPuntosEnt1").prop('disabled', bool);
+        $("#NoIntPuntosEnt1").prop('disabled', bool);
+        $("#ReferenciaPuntosEnt1").prop('disabled', bool);
+        $("#c1Ent1").prop('disabled', bool);
+    }
+
+    function LimpiarCampos() {
+        $("#IdPuntoEnt1").val('');
+        $("#DescripcionPuntoEnt1").val('');
+        $("#ContactoPuntoEnt1").val('');
+        $("#CallePuntosEnt1").val('');
+        $("#NoExtPuntosEnt1").val('');
+        $("#NoIntPuntosEnt1").val('');
+        $("#ReferenciaPuntosEnt1").val('');
+        $("#c1Ent1").val('');
+        $("#IdColoniaEnt1").html('');
+        $("#MunicipioEnt1").val('');
+        $("#EstadoEnt1").val('');
+        $("#PaisEnt1").val('');
+        $('#IdColoniaEnt1').selectpicker('refresh');
+    }
+
+</script>

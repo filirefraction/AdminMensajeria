@@ -1,0 +1,64 @@
+﻿@model AdminMensajeria.Models.OPE_GUIA
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>OPE_GUIA</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaCreacionGuia)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaCreacionGuia)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaProgramadaGuia)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaProgramadaGuia)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CompletaGuia)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CompletaGuia)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EstatusGuia)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EstatusGuia)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GEN_USUARIO.NombreUsuario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GEN_USUARIO.NombreUsuario)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

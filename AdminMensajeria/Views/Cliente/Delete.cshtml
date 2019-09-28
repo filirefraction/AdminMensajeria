@@ -1,0 +1,72 @@
+﻿@model AdminMensajeria.Models.OPE_CLIENTPROVEE
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>OPE_CLIENTPROVEE</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoClientProvee)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TipoClientProvee)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RazonSocial)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RazonSocial)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RFC)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RFC)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ObsClientProvee)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ObsClientProvee)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EstatusClientProvee)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EstatusClientProvee)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OPE_CATEGORIA.Categoria)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OPE_CATEGORIA.Categoria)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

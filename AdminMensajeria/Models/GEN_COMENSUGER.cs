@@ -18,8 +18,9 @@ namespace AdminMensajeria.Models
         public int IdUsuario { get; set; }
         public string Asunto { get; set; }
         public string Cuerpo { get; set; }
-        public string FechaCreacioComenSuger { get; set; }
-        public string FechaAtencionComenSuger { get; set; }
+        public System.DateTime FechaCreacionComenSuger { get; set; }
+        public string Respuesta { get; set; }
+        public Nullable<System.DateTime> FechaAtencionComenSuger { get; set; }
         public bool EstatusComenSuger { get; set; }
     
         public virtual GEN_USUARIO GEN_USUARIO { get; set; }

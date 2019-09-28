@@ -1,0 +1,135 @@
+﻿@model IEnumerable<AdminMensajeria.Models.GEN_MUNICIPIO>
+
+@{
+    ViewBag.Title = "Municipios";
+}
+
+<h2>Municipios</h2>
+
+<div class="form-horizontal">
+    <div class="form-group row">
+        <div class="col-md-3">
+            @Html.DropDownList("ListPais", (IEnumerable<SelectListItem>)ViewBag.ListPais, "1.- Elige Un País", htmlAttributes: new { @class = "form-control input-sm" })
+            <span class="AlertaDanger" id="ListPaisVal"></span>
+        </div>
+        <div class="col-md-3" id="DivEstados">
+            <select id="ListEstado" name="ListEstado" class="form-control input-sm">
+                <option value="">2.- Elige un Estado</option>
+            </select>
+           <span class="AlertaDanger" id="ListEstadoVal"></span>
+            
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-1">
+            <a id="RegistrarMunicipio" data-toggle="tooltip" title="Nuevo Municipio" class="btn btn-default btn-sm ">
+                <span class="glyphicon glyphicon-plus"></span> Nuevo
+            </a>
+        </div>
+        <div class="col-md-8">&nbsp;</div>
+        <div class="col-md-offset-2 col-md-1">
+            <a href="@Url.Action("Configuracion", "Home")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Menu">
+                <span class="glyphicon glyphicon-home"></span> Volver
+            </a>
+        </div>
+    </div>
+
+    <div id="VistaMinicipios"></div>
+    
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ListPais').selectpicker({
+            liveSearch: true
+        });
+        $('#ListEstado').selectpicker({
+            liveSearch: true
+        });
+        $("button").addClass("input-sm").css({ "font-size": "12px" });
+
+        $('#ListPais').change(function () {
+            if ($('#ListPais').val() != '') {
+                var IdPais = $('#ListPais').val();
+                $("#ListPaisVal").html('');
+                ObtenerEstados(IdPais);
+
+            }
+            else {
+                $("#ListPaisVal").html('');
+                $("#ListPaisVal").append('Debe elegir un país para ver los estados')
+            }
+        });
+
+        $('#ListEstado').change(function () {
+
+            if ($('#ListEstado').val() != '') {
+                var IdEstado = $('#ListEstado').val();
+                $("#ListEstadoVal").html('');
+                $("#VistaMinicipios").load('@Url.Action("Municipios", "Municipio")' + '/' + IdEstado);
+            }
+            else {
+                $("#ListEstadoVal").html('');
+                $("#ListEstadoVal").append('Debe elegir un estado para ver los municipios');
+            }
+        });
+
+        $("#RegistrarMunicipio").click(function () {
+            var IdPais = $("#ListPais").val();
+            var IdEstado = $("#ListEstado").val();
+
+            if ($("#ListPais").val() == '') {
+                $("#ListPaisVal").html('');
+                $("#ListPaisVal").append('Debe elegir un país para ver los estados')
+            }
+            else {
+                $("#ListPaisVal").html('');
+            }
+
+            if ($("#ListEstado").val() == '') {
+                $("#ListEstadoVal").html('');
+                $("#ListEstadoVal").append('Debe elegir un estado para ver los municipios');
+            }
+            else {
+                $("#ListEstadoVal").html('');
+            }
+
+            if ($('#ListPais').val() != '' && $("#ListEstado").val() != '') {
+                NuevoMunicipio(IdEstado);
+            }
+
+        });
+    });
+
+    function ObtenerEstados(id)
+    {
+        $.ajax({
+            url: '@Url.Action("ListaEstados", "Municipio")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                $("#ListEstado").html('');
+                $("#ListEstado").append('<option value =""> 2.- Elige un Estado</option>');
+                $.each(Data,
+                    function (index, propie) {
+                        var content = '<option value="' + propie.idestado + '">' + propie.estado + '</option>';
+                        $("#ListEstado").append(content);
+                    });
+                $('#ListEstado').selectpicker('refresh');
+            },
+            error: function () {
+                console.log("No pudo acceder al metodo");
+            }
+        });
+    }
+
+    function NuevoMunicipio(id) {
+        $("#OperTitle").html('');
+        $("#OperTitle").append('Nuevo Municipio')
+        $("#OperBody").html('');
+        $("#OperBody").load('@Url.Action("Create", "Municipio")' + '/' + id);
+        $('#OperModal').modal('show');
+    }
+</script>

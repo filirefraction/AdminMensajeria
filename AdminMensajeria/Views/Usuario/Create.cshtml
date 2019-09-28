@@ -1,0 +1,333 @@
+﻿@model AdminMensajeria.Models.GEN_USUARIO
+
+@{
+    ViewBag.Title = "Usuario";
+}
+
+<div class="form-horizontal">
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                @Html.DropDownList("IdCategoria", (IEnumerable<SelectListItem>)ViewBag.ListCategoria, "Elige una Categoría", htmlAttributes: new { @class = "form-control input-sm" })
+                <label for="IdCategoria">Categoría (*)</label>
+            </div>
+            <span class="AlertaDanger" id="IdCategoriaVal"></span>
+        </div>
+        <div class="col-md-6">
+            <div class="field">
+                <select id="IdClientProvee" class="form-control input-sm">
+                    <option value="">Elige un Cliente</option>
+                </select>
+                <label for="IdClientProvee">Cliente (*)</label>
+            </div>
+            <span class="AlertaDanger" id="IdClientProveeVal"></span>
+        </div>
+     
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                <select id="IdPuntoEntRec" class="form-control input-sm">
+                    <option value="">Elige un Punto</option>
+                </select>
+                <label for="IdPuntoEntRec">Punto (*)</label>
+            </div>
+            <span class="AlertaDanger" id="IdPuntoEntRecVal"></span>
+        </div>
+        <div class="col-md-6">
+            <div class="field">
+                <select id="TipoUsuario" class="form-control input-sm">
+                    <option value="0">Elige Tipo de Usuario</option>
+                    <option value="1">Administrador</option>
+                    <option value="2">Solicitante</option>
+                    <option value="3">Ejecutivo</option>
+                    <option value="4">Mensajero</option>
+                </select>
+                <label for="TipoUsuario">Tipo de Usuario (*)</label>
+            </div>
+            <span class="AlertaDanger" id="TipoUsuarioVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.NombreUsuario, new { htmlAttributes = new { @class = "form-control input-sm", @PlaceHolder = "Juan Perez", @maxlength = "100" } })
+                <label for="NombreUsuario">Nombre (*)</label>
+            </div>
+            <span class="AlertaDanger" id="NombreUsuarioVal"></span>
+        </div>
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.CorreoUsuario, new { htmlAttributes = new { @class = "form-control input-sm", @PlaceHolder = "juan@algo.com", @maxlength = "100" } })
+                <label for="CorreoUsuario">Correo (*)</label>
+            </div>
+            <span class="AlertaDanger" id="CorreoUsuarioVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.Usuario, new { htmlAttributes = new { @class = "form-control input-sm", @PlaceHolder = "jperez", @maxlength = "100" } })
+                <label for="Usuario">Usuario (*)</label>
+            </div>
+            <span class="AlertaDanger" id="UsuarioVal"></span>
+        </div>
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.Contrasena, new { htmlAttributes = new { @class = "form-control input-sm", @PlaceHolder = "******", @maxlength = "100" } })
+                <label for="Contrasena">Contraseña (*)</label>
+            </div>
+            <span class="AlertaDanger" id="ContrasenaVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-2">
+            <button id="ValidaUsuario" type="button" class="btn btn-primary btn-sm ">
+                <span class="glyphicon glyphicon-floppy-disk"></span> Crear
+            </button>
+        </div>
+        <div class="col-md-7">
+            <span class="AlertaDanger" id="MensajeError"></span>
+        </div>
+        <div id="VolverCliente" class="col-md-2">
+            <button onclick="CerrarModal()" class="btn btn-danger btn-sm">
+                <span class="glyphicon glyphicon-floppy-remove"></span> Cancelar
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#IdCategoria, #IdClientProvee, #IdPuntoEntRec, #TipoUsuario').selectpicker({
+            liveSearch: true
+        });
+
+        $("button").addClass("input-sm").css({ "font-size": "12px" });
+
+        $("#IdCategoria").change(function () {
+            if ($('#IdCategoria').val() != '') {
+                var IdCategoria = $('#IdCategoria').val();
+                $("#IdCategoriaVal").html('');
+                ObtenerClientes(IdCategoria);
+            }
+            else {
+                $("#IdCategoriaVal").html('');
+                $("#IdCategoriaVal").append('Debe elegir una Categoría para ver los Clientes');
+            }
+        });
+
+        $("#IdClientProvee").change(function () {
+            if ($('#IdClientProvee').val() != '') {
+                var IdClientProvee = $('#IdClientProvee').val();
+                $("#IdClientProveeVal").html('');
+                ObtenerPuntos(IdClientProvee);
+            }
+            else {
+                $("#IdClientProveeVal").html('');
+                $("#IdClientProveeVal").append('Debe elegir un Cliente para ver los Puntos');
+            }
+
+
+            $("#IdClientProveeVal").html('');
+        });
+
+        $("#IdPuntoEntRec").change(function () {
+            $("#IdPuntoEntRecVal").html('');
+        });
+
+        $("#TipoUsuario").change(function () {
+            $("#TipoUsuarioVal").html('');
+        });
+
+        $("#NombreUsuario").keyup(function () {
+            $("#NombreUsuarioVal").html('');
+        });
+
+        $("#CorreoUsuario").keyup(function () {
+            $("#CorreoUsuarioVal").html('');
+        });
+
+        $("#Usuario").keyup(function () {
+            $("#UsuarioVal").html('');
+        });
+
+        $("#Contrasena").keyup(function () {
+            $("#ContrasenaVal").html('');
+        });
+
+
+        ///////////////////////////////////////////////////////////////
+        $("#ValidaUsuario").click(function () {
+            var IdUsuario = null;
+            var IdPuntoEntRec = $("#IdPuntoEntRec").val();
+            var TipoUsuario = $("#TipoUsuario").val();
+            var NombreUsuario = $("#NombreUsuario").val();
+            var Usuario = $("#Usuario").val();
+            var Contrasena = $("#Contrasena").val();
+            var CorreoUsuario = $("#CorreoUsuario").val();
+            var CambiarContrasena = true;
+            var EstatusUsuario = true;
+
+            ///////////////////////////////////////////////////////////
+            if ($("#IdCategoria").val() == '') {
+                $("#IdCategoriaVal").html('');
+                $("#IdCategoriaVal").append('Debe elegir una categoría');
+            }
+
+            if ($("#IdClientProvee").val() == '') {
+                $("#IdClientProveeVal").html('');
+                $("#IdClientProveeVal").append('Debe elegir un Cliente');
+            }
+
+            if ($("#IdPuntoEntRec").val() == '') {
+                $("#IdPuntoEntRecVal").html('');
+                $("#IdPuntoEntRecVal").append('Debe elegir un Punto');
+            }
+
+            if ($("#TipoUsuario").val() == 0) {
+                $("#TipoUsuarioVal").html('');
+                $("#TipoUsuarioVal").append('Debe elegir un Usuario');
+            }
+
+
+            if ($("#NombreUsuario").val().length == 0) {
+                $("#NombreUsuarioVal").html('');
+                $("#NombreUsuarioVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#NombreUsuario").val().length > 100) {
+                $("#NombreUsuarioVal").html('');
+                $("#NombreUsuarioVal").append('Este Campo es puede contener maximo 100 caracteres');
+            }
+
+            if ($("#Usuario").val().length == 0) {
+                $("#UsuarioVal").html('');
+                $("#UsuarioVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#Usuario").val().length > 100) {
+                $("#UsuarioVal").html('');
+                $("#UsuarioVal").append('Este Campo es puede contener maximo 100 caracteres');
+            }
+
+            if ($("#Contrasena").val().length == 0) {
+                $("#ContrasenaVal").html('');
+                $("#ContrasenaVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#Contrasena").val().length > 100) {
+                $("#ContrasenaVal").html('');
+                $("#ContrasenaVal").append('Este Campo es puede contener maximo 100 caracteres');
+            }
+
+
+            if ($("#CorreoUsuario").val().length == 0) {
+                $("#CorreoUsuarioVal").html('');
+                $("#CorreoUsuarioVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#CorreoUsuario").val().length > 100) {
+                $("#CorreoUsuarioVal").html('');
+                $("#CorreoUsuarioVal").append('Este Campo es puede contener maximo 100 caracteres');
+            }
+            
+
+            if ($("#IdCategoria").val() != '' && $("#IdClientProvee").val() != '' &&
+                $("#IdPuntoEntRec").val() != '' && $("#TipoUsuario").val() != 0 &&
+                $("#NombreUsuario").val().length != 0 && $("#NombreUsuario").val().length <= 100 &&
+                $("#Usuario").val().length != 0 && $("#Usuario").val().length <= 100 &&
+                $("#Contrasena").val().length != 0 && $("#Contrasena").val().length <= 100 &&
+                $("#CorreoUsuario").val().length != 0 && $("#CorreoUsuario").val().length <= 100 ) {
+
+                $.ajax({
+                    url: '@Url.Action("CreateUsuario", "Usuario")',
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "IdUsuario": IdUsuario,
+                        "IdPuntoEntRec": IdPuntoEntRec,
+                        "TipoUsuario": TipoUsuario,
+                        "NombreUsuario": NombreUsuario,
+                        "Usuario": Usuario,
+                        "Contrasena": Contrasena,
+                        "CorreoUsuario": CorreoUsuario,
+                        "CambiarContrasena": CambiarContrasena,
+                        "EstatusUsuario": EstatusUsuario
+                    }),
+                    success: function (data) {
+                        if (data.Result == true) {
+                          window.location = '@Url.Action("Index", "Usuario")';
+                        }
+                        else {
+                            $("#MensajeError").html('');
+                            $("#MensajeError").append(data.Mensaje);
+                        }
+                    },
+                    error: function () {
+                        console.log("No pudo acceder al Metodo");
+                    }
+                });
+            }
+            else {
+                console.log("No se cumplio la validación de datos");
+            }
+        });
+    });
+
+    function ObtenerClientes(id) {
+        $.ajax({
+            url: '@Url.Action("ListaClientes", "Usuario")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                $("#IdClientProvee").html('');
+                $("#IdClientProvee").append('<option value ="">Elige un Cliente</option>');
+                $.each(Data,
+                    function (index, propie) {
+                        var content = '<option value="' + propie.idcliente + '">' + propie.cliente + '</option>';
+                        $("#IdClientProvee").append(content);
+                    });
+                $('#IdClientProvee').selectpicker('refresh');
+            },
+            error: function () {
+                console.log("No pudo acceder al metodo");
+            }
+        });
+    }
+
+    function ObtenerPuntos(id) {
+        $.ajax({
+            url: '@Url.Action("ListaPuntos", "Usuario")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                $("#IdPuntoEntRec").html('');
+                $("#IdPuntoEntRec").append('<option value ="">Elige un Punto</option>');
+                $.each(Data,
+                    function (index, propie) {
+                        var content = '<option value="' + propie.idpunto + '">' + propie.punto + '</option>';
+                        $("#IdPuntoEntRec").append(content);
+                    });
+                $('#IdPuntoEntRec').selectpicker('refresh');
+            },
+            error: function () {
+                console.log("No pudo acceder al metodo");
+            }
+        });
+    }
+
+    function CerrarModal() {
+        $("#OperTitle").html('');
+        $("#OperBody").html('');
+        $('#OperModal').modal('hide');
+    }
+</script>
+

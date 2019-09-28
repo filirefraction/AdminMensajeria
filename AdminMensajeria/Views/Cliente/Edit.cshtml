@@ -1,0 +1,216 @@
+﻿@model AdminMensajeria.Models.OPE_CLIENTPROVEE
+
+@{
+    ViewBag.Title = "Editar Clientes";
+}
+
+
+<div class="form-horizontal">
+    <div class="form-group row">
+        <div class="col-md-1">
+            <button id="ValidaCliente" type="button" class="btn btn-primary btn-sm ">
+                <span class="glyphicon glyphicon-floppy-disk"></span> Guardar
+            </button>
+        </div>
+        <div class="col-md-10">
+            <span class="AlertaDanger" id="MensajeError"></span>
+        </div>
+        <div class="col-md-1">
+            <a href="@Url.Action("Index","Cliente")" class="btn btn-danger btn-sm">
+                <span class="glyphicon glyphicon-floppy-remove"></span> Cancelar
+            </a>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                @Html.DropDownList("IdCategoria", null, "Elige una Categoría", htmlAttributes: new { @class = "form-control" })
+                <label for="IdCategoria">Categoría (*)</label>
+            </div>
+            <span class="AlertaDanger" id="IdCategoriaVal"></span>
+        </div>
+        <div class="col-md-6">
+            <div class="field">
+                <select id="TipoClientProvee" class="form-control input-sm">
+                    <option value="0">Elige Tipo de Registro</option>
+                    <option value="1">Cliente</option>
+                    <option value="2">Proveedor</option>
+                </select>
+                <label for="TipoClientProvee">Tipo de Registro (*)</label>
+            </div>
+            <span class="AlertaDanger" id="TipoClientProveeVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.RazonSocial, new { htmlAttributes = new { @class = "form-control input-sm", @PlaceHolder = "Empresa S.A. de C.V.", @maxlength = "200" } })
+                <label for="RazonSocial">Nombre o Razón Social (*)</label>
+            </div>
+            <span class="AlertaDanger" id="RazonSocialVal"></span>
+        </div>
+        <div class="col-md-4">
+            <div class="field">
+                @Html.EditorFor(model => model.RFC, new { htmlAttributes = new { @class = "form-control input-sm", @PlaceHolder = "XXXXXXXXXXXXX", @maxlength = "20" } })
+                <label for="RFC">RFC (Opcional)</label>
+            </div>
+            <span class="AlertaDanger" id="RFCVal"></span>
+        </div>
+        <div class="col-md-2">
+            <div class="field">
+                @Html.EditorFor(model => model.EstatusClientProvee)
+                <label for="EstatusClientProvee">Activo</label>
+            </div>
+            <span class="AlertaDanger" id="EstatusClientProveeVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-12">
+            <div class="field">
+                <input id="ObsClientProvee" value="@Model.ObsClientProvee" class="form-control input-sm" PlaceHolder="Observaciones de cliente o Proveedor" maxlength="500" />
+                <label for="ObsClientProvee">Observaciones (Opcional)</label>
+            </div>
+            <span class="AlertaDanger" id="ObsClientProveeVal"></span>
+        </div>
+    </div>
+
+    <div>
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#direcciones">Puentos de Recolección y Entrega</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="direcciones" class="tab-pane fade in active">
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function (){
+        $("#direcciones").load('@Url.Action("Puntos", "PuntosEntRec")' + '/' + @Model.IdClientProvee);
+
+        $("#TipoClientProvee option[value=" + @Model.TipoClientProvee + "]").attr("selected", true);
+
+        $('#IdCategoria').selectpicker({
+            liveSearch: true
+        });
+
+        $('#TipoClientProvee').selectpicker({
+            liveSearch: true
+        });
+
+        $("button").addClass("input-sm").css({ "font-size": "12px" });
+
+        $("#IdCategoria").change(function () {
+            $("#IdCategoriaVal").html('');
+        });
+
+        $("#TipoClientProvee").change(function () {
+            $("#TipoClientProveeVal").html('');
+        });
+
+        $("#RazonSocial").keyup(function () {
+            $("#RazonSocialVal").html('');
+        });
+
+        $("#RFC").keyup(function () {
+            $("#RFCVal").html('');
+        });
+
+        $("#ObsClientProvee").keyup(function () {
+            $("#ObsClientProveeVal").html('');
+        });
+
+
+        ///////////////////////////////////////////////////////////////
+        $("#ValidaCliente").click(function () {
+            var IdCategoria = $("#IdCategoria").val();
+            var TipoClientProvee = $("#TipoClientProvee").val();
+            var RazonSocial = $("#RazonSocial").val();
+            var RFC = $("#RFC").val();
+            var ObsClientProvee = $("#ObsClientProvee").val();
+            var EstatusClientProvee = $("#EstatusClientProvee").prop("checked");
+
+            ///////////////////////////////////////////////////////////
+            if ($("#IdCategoria").val() == '') {
+                $("#IdCategoriaVal").html('');
+                $("#IdCategoriaVal").append('Debe elegir una categoría');
+            }
+
+            if ($("#TipoClientProvee").val() == 0) {
+                $("#TipoClientProveeVal").html('');
+                $("#TipoClientProveeVal").append('Debe elegir un tipo de registro');
+            }
+
+            if ($("#RazonSocial").val().length == 0) {
+                $("#RazonSocialVal").html('');
+                $("#RazonSocialVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#RazonSocial").val().length > 200) {
+                $("#RazonSocialVal").html('');
+                $("#RazonSocialVal").append('Este Campo es puede contener maximo 200 caracteres');
+            }
+
+            if ($("#RFC").val().length > 20) {
+                $("#RFCVal").html('');
+                $("#RFCVal").append('Este Campo es puede contener maximo 20 caracteres');
+            }
+
+            if ($("#ObsClientProvee").val().length > 500) {
+                $("#ObsClientProveeVal").html('');
+                $("#ObsClientProveeVal").append('Este Campo es puede contener maximo 500 caracteres');
+            }
+
+            if ($("#IdCategoria").val() != '' && $("#TipoClientProvee").val() != 0 &&
+                $("#RazonSocial").val().length != 0 && $("#RazonSocial").val().length <= 200 &&
+                $("#RFC").val().length <= 20 && $("#ObsClientProvee").val().length <= 500) {
+
+                console.log("IdCategoria: " + IdCategoria);
+                console.log("TipoClientProvee: " + TipoClientProvee);
+                console.log("RazonSocial: " + RazonSocial);
+                console.log("RFC: " + RFC);
+                console.log("ObsClientProvee: " + ObsClientProvee);
+
+
+                $.ajax({
+                    url: '@Url.Action("EditCliente", "Cliente")',
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "IdClientProvee": @Model.IdClientProvee,
+                        "IdCategoria": IdCategoria,
+                        "TipoClientProvee": TipoClientProvee,
+                        "RazonSocial": RazonSocial,
+                        "RFC": RFC,
+                        "ObsClientProvee": ObsClientProvee,
+                        "EstatusClientProvee": EstatusClientProvee
+                    }),
+                    success: function (data) {
+                        if (data.Result == true) {
+                            window.location = '@Url.Action("Index", "Cliente")';
+                        }
+                        else {
+                            $("#MensajeError").html('');
+                            $("#MensajeError").append(data.Mensaje);
+                        }
+                    },
+                    error: function () {
+                        console.log("No pudo acceder al Metodo");
+                    }
+                });
+            }
+            else {
+                console.log("No se cumplio la validación de datos");
+            }
+        });
+    });
+
+
+</script>

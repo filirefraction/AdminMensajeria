@@ -1,0 +1,158 @@
+﻿@model IEnumerable<AdminMensajeria.Models.OPE_GUIA>
+
+@{
+    ViewBag.Title = "Asignación de envíos";
+}
+
+<h2>Asignación de Envios</h2>
+
+<div class="form-horizontal">
+
+        <div class="form-group row">
+        <div class="col-md-2">
+            <button onclick="NuevaAsignacion()" data-toggle="tooltip" title="Nuevo Estado" class="btn btn-default btn-sm ">
+                <span class="glyphicon glyphicon-plus"></span> Nuevo
+            </button>
+        </div>
+        <div class="col-md-9">&nbsp;</div>
+        <div class="col-md-1">
+            <a href="@Url.Action("Estandar", "Home")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Menu">
+                <span class="glyphicon glyphicon-home"></span> Volver
+            </a>
+        </div>
+    </div>
+
+    <table id="AsignacionTable" class="ui celled table compact">
+        <thead>
+            <tr>
+                <th class="col-md-1">
+                    # de Asignación
+                </th>
+                <th>
+                    Fecha de Ejecución
+                </th>
+                <th>
+                    Entregas Completas
+                </th>
+                <th>
+                    Estatus
+                </th>
+                <th>
+                    Mensajero
+                </th>
+                <th class="col-md-2"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdGuia)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FechaProgramadaGuia)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompletaGuia)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EstatusGuia)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GEN_USUARIO.NombreUsuario)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Asignacion", new { id = item.IdGuia })" data-toggle="tooltip" title="Editar Asignación" class="btn btn-default btn-sm">
+                            <span class='glyphicon glyphicon-edit'></span>
+                        </a>
+                        <a href="@Url.Action("Details", "Asignacion", new { id = item.IdGuia })" data-toggle="tooltip" title="Imprimir Formato" class="btn btn-default btn-sm">
+                            <span class='glyphicon glyphicon-list-alt'></span>
+                        </a>
+                        <button onclick="Entregas(@item.IdGuia)" data-toggle="tooltip" title="Reportar Entrega" class="btn btn-success btn-sm">
+                            <span class='glyphicon glyphicon-ok-sign'></span>
+                        </button>
+                        <button onclick="EliminarAsignacion(@item.IdGuia)" data-toggle="tooltip" title="Eliminar Asignación" class="btn btn-default btn-sm">
+                            <span class='glyphicon glyphicon-trash'></span>
+                        </button>
+                   
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#AsignacionTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "order": [[0, "desc"]]
+        });
+    });
+
+
+    function EliminarAsignacion(id) {
+        $('#ConfirmTitle').html('');
+        var title = "Confirme para eliminar Asignacion"
+        $('#ConfirmTitle').append(title);
+        $('#ConfirmBody').html('');
+        var body = '<button onclick="ConfirmaEliminarAsignacion(' + id + ')" type="button" class="btn btn-danger" id="modal-btn-si">Si</button>' +
+                   '<button onclick="CancelaEliminar()" type="button" class="btn btn-primary" id="modal-btn-no">No</button>';
+        $('#ConfirmBody').append(body);
+        $('#ConfirmModal').modal('show');
+
+    }
+
+    function ConfirmaEliminarAsignacion(id) {
+        $.ajax({
+            url: '@Url.Action("DeleteAsignacion", "Asignacion")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                if (Data.Result == true) {
+                 window.location = '@Url.Action("Index", "Asignacion")';
+                }
+                else {
+                    $("#ErrorMSG").html('');
+                    $("#ErrorMSG").append(Data.Mensaje);
+                    $('#ConfirmModal').modal('hide');
+                    $('#ModalErrorMSG').modal('show')
+                }
+            },
+            error: function (data) {
+                console.log("ocurrio un error al Eliminar");
+            }
+        });
+    }
+
+    function CancelaEliminar() {
+        $('#ConfirmTitle').html('');
+        $('#ConfirmBody').html('');
+        $('#ConfirmModal').modal('hide');
+    }
+
+    function NuevaAsignacion() {
+        $("#OperTitle").html('');
+        $("#OperTitle").append('Nuevo Asignacion')
+        $("#OperBody").html('');
+        $("#OperBody").load('@Url.Action("Create", "Asignacion")');
+        $('#OperModal').modal('show');
+    }
+
+    function Entregas(id) {
+        $("#OperTitle").html('');
+        $("#OperTitle").append('Reportar Entrega de Envíos')
+        $("#OperBody").html('');
+        $("#OperBody").load('@Url.Action("ReportaEntregas", "Asignacion")' + '/' + id);
+        $('#OperModal').modal('show');
+    }
+
+</script>
+
+

@@ -1,0 +1,184 @@
+﻿@model AdminMensajeria.Models.GEN_MUNICIPIO
+
+
+@{
+    ViewBag.Title = "Muncipio";
+}
+
+<div class="form-horizontal">
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                @Html.DropDownList("Paises", (IEnumerable<SelectListItem>)ViewBag.ListPais, "Elige Un País", htmlAttributes: new { @class = "form-control input-sm" })
+                <label for="Paises">País (*)</label>
+            </div>
+            <span class="AlertaDanger" id="PaisesVal"></span>
+        </div>
+        <div class="col-md-6">
+            <div class="field">
+                @Html.DropDownList("Estados", (IEnumerable<SelectListItem>)ViewBag.ListEstado, "Elige un Estado", htmlAttributes: new { @class = "form-control" })
+                <label for="Estados">Estado (*)</label>
+            </div>
+            <span class="AlertaDanger" id="EstadosVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.Municipio, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Guastavo A. Madero", @Maxlength = 50 } })
+                <label for="Municipio">Municipio (*)</label>
+            </div>
+            <span class="AlertaDanger" id="MunicipioVal"></span>
+        </div>
+        <div class="col-md-6">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-2">
+            <button id="ValidaMunicipio" type="button" class="btn btn-primary btn-sm ">
+                <span class="glyphicon glyphicon-floppy-disk"></span> Crear
+            </button>
+        </div>
+        <div class="col-md-7">
+            <span class="AlertaDanger" id="MensajeError"></span>
+        </div>
+        <div id="VolverCliente" class="col-md-2">
+            <button onclick="CerrarModal()" class="btn btn-danger btn-sm">
+                <span class="glyphicon glyphicon-floppy-remove"></span> Cancelar
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#Paises option[value=" + @ViewBag.pais + "]").attr("selected", true);
+        $("#Estados option[value=" + @ViewBag.estado + "]").attr("selected", true);
+
+        $('#Paises').selectpicker({
+            liveSearch: true
+        });
+
+        $('#Estados').selectpicker({
+            liveSearch: true
+        });
+        $("button").addClass("input-sm").css({ "font-size": "12px" });
+
+        $("#Municipio").keyup(function () {
+            $("#MunicipioVal").html('');
+        });
+
+        $("#Estados").change(function () {
+            $("#EstadosVal").html('');
+        });
+
+        ///////////////////////////////////////////////////////////////
+        $("#ValidaMunicipio").click(function () {
+            var Municipio = $("#Municipio").val();
+            var IdEstado = $("#Estados").val();
+
+
+            ///////////////////////////////////////////////////////////
+            if ($("#Municipio").val().length === 0) {
+                $("#MunicipioVal").html('');
+                $("#MunicipioVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#Municipio").val().length > 50) {
+                $("#MunicipioVal").html('');
+                $("#MunicipioVal").append('Este Campo es puede contener maximo 50 caracteres');
+            }
+
+            if ($("#Estados").val() == '') {
+                $("#EstadosVal").html('');
+                $("#EstadosVal").append('Debe Elegir un Estado');
+            }
+
+            //Primero Valida que los campos que siempre van a ser obligatorios//
+            if ($("#Municipio").val().length != 0 &&
+                $("#Municipio").val().length <= 50 &&
+                $("#Estados").val() != '') {
+
+                console.log("Municipio: " + Municipio);
+                console.log("IdEstado: " + IdEstado);
+
+                //inserta sin validar la fecha de egreso//
+                $.ajax({
+                    url: '@Url.Action("CreateMunicipio", "Municipio")',
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "IdMunicipio": null,
+                        "Municipio": Municipio,
+                        "IdEstado": IdEstado
+                    }),
+                    success: function (data) {
+                        if (data.Result == true) {
+                            $("#VistaMinicipios").html('');
+                            $("#VistaMinicipios").load('@Url.Action("Municipios", "Municipio")' + '/' + IdEstado);
+                            CerrarModal();
+                        }
+                        else {
+                            $("#MensajeError").html('');
+                            $("#MensajeError").append(data.Mensaje);
+                        }
+                    },
+                    error: function () {
+                        console.log("No pudo acceder al Metodo");
+                    }
+                });
+            }
+            else {
+                console.log("No se cumplio la validación de datos");
+            }
+        });
+
+        $('#Paises').change(function () {
+            if ($('#Paises').val() != '') {
+                var IdPais = $('#Paises').val();
+                $("#PaisesVal").html('');
+                ListarEstados(IdPais);
+
+            }
+            else {
+                $("#PaisesVal").html('');
+                $("#PaisesVal").append('Debe elegir un país para ver los estados')
+            }
+        });
+
+    });
+
+    function ListarEstados(id) {
+        $.ajax({
+            url: '@Url.Action("ListaEstados", "Municipio")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                $("#Estados").html('');
+                $("#Estados").append('<option value ="">Elige un Estado</option>');
+                $.each(Data,
+                    function (index, propie) {
+                        var content = '<option value="' + propie.idestado + '">' + propie.estado + '</option>';
+                        $("#Estados").append(content);
+                    });
+                $('#Estados').selectpicker('refresh');
+            },
+            error: function () {
+                console.log("No pudo acceder al metodo");
+            }
+        });
+    }
+
+    function CerrarModal() {
+        $("#OperTitle").html('');
+        $("#OperBody").html('');
+        $('#OperModal').modal('hide');
+    }
+</script>
+

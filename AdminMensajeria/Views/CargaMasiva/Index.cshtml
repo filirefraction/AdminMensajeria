@@ -1,0 +1,593 @@
+﻿
+@{
+    ViewBag.Title = "Carga Masiva";
+}
+
+@model System.Data.DataTable
+@using System.Data;
+
+
+
+<script>
+    function bs_input_file() {
+        $(".input-file").before(
+            function () {
+                if (!$(this).prev().hasClass('input-ghost')) {
+                    var element = $("<input type='file' id='dataFile' name='upload' class='input-ghost' style='visibility:hidden; height:0'>");
+                    element.attr("name", $(this).attr("name"));
+                    element.change(function () {
+                        element.next(element).find('input').val((element.val()).split('\\').pop());
+                    });
+                    $(this).find("button.btn-choose").click(function () {
+                        element.click();
+                    });
+                    $(this).find("button.btn-reset").click(function () {
+                        element.val(null);
+                        $(this).parents(".input-file").find('input').val('');
+                    });
+                    $(this).find('input').css("cursor", "pointer");
+                    $(this).find('input').mousedown(function () {
+                        $(this).parents('.input-file').prev().click();
+                        return false;
+                    });
+                    return element;
+                }
+            }
+        );
+    }
+
+    function clear() {
+        var input = $("#dataFile").val('');
+    };
+    $(function () {
+        clear();
+        bs_input_file();
+    });
+</script>
+
+@*@using (Html.BeginForm("Index", "CargaMasiva", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {*@
+<div class="form-horizontal">
+    <h2>Carga Masiva de Envíos</h2>
+    @Html.AntiForgeryToken()
+
+
+
+
+    <!-- COMPONENT START -->
+    <div class="form-group">
+        <div class="col-md-3">
+            <div class="input-group input-file">
+                <span class="input-group-btn">
+                    <button class="btn btn-default btn-choose" type="button"><span class="glyphicon glyphicon-cloud-upload"></span></button>
+                </span>
+                <input type="text" class="form-control" placeholder="Elegir Archivo de Excel..." />
+            </div>
+        </div>
+        <div class="col-md-1">
+            <button onclick="CargarTable()" class="btn btn-default">
+                <span class="glyphicon glyphicon-transfer"></span> Cargar
+            </button>
+        </div>
+        <div class="col-md-1">
+            <button onclick="LimpiarTable()" class="btn btn-default">
+                <span class="glyphicon glyphicon-minus"></span> Limpiar
+            </button>
+        </div>
+        <div class="col-md-1">
+            @if (Model != null)
+            {
+            <a id="ValidacionMasiva" data-toggle="tooltip" title="Validar Datos" class="btn btn-default">
+                <span class="glyphicon glyphicon-ok-circle"></span> Validar
+            </a>
+            }
+        </div>
+        <div class="col-md-2">
+            <button id="RegistroMasivo" onclick="ConfirmarRegistro()" data-toggle="tooltip" title="Procesar Datos" class="btn btn-primary hidden">
+                <span class="glyphicon glyphicon-floppy-disk"></span> Guardar Envíos
+            </button>
+            <button id="ImpresionMasiva" onclick="Imprimir()" data-toggle="tooltip" title="Imprimir Guias" class="btn btn-default hidden">
+                <span class="glyphicon glyphicon-print"></span> Imprimir Guias
+            </button>
+        </div>
+        <div class="col-md-3">
+        </div>
+        <div class="col-md-1">
+            <a href="@Url.Action("Estandar", "Home")" class="btn btn-default" data-toggle="tooltip" title="Menu">
+                <span class="glyphicon glyphicon-home"></span> Volver
+            </a>
+        </div>
+    </div>
+
+
+
+
+    @if (Model != null)
+    {
+        <table id="CargaTable" class="ui celled table compact" style="font-size:10px">
+            <thead>
+                <tr>
+                    @foreach (DataColumn col in Model.Columns)
+                    {
+                        <th>@col.ColumnName</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow row in Model.Rows)
+                {
+                    <tr>
+                        @foreach (DataColumn col in Model.Columns)
+                        {
+                            <td>@row[col.ColumnName]</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <table id="CargaTable" class="ui celled table compact">
+            <thead>
+                <tr>
+                    <th>Destinarario (*,200)</th>
+                    <th>Referencia 1(*,200)</th>
+                    <th>Cant (*)</th>
+                    <th>Destino (*,100)</th>
+                    <th>Calle (*,100)</th>
+                    <th>#Ext (*,20)</th>
+                    <th>#Int (100)</th>
+                    <th>Referencia 2 (200)</th>
+                    <th>Colonia (*,100)</th>
+                    <th>C.P. (*,20)</th>
+                    <th>Municipio (*,100)</th>
+                    <th>Estado (*,100)</th>
+                    <th>País (*,100)</th>
+                    <th>Valido</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+    }
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#CargaTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "paging": false
+        });
+    });
+
+    function CargarTable() {
+
+
+        var FileExcel = $("#dataFile")[0].files[0];
+        var dataFileExcel = new FormData();
+        dataFileExcel.append("upload", FileExcel);
+        $.ajax({
+            processData: false,
+            contentType: false,
+            type: "POST",
+            datatype: "json",
+            url: '@Url.Action("CargarTabla", "CargaMasiva")',//"/Empresa/CargaLogo",
+            data: dataFileExcel,
+            success: function (data) {
+                if (data.Result == true) {
+                    window.location = '@Url.Action("Index", "CargaMasiva")';
+                }
+                else {
+                    $("#ErrorMSG").html('');
+                    $("#ErrorMSG").append(data.Mensaje);
+                    $('#ConfirmModal').modal('hide');
+                    $('#ModalErrorMSG').modal('show')
+                }
+            },
+            error: function () {
+                console.log("No se pudo acceder al metodo");
+            }
+        });
+
+    }
+
+    function LimpiarTable() {
+
+        $.ajax({
+            url: '@Url.Action("LimpiarTabla", "CargaMasiva")',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                window.location = '@Url.Action("Index", "CargaMasiva")';
+            },
+            error: function () {
+                console.log("No pudo acceder al Metodo");
+            }
+        });
+
+
+    }
+</script>
+
+<script>
+    $('#ValidacionMasiva').click(function () {
+
+        //var cells = [];
+        var Nombre;
+        var Producto;
+        var Cantidad;
+        var Destinatario;
+        var Calle;
+        var NoExt;
+        var NoInt;
+        var Referencia;
+        var Colonia;
+        var CodigoPostal;
+        var Municipio;
+        var Estado;
+        var Pais;
+
+        var rows = $("#CargaTable").dataTable().fnGetNodes();
+        for (var i = 0; i < rows.length; i++) {
+
+            Nombre = $(rows[i]).find("td:eq(0)").html();
+            Producto = $(rows[i]).find("td:eq(1)").html();
+            Cantidad = $(rows[i]).find("td:eq(2)").html();
+            Destinatario = $(rows[i]).find("td:eq(3)").html();
+            Calle = $(rows[i]).find("td:eq(4)").html();
+            NoExt = $(rows[i]).find("td:eq(5)").html();
+            NoInt = $(rows[i]).find("td:eq(6)").html();
+            Referencia = $(rows[i]).find("td:eq(7)").html();
+            Colonia = $(rows[i]).find("td:eq(8)").html();
+            CodigoPostal = $(rows[i]).find("td:eq(9)").html();
+            Municipio = $(rows[i]).find("td:eq(10)").html();
+            Estado = $(rows[i]).find("td:eq(11)").html();
+            Pais = $(rows[i]).find("td:eq(12)").html();
+
+            //limpiar Validación
+            $(rows[i]).find("td:eq(13)").html('');
+            $(rows[i]).find("td:eq(0)").removeClass();
+            $(rows[i]).find("td:eq(1)").removeClass();
+            $(rows[i]).find("td:eq(2)").removeClass();
+            $(rows[i]).find("td:eq(3)").removeClass();
+            $(rows[i]).find("td:eq(4)").removeClass();
+            $(rows[i]).find("td:eq(5)").removeClass();
+            $(rows[i]).find("td:eq(6)").removeClass();
+            $(rows[i]).find("td:eq(7)").removeClass();
+            $(rows[i]).find("td:eq(8)").removeClass();
+            $(rows[i]).find("td:eq(9)").removeClass();
+            $(rows[i]).find("td:eq(10)").removeClass();
+            $(rows[i]).find("td:eq(11)").removeClass();
+            $(rows[i]).find("td:eq(12)").removeClass();
+            $(rows[i]).find("td:eq(13)").removeClass();
+
+
+            if ($(rows[i]).find("td:eq(0)").html().length == 0) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Indique Un Destinatario</span> <br>');
+                $(rows[i]).find("td:eq(0)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(0)").html().length > 200) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Destinatario maximo 200 Caracteres</span> <br>');
+                $(rows[i]).find("td:eq(0)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(1)").html().length == 0) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Indique Una Referencia</span> <br>');
+                $(rows[i]).find("td:eq(1)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(1)").html().length > 200) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Referencia maximo 200 Caracteres</span> <br>');
+                $(rows[i]).find("td:eq(1)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(2)").html().length == 0) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Indique Cantidad</span> <br>');
+                $(rows[i]).find("td:eq(2)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(3)").html().length == 0) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Indique Destinatario</span> <br>');
+                $(rows[i]).find("td:eq(3)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(3)").html().length > 100) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Destinatario maximo 100 Caracteres</span> <br>');
+                $(rows[i]).find("td:eq(3)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(4)").html().length == 0) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Indique Una Calle</span> <br>');
+                $(rows[i]).find("td:eq(4)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(4)").html().length > 100) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Calle maximo 100 Caracteres</span> <br>');
+                $(rows[i]).find("td:eq(4)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(5)").html().length == 0) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Indique Un Número Exterior</span> <br>');
+                $(rows[i]).find("td:eq(5)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(5)").html().length > 20) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Número Exterior maximo 20 Caracteres</span> <br>');
+                $(rows[i]).find("td:eq(5)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(6)").html().length > 100) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Número Interior maximo 100 Caracteres</span> <br>');
+                $(rows[i]).find("td:eq(6)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(7)").html().length > 200) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Referencia 2 maximo 200 Caracteres</span> <br>');
+                $(rows[i]).find("td:eq(7)").addClass('alert alert-danger');
+            }
+
+
+            if ($(rows[i]).find("td:eq(8)").html().length == 0) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Indique Una Colonia</span> <br>');
+                $(rows[i]).find("td:eq(8)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(8)").html().length > 100) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Colonia maximo 100 Caracteres</span> <br>');
+                $(rows[i]).find("td:eq(8)").addClass('alert alert-danger');
+            }
+
+
+            if ($(rows[i]).find("td:eq(9)").html().length == 0) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Indique Código Postal</span> <br>');
+                $(rows[i]).find("td:eq(9)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(9)").html().length > 20) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Código Postal maximo 20 Caracteres</span> <br>');
+                $(rows[i]).find("td:eq(9)").addClass('alert alert-danger');
+            }
+
+
+            if ($(rows[i]).find("td:eq(10)").html().length == 0) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Indique Municipio</span> <br>');
+                $(rows[i]).find("td:eq(10)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(10)").html().length > 100) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Municipio maximo 100 Caracteres</span> <br>');
+                $(rows[i]).find("td:eq(10)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(11)").html().length == 0) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Indique Estado</span> <br>');
+                $(rows[i]).find("td:eq(11)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(11)").html().length > 100) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Estado maximo 100 Caracteres</span> <br>');
+                $(rows[i]).find("td:eq(11)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(12)").html().length == 0) {
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Indique País</span> <br>');
+                $(rows[i]).find("td:eq(12)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(12)").html().length > 100) {
+                $(rows[i]).find("td:eq(13)").html('');
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">Pais maximo 100 caracteres</span> <br>');
+                $(rows[i]).find("td:eq(12)").removeClass();
+                $(rows[i]).find("td:eq(12)").addClass('alert alert-danger');
+            }
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            if ($(rows[i]).find("td:eq(0)").html().length != 0 && $(rows[i]).find("td:eq(0)").html().length <= 200 &&
+                $(rows[i]).find("td:eq(1)").html().length != 0 && $(rows[i]).find("td:eq(1)").html().length <= 200 && $(rows[i]).find("td:eq(2)").html().length != 0 &&
+                $(rows[i]).find("td:eq(3)").html().length != 0 && $(rows[i]).find("td:eq(3)").html().length <= 100 &&
+                $(rows[i]).find("td:eq(4)").html().length != 0 && $(rows[i]).find("td:eq(4)").html().length <= 100 &&
+                $(rows[i]).find("td:eq(5)").html().length != 0 && $(rows[i]).find("td:eq(5)").html().length <= 20 &&
+                $(rows[i]).find("td:eq(6)").html().length <= 100 && $(rows[i]).find("td:eq(7)").html().length <= 200 &&
+                $(rows[i]).find("td:eq(8)").html().length != 0 && $(rows[i]).find("td:eq(8)").html().length <= 100 &&
+                $(rows[i]).find("td:eq(9)").html().length != 0 && $(rows[i]).find("td:eq(9)").html().length <= 20 &&
+                $(rows[i]).find("td:eq(10)").html().length != 0 && $(rows[i]).find("td:eq(10)").html().length <= 100 &&
+                $(rows[i]).find("td:eq(11)").html().length != 0 && $(rows[i]).find("td:eq(11)").html().length <= 100 &&
+                $(rows[i]).find("td:eq(12)").html().length != 0 && $(rows[i]).find("td:eq(12)").html().length <= 100) {
+                $(rows[i]).find("td:eq(13)").html('');
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaSuccess">Correcto</span>');
+                $(rows[i]).find("td:eq(13)").removeClass();
+                $(rows[i]).find("td:eq(13)").addClass('alert alert-success');
+            }
+
+        }
+        //console.log(cells);
+        $("#RegistroMasivo").removeClass('hidden');
+
+    });
+
+    function GuardarEnvios() {
+        $('#ConfirmModal').modal('hide');
+
+        var Nombre;
+        var Producto;
+        var Cantidad;
+        var Destinatario;
+        var Calle;
+        var NoExt;
+        var NoInt;
+        var Referencia;
+        var Colonia;
+        var CodigoPostal;
+        var Municipio;
+        var Estado;
+        var Pais;
+
+        var rows = $("#CargaTable").dataTable().fnGetNodes();
+        for (var i = 0; i < rows.length; i++) {
+            
+                Nombre = $(rows[i]).find("td:eq(0)").html();
+                Producto = $(rows[i]).find("td:eq(1)").html();
+                Cantidad = $(rows[i]).find("td:eq(2)").html();
+                Destinatario = $(rows[i]).find("td:eq(3)").html();
+                Calle = $(rows[i]).find("td:eq(4)").html();
+                NoExt = $(rows[i]).find("td:eq(5)").html();
+                NoInt = $(rows[i]).find("td:eq(6)").html();
+                Referencia = $(rows[i]).find("td:eq(7)").html();
+                Colonia = $(rows[i]).find("td:eq(8)").html();
+                CodigoPostal = $(rows[i]).find("td:eq(9)").html();
+                Municipio = $(rows[i]).find("td:eq(10)").html();
+                Estado = $(rows[i]).find("td:eq(11)").html();
+                Pais = $(rows[i]).find("td:eq(12)").html();
+
+                //limpiar Validación
+                $(rows[i]).find("td:eq(13)").html('');
+                $(rows[i]).find("td:eq(13)").removeClass();
+                $(rows[i]).find("td:eq(13)").append('<span class="AlertaDanger">No Registrado</span>');
+                $(rows[i]).find("td:eq(13)").addClass('alert alert-danger');
+
+
+                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                if ($(rows[i]).find("td:eq(0)").html().length != 0 && $(rows[i]).find("td:eq(0)").html().length <= 200 &&
+                    $(rows[i]).find("td:eq(1)").html().length != 0 && $(rows[i]).find("td:eq(1)").html().length <= 200 && $(rows[i]).find("td:eq(2)").html().length != 0 &&
+                    $(rows[i]).find("td:eq(3)").html().length != 0 && $(rows[i]).find("td:eq(3)").html().length <= 100 &&
+                    $(rows[i]).find("td:eq(4)").html().length != 0 && $(rows[i]).find("td:eq(4)").html().length <= 100 &&
+                    $(rows[i]).find("td:eq(5)").html().length != 0 && $(rows[i]).find("td:eq(5)").html().length <= 20 &&
+                    $(rows[i]).find("td:eq(6)").html().length <= 100 && $(rows[i]).find("td:eq(7)").html().length <= 200 &&
+                    $(rows[i]).find("td:eq(8)").html().length != 0 && $(rows[i]).find("td:eq(8)").html().length <= 100 &&
+                    $(rows[i]).find("td:eq(9)").html().length != 0 && $(rows[i]).find("td:eq(9)").html().length <= 20 &&
+                    $(rows[i]).find("td:eq(10)").html().length != 0 && $(rows[i]).find("td:eq(10)").html().length <= 100 &&
+                    $(rows[i]).find("td:eq(11)").html().length != 0 && $(rows[i]).find("td:eq(11)").html().length <= 100 &&
+                    $(rows[i]).find("td:eq(12)").html().length != 0 && $(rows[i]).find("td:eq(12)").html().length <= 100) {
+
+                    //COmienza la inserción
+                    $.ajax({
+                        url: '@Url.Action("CrateMasivo", "CargaMasiva")',
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        data: JSON.stringify({
+                            "Nombre": Nombre,
+                            "Producto": Producto,
+                            "Cantidad": Cantidad,
+                            "Destinatario": Destinatario,
+                            "Calle": Calle,
+                            "NoExt": NoExt,
+                            "NoInt": NoInt,
+                            "Referencia": Referencia,
+                            "Colonia": Colonia,
+                            "CodigoPostal": CodigoPostal,
+                            "Municipio": Municipio,
+                            "Estado": Estado,
+                            "Pais": Pais,
+                            "Fila": i,
+                        }),
+                        success: function (Data) {
+                            if (Data.Result == true) {
+                                $(rows[Data.Fila]).find("td:eq(13)").html('');
+                                $(rows[Data.Fila]).find("td:eq(13)").removeClass();
+                                $(rows[Data.Fila]).find("td:eq(13)").append('<span class="AlertaSuccess">Registro Correcto</span>');
+                                $(rows[Data.Fila]).find("td:eq(13)").addClass('alert alert-success');
+                                $(rows[Data.Fila]).find("td:eq(14)").append(Data.Valor);
+                            }
+                            else {
+                                if (Data.Redirecciona == true) {
+                                    window.location = '@Url.Action("Index", "Home")';
+                                }
+                                else {
+                                    $(rows[Data.Fila]).find("td:eq(13)").html('');
+                                    $(rows[Data.Fila]).find("td:eq(13)").removeClass();
+                                    $(rows[Data.Fila]).find("td:eq(13)").append('<span class="AlertaDanger">Error Al registrar: ' + Data.Mensaje + '</span>');
+                                    $(rows[Data.Fila]).find("td:eq(13)").addClass('alert alert-danger');
+                                }
+                            }
+                        },
+                        error: function () {
+                            console.log("No pudo acceder al Metodo");
+                        }
+                    });
+
+                }
+            }
+        
+        $('#RegistroMasivo').addClass('hidden');
+        $('#ImpresionMasiva').removeClass('hidden');
+    }
+
+    function ConfirmarRegistro() {
+        $('#ConfirmTitle').html('');
+        var title = "Confirme para Registrar"
+        $('#ConfirmTitle').append(title);
+        $('#ConfirmBody').html('');
+        var warning = '<span class="AlertaDanger">¡Importante! Los registros que no son validos no se guardaran.</span><br>';
+        var body = '<button onclick="GuardarEnvios()" type="button" class="btn btn-primary" id="modal-btn-si">Si</button>' +
+                   '<button onclick="Cancela()" type="button" class="btn btn-danger" id="modal-btn-no">No</button>';
+        $('#ConfirmBody').append(warning);
+        $('#ConfirmBody').append(body);
+        $('#ConfirmModal').modal('show');
+    }
+
+    function Cancela() {
+        $('#ConfirmTitle').html('');
+        $('#ConfirmBody').html('');
+        $('#ConfirmModal').modal('hide');
+    }
+
+    function Imprimir() {
+        var uri = '@Url.Action("Impresion", "CargaMasiva")';
+
+        var arr = [0];
+        var rows = $("#CargaTable").dataTable().fnGetNodes();
+        var a = 0;
+
+        for (var i = 0; i < rows.length; i++) {
+
+            Numero = $(rows[i]).find("td:eq(14)").html();
+            if ($(rows[i]).find("td:eq(14)").html().length != 0) {
+                arr[a] = Numero;
+                a = a + 1
+            }
+        }
+
+        $.ajax({
+            url: uri,
+            data: JSON.stringify(arr),
+            type: 'POST',
+            contentType: 'application/json',
+            success: function () {
+                window.location = '@Url.Action("ImpresionMasiva", "CargaMasiva")';
+            },
+            error: function () {
+                console.log("No pudo acceder al Metodo");
+            }
+        });
+
+
+    }
+</script>

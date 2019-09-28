@@ -24,8 +24,8 @@ namespace AdminMensajeria.Models
         public int IdEstado { get; set; }
         public string Municipio { get; set; }
     
-        public virtual GEN_ESTADO GEN_ESTADO { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GEN_COLONIA> GEN_COLONIA { get; set; }
+        public virtual GEN_ESTADO GEN_ESTADO { get; set; }
     }
 }

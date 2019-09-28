@@ -1,0 +1,419 @@
+﻿@model AdminMensajeria.Models.OPE_PUNTOENTREC
+
+<div class="form-horizontal">
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.DescripcionPunto, new { htmlAttributes = new { @class = "form-control input-sm", @PlaceHolder = "Sucursal Norte", @MaxLength = "100" } })
+                <label for="DescripcionPunto">Descripción (*)</label>
+            </div>
+            <span class="AlertaDanger" id="DescripcionPuntoVal"></span>
+        </div>
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.ContactoPunto, new { htmlAttributes = new { @class = "form-control input-sm", @PlaceHolder = "Juan Peréz", @MaxLength = "100" } })
+                <label for="ContactoPunto">Contacto</label>
+            </div>
+            <span class="AlertaDanger" id="ContactoPuntoVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                <select id="TipoPunto" class="form-control input-sm">
+                    <option value="0">Elige Tipo de Punto</option>
+                    <option value="1">Recolección y Entrega</option>
+                    <option value="2">Solo Recolección</option>
+                    <option value="3">Solo Entrega</option>
+                </select>
+                <label for="TipoPunto">Tipo de Punto (*)</label>
+            </div>
+            <span class="AlertaDanger" id="TipoPuntoVal"></span>
+        </div>
+        <div class="col-md-3">
+            <div class="field">
+                @Html.EditorFor(model => model.HoraDePunto, new { htmlAttributes = new { @class = "form-control input-sm", @PlaceHolder = "09:00" } })
+                <label for="HoraDePunto">Atención de </label>
+            </div>
+            <span class="AlertaDanger" id="HoraDePuntoVal"></span>
+        </div>
+        <div class="col-md-3">
+            <div class="field">
+                @Html.EditorFor(model => model.HoraHaPunto, new { htmlAttributes = new { @class = "form-control input-sm", @PlaceHolder = "18:00" } })
+                <label for="HoraHaPunto">Atención Hasta</label>
+            </div>
+            <span class="AlertaDanger" id="HoraHaPuntoVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.CallePunto, new { htmlAttributes = new { @class = "form-control input-sm", @PlaceHolder = "Lazaro Cardenas", @MaxLength = "100" } })
+                <label for="CallePunto">Calle (*)</label>
+            </div>
+            <span class="AlertaDanger" id="CallePuntoVal"></span>
+        </div>
+        <div class="col-md-3">
+            <div class="field">
+                @Html.EditorFor(model => model.NoExtPunto, new { htmlAttributes = new { @class = "form-control input-sm", @PlaceHolder = "724", @MaxLength = "20" } })
+                <label for="NoExtPunto"># Exterior (*)</label>
+            </div>
+            <span class="AlertaDanger" id="NoExtPuntoVal"></span>
+        </div>
+        <div class="col-md-3">
+            <div class="field">
+                @Html.EditorFor(model => model.NoIntPunto, new { htmlAttributes = new { @class = "form-control input-sm", @PlaceHolder = "14", @MaxLength = "20" } })
+                <label for="NoIntPunto"># Interior</label>
+            </div>
+            <span class="AlertaDanger" id="NoIntPuntoVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-3">
+            <div class="field">
+                @Html.EditorFor(model => model.Referencia, new { htmlAttributes = new { @class = "form-control input-sm", @PlaceHolder = "Entre Calles A y B", @MaxLength = "100" } })
+                <label for="Referencia">Referencia </label>
+            </div>
+            <span class="AlertaDanger" id="ReferenciaVal"></span>
+        </div>
+        <div class="col-md-3">
+            <div class="field">
+                <input id="c1" name="c1" autocomplete="nope" type="text" value="@Model.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal" class="form-control input-sm" placeholder="09864" maxlength="20" />
+                <label for="c1">Código Postal (*)</label>
+            </div>
+            <span class="AlertaDanger" id="c1Val"></span>
+            </div>
+        <div class="col-md-6">
+            <div class="field">
+                @Html.DropDownList("IdColonia", null, "Elige una Colonia", htmlAttributes: new { @class = "form-control" })
+                <label for="IdColonia">Elige Una Colonia (*)</label>
+            </div>
+            <span class="AlertaDanger" id="IdColoniaVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                <input type="text" disabled="disabled" id="Municipio" value="@Model.GEN_COLONIA.GEN_MUNICIPIO.Municipio" class="form-control input-sm" placeholder="Iztacalco" />
+                <label for="municipio">Municipio</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="field">
+                <input type="text" disabled="disabled" id="Estado" value="@Model.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado" class="form-control input-sm" placeholder="Ciudad de México" />
+                <label for="Estado">Estado</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="field">
+                <input type="text" disabled="disabled" id="Pais" value="@Model.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais" class="form-control input-sm" placeholder="México" />
+                <label for="Pais">País</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-12">
+            <div class="field">
+                @Html.EditorFor(model => model.ObsPunto, new { htmlAttributes = new { @class = "form-control input-sm", PlaceHolder = "Observaciones", maxlength = "500" } })
+                <label for="ObsPunto">Observaciones (Opcional)</label>
+            </div>
+            <span class="AlertaDanger" id="ObsPuntoVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-2">
+            <button id="ValidaPunto" type="button" class="btn btn-primary btn-sm ">
+                <span class="glyphicon glyphicon-floppy-disk"></span> Guardar
+            </button>
+        </div>
+        <div class="col-md-7">
+            <span class="AlertaDanger" id="MensajeError"></span>
+        </div>
+        <div id="VolverCliente" class="col-md-2">
+            <button onclick="CerrarModal()" class="btn btn-danger btn-sm">
+                <span class="glyphicon glyphicon-floppy-remove"></span> Cancelar
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#TipoPunto option[value=" + @Model.TipoPunto + "]").attr("selected", true);
+
+
+        $("#HoraDePunto, #HoraHaPunto").datetimepicker({ format: "H:i", datepicker: false, step: 30 });
+
+        $('#TipoPunto').selectpicker({
+            liveSearch: true
+        });
+
+        $('#IdColonia').selectpicker({
+            liveSearch: true
+        });
+
+        $("button").addClass("input-sm").css({ "font-size": "12px" });
+
+        $("#DescripcionPunto").keyup(function () {
+            $("#DescripcionPuntoVal").html('');
+        });
+
+        $("#ContactoPunto").keyup(function () {
+            $("#ContactoPuntoVal").html('');
+        });
+
+        $("#TipoPunto").change(function () {
+            $("#TipoPuntoVal").html('');
+        });
+
+        $("#HoraDePunto").keyup(function () {
+            $("#HoraDePuntoVal").html('');
+        });
+
+        $("#HoraHaPunto").keyup(function () {
+            $("#HoraHaPuntoVal").html('');
+        });
+
+        $("#CallePunto").keyup(function () {
+            $("#CallePuntoVal").html('');
+        });
+
+        $("#NoExtPunto").keyup(function () {
+            $("#NoExtPuntoVal").html('');
+        });
+
+        $("#NoIntPunto").keyup(function () {
+            $("#NoIntPuntoVal").html('');
+        });
+
+        $("#Referencia").keyup(function () {
+            $("#ReferenciaVal").html('');
+        });
+
+        $("#c1").keyup(function () {
+            $("#Municipio").val('');
+            $("#Estado").val('');
+            $("#Pais").val('');
+        });
+
+        $("#IdColonia").change(function () {
+            var IdColonia = $("#IdColonia").val();
+            if ($("#IdColonia").val == 0) {
+                $("#Municipio").val('');
+                $("#Estado").val('');
+                $("#Pais").val('');
+            }
+            else {
+                ComplementoDomiclio(IdColonia);
+            }
+            $("#IdColoniaVal").html('');
+        });
+
+        $("#ObsPunto").keyup(function () {
+            $("#ObsPuntoVal").html('');
+        });
+
+        ///////////////////////////////////////////////////////////////
+        $("#ValidaPunto").click(function () {
+            var IdPuntoEntRec = @Model.IdPuntoEntRec;
+            var IdClientProvee = @Model.IdClientProvee;
+            var DescripcionPunto = $("#DescripcionPunto").val();
+            var ContactoPunto = $("#ContactoPunto").val();
+            var TipoPunto = $("#TipoPunto").val();
+            var HoraDePunto = $("#HoraDePunto").val();
+            var HoraHaPunto = $("#HoraHaPunto").val();
+            var CallePunto = $("#CallePunto").val();
+            var NoExtPunto = $("#NoExtPunto").val();
+            var NoIntPunto = $("#NoIntPunto").val();
+            var Referencia = $("#Referencia").val();
+            var IdColonia = $("#IdColonia").val();
+            var ObsPunto = $("#ObsPunto").val();
+            var EstatusPunto = true;
+
+            ///////////////////////////////////////////////////////////
+            if ($("#DescripcionPunto").val().length == 0) {
+                $("#DescripcionPuntoVal").html('');
+                $("#DescripcionPuntoVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#DescripcionPunto").val().length > 100) {
+                $("#DescripcionPuntoVal").html('');
+                $("#DescripcionPuntoVal").append('Este Campo es puede contener maximo 100 caracteres');
+            }
+
+            if ($("#ContactoPunto").val().length > 100) {
+                $("#ContactoPuntoVal").html('');
+                $("#ContactoPuntoVal").append('Este Campo es puede contener maximo 100 caracteres');
+            }
+
+            if ($("#TipoPunto").val() == 0) {
+                $("#TipoPuntoVal").html('');
+                $("#TipoPuntoVal").append('Debe Elegir Un Tipo');
+            }
+
+            if ($("#HoraDePunto").val().length > 8) {
+                $("#HoraDePuntoVal").html('');
+                $("#HoraDePuntoVal").append('Debe Ingresar Formato Valido');
+            }
+
+            if ($("#HoraHaPunto").val().length > 8) {
+                $("#HoraHaPuntoVal").html('');
+                $("#HoraHaPuntoVal").append('Debe Ingresar Formato Valido');
+            }
+
+            if ($("#CallePunto").val().length == 0) {
+                $("#CallePuntoVal").html('');
+                $("#CallePuntoVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#CallePunto").val().length > 100) {
+                $("#CallePuntoVal").html('');
+                $("#CallePuntoVal").append('Este Campo es puede contener maximo 100 caracteres');
+            }
+
+            if ($("#NoExtPunto").val().length == 0) {
+                $("#NoExtPuntoVal").html('');
+                $("#NoExtPuntoVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#NoExtPunto").val().length > 20) {
+                $("#NoExtPuntoVal").html('');
+                $("#NoExtPuntoVal").append('Este Campo es puede contener maximo 20 caracteres');
+            }
+
+            if ($("#NoIntPunto").val().length > 20) {
+                $("#NoIntPuntoVal").html('');
+                $("#NoIntPuntoVal").append('Este Campo es puede contener maximo 20 caracteres');
+            }
+
+            if ($("#Referencia").val().length > 100) {
+                $("#ReferenciaVal").html('');
+                $("#ReferenciaVal").append('Este Campo es puede contener maximo 100 caracteres');
+            }
+
+            if ($("#IdColonia").val() == 0) {
+                $("#IdColoniaVal").html('');
+                $("#IdColoniaVal").append('Debe Elegir una Colonia');
+            }
+
+            if ($("#ObsPunto").val().length > 500) {
+                $("#ObsPuntoVal").html('');
+                $("#ObsPuntoVal").append('Este Campo es puede contener maximo 500 caracteres');
+            }
+
+
+            if ($("#DescripcionPunto").val().length != 0 && $("#DescripcionPunto").val().length <= 100  && $("#ContactoPunto").val().length <= 100 &&
+                $("#TipoPunto").val() != 0 && $("#HoraDePunto").val().length <= 8 && $("#HoraHaPunto").val().length <= 8 && $("#CallePunto").val().length != 0 &&
+                $("#CallePunto").val().length <= 100 && $("#NoExtPunto").val().length != 0  && $("#NoExtPunto").val().length <= 20 &&
+                $("#NoIntPunto").val().length <= 20 && $("#Referencia").val().length <= 100 && $("#IdColonia").val() != 0 && $("#ObsPunto").val().length <= 500) {
+
+                $.ajax({
+                    url: '@Url.Action("EditPuntos", "PuntosEntRec")',
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "IdPuntoEntRec" : IdPuntoEntRec,
+                        "IdClientProvee" : IdClientProvee,
+                        "DescripcionPunto": DescripcionPunto,
+                        "ContactoPunto" : ContactoPunto,
+                        "TipoPunto" : TipoPunto,
+                        "HoraDePunto" : HoraDePunto,
+                        "HoraHaPunto" : HoraHaPunto,
+                        "CallePunto" : CallePunto,
+                        "NoExtPunto" : NoExtPunto,
+                        "NoIntPunto" : NoIntPunto,
+                        "Referencia" : Referencia,
+                        "IdColonia" : IdColonia,
+                        "ObsPunto" : ObsPunto,
+                        "EstatusPunto" : EstatusPunto
+
+                    }),
+                    success: function (data) {
+                        if (data.Result == true) {
+                            $("#direcciones").html('');
+                            $("#direcciones").load('@Url.Action("Puntos", "PuntosEntRec")' + '/' + IdClientProvee);
+                            CerrarModal();
+                        }
+                        else {
+                            $("#MensajeError").html('');
+                            $("#MensajeError").append(data.Mensaje);
+                        }
+                    },
+                    error: function () {
+                        console.log("No pudo acceder al Metodo");
+                    }
+                });
+            }
+            else {
+                console.log("No se cumplio la validación de datos");
+            }
+        });
+
+        $("#c1").blur(function () {
+            if ($('#c1').val() != '') {
+                var codigopostal = $('#c1').val();
+                $('#clVal').html('');
+                ListarColonias(codigopostal);
+            }
+            else {
+                $('#c1Val').html('');
+                $('#c1Val').append('Este Campo es Obligatorio');
+            }
+        });
+
+    });
+
+
+    function ListarColonias(id) {
+        $.ajax({
+            url: '@Url.Action("ListaColonias", "PuntosEntRec")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                $("#IdColonia").html('');
+                $("#IdColonia").append('<option value ="0">Elige una Colonia</option>');
+                $.each(Data,
+                    function (index, propie) {
+                        var content = '<option value="' + propie.idcolonia + '">' + propie.colonia + '</option>';
+                        $("#IdColonia").append(content);
+                    });
+                $('#IdColonia').selectpicker('refresh');
+            },
+            error: function () {
+                console.log("No pudo acceder al metodo");
+            }
+        });
+    }
+
+    function ComplementoDomiclio(id) {
+        $.ajax({
+            url: '@Url.Action("ComplementoDomicilio", "PuntosEntRec")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                $("#Municipio").val(Data.municipio);
+                $("#Estado").val(Data.estado);
+                $("#Pais").val(Data.pais);
+            },
+            error: function () {
+                console.log("No pudo acceder al metodo");
+            }
+        });
+    }
+
+    function CerrarModal() {
+        $("#OperTitle").html('');
+        $("#OperBody").html('');
+        $('#OperModal').modal('hide');
+    }
+</script>

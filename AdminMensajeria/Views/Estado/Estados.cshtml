@@ -1,0 +1,99 @@
+﻿@model IEnumerable<AdminMensajeria.Models.GEN_ESTADO>
+
+<table id="EstadoTable" class="ui celled table compact">
+    <thead>
+        <tr>
+            <th class="col-md-2"></th>
+            <th class="col-lg-5">
+                @Html.Label("Estado")
+            </th>
+            <th class="col-lg-5">
+                @Html.Label("País")
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <button onclick="EditarEstado(@item.IdEstado)"  data-toggle="tooltip" title="Editar Estado" class="btn btn-default btn-sm">
+                        <span class='glyphicon glyphicon-edit'></span>
+                    </button>
+                    <button onclick="EliminarEstado(@item.IdEstado)" data-toggle="tooltip" title="Eliminar Estado" class="btn btn-default btn-sm">
+                        <span class='glyphicon glyphicon-trash'></span>
+                    </button>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CiudadEstado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GEN_PAIS.Pais)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+           $('#EstadoTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            }
+        });
+    });
+
+    function EditarEstado(id) {
+        $("#OperTitle").html('');
+        $("#OperTitle").append('Editar Estado')
+        $("#OperBody").html('');
+        $("#OperBody").load('@Url.Action("Edit", "Estado")' + '/' + id);
+        $('#OperModal').modal('show');
+    }
+
+    function EliminarEstado(id) {
+        $('#ConfirmTitle').html('');
+        var title = "Confirme para eliminar Estado"
+        $('#ConfirmTitle').append(title);
+        $('#ConfirmBody').html('');
+        var body = '<button onclick="ConfirmaEliminarEstado(' + id + ')" type="button" class="btn btn-danger" id="modal-btn-si">Si</button>' +
+                   '<button onclick="CancelaEliminar()" type="button" class="btn btn-primary" id="modal-btn-no">No</button>';
+        $('#ConfirmBody').append(body);
+        $('#ConfirmModal').modal('show');
+
+    }
+
+    function ConfirmaEliminarEstado(id) {
+        $.ajax({
+            url: '@Url.Action("DeleteEstado", "Estado")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                if (Data.Result == true) {
+                    $("#VistaEstados").html('');
+                    $("#VistaEstados").load('@Url.Action("Estados", "Estado")');
+                    CancelaEliminar();
+                }
+                else {
+                    $("#ErrorMSG").html('');
+                    $("#ErrorMSG").append(Data.Mensaje);
+                    $('#ConfirmModal').modal('hide');
+                    $('#ModalErrorMSG').modal('show')
+                }
+            },
+            error: function (data) {
+                console.log("ocurrio un error al Eliminar");
+            }
+        });
+    }
+
+    function CancelaEliminar() {
+        $('#ConfirmTitle').html('');
+        $('#ConfirmBody').html('');
+        $('#ConfirmModal').modal('hide');
+    }
+
+
+</script>

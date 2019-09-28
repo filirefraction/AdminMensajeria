@@ -1,0 +1,108 @@
+﻿@model IEnumerable<AdminMensajeria.Models.OPE_PUNTOENTREC>
+
+<div class="form-horizontal">
+    <div class="form-group row">
+        <div class="col-md-1">
+            <button onclick="NuevoPais()" data-toggle="tooltip" title="Nuevo País" type="button" class="btn btn-default btn-sm ">
+                <span class="glyphicon glyphicon-plus"></span> Nuevo
+            </button>
+        </div>
+        <div class="col-md-8">&nbsp;</div>
+        <div class="col-md-offset-2 col-md-1">
+            <div class="col-md-offset-2 col-md-1">
+                <a href="@Url.Action("CRM","Home")" data-toggle="tooltip" title="Volver al Menú" class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-triangle-left"></span> Volver
+                </a>
+            </div>
+        </div>
+    </div>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DescripcionPunto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TipoPunto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactoPunto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HoraDePunto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HoraHaPunto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CallePunto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NoIntPunto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NoExtPunto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ObsPunto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EstatusPunto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GEN_COLONIA.Colonia)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OPE_CLIENTPROVEE.RazonSocial)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.DescripcionPunto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TipoPunto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ContactoPunto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.HoraDePunto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.HoraHaPunto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CallePunto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NoIntPunto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NoExtPunto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ObsPunto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EstatusPunto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GEN_COLONIA.Colonia)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OPE_CLIENTPROVEE.RazonSocial)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.IdPuntoEntRec }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IdPuntoEntRec }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IdPuntoEntRec })
+        </td>
+    </tr>
+}
+
+    </table>
+
+</div>

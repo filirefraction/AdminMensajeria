@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "Configuración";
+}
+
+<div class="form-group row">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-9">
+    </div>
+    <div class="col-md-1">
+        <a href="@Url.Action("Estandar", "Home")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Menu">
+            <span class="glyphicon glyphicon-home"></span> Volver
+        </a>
+    </div>
+</div>
+
+    <div class="row">
+        <div class="text-center">
+            <div class="col-md-12">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <a href="@Url.Action("Index", "Usuario")" data-toggle="tooltip" title="Ver Usuarios"><div class="btn btn-primary col-md-6 bigBtnRep">USUARIOS</div></a>
+                        <a href="@Url.Action("Edit", "Correo", new { id = 2 })" data-toggle="tooltip" title="Configuración de Correo"><div class="btn btn-primary col-md-6 bigBtnRep">CORREO</div></a>
+                        <a href="@Url.Action("Index", "Unidad")" data-toggle="tooltip" title="Ver Unidades"><div class="btn btn-primary col-md-6 bigBtnRep">UNIDADES DE <br /> MEDIDA</div></a>
+                        <a href="@Url.Action("Index", "Categoria")" data-toggle="tooltip" title="Ver Categorias"><div class="btn btn-primary col-md-6 bigBtnRep">CATEGORIAS</div></a>
+                    </div>
+                    <div class="row">
+                        <a href="@Url.Action("Index", "Colonia")" data-toggle="tooltip" title="Ver Colonias"><div class="btn btn-primary col-md-6 bigBtnRep">COLONIAS</div></a>
+                        <a href="@Url.Action("Index", "Municipio")" data-toggle="tooltip" title="Ver Municipios"><div class="btn btn-primary col-md-6 bigBtnRep">MUNICIPIOS</div></a>
+                        <a href="@Url.Action("Index", "Estado")" data-toggle="tooltip" title="Ver Estados"><div class="btn btn-primary col-md-6 bigBtnRep">ESTADOS</div></a>
+                        <a href="@Url.Action("Index", "pais")" data-toggle="tooltip" title="ver Paises"><div class="btn btn-primary col-md-6 bigBtnRep">PAÍSES</div></a>
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+    </div>
+

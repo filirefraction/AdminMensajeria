@@ -1,0 +1,82 @@
+﻿@model AdminMensajeria.Models.GEN_EMAILCONGIF
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>GEN_EMAILCONGIF</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Remitente)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remitente)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Asunto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Asunto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Cuerpo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Cuerpo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ContrasenaEmail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ContrasenaEmail)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SMTPHost)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SMTPHost)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SMTPPort)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SMTPPort)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SSL)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SSL)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EstatusEMail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EstatusEMail)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.IdEmailConfig }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

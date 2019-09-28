@@ -1,0 +1,129 @@
+﻿@model AdminMensajeria.Models.GEN_COMENSUGER
+
+@{
+    ViewBag.Title = "Comentarios o Sugerencias";
+}
+
+<div class="form-horizontal">
+    <div class="form-group">
+        <div class="col-md-12">
+            <div class="field">
+                @Html.EditorFor(model => model.Asunto, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Asunto", @Maxlength = 50 } })
+                <label for="Asunto">Asunto (*)</label>
+            </div>
+            <span class="AlertaDanger" id="AsuntoVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-12">
+            <div class="field">
+                @Html.EditorFor(model => model.Cuerpo, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Comentario", @Maxlength = 500 } })
+                <label for="Cuerpo">Comentario (*)</label>
+            </div>
+            <span class="AlertaDanger" id="CuerpoVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-2">
+            <button id="ValidaComentario" type="button" class="btn btn-primary btn-sm ">
+                <span class="glyphicon glyphicon-floppy-disk"></span> Guardar
+            </button>
+        </div>
+        <div class="col-md-7">
+            <span class="AlertaDanger" id="MensajeError"></span>
+        </div>
+        <div id="VolverCliente" class="col-md-2">
+            <a href="@Url.Action("Index","Comentarios")" class="btn btn-danger btn-sm">
+                <span class="glyphicon glyphicon-floppy-remove"></span> Cancelar
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#Asunto").keyup(function () {
+            $("#AsuntoVal").html('');
+        });
+
+        $("#Cuerpo").keyup(function () {
+            $("#CuerpoVal").html('');
+        });
+
+        ///////////////////////////////////////////////////////////////
+        $("#ValidaComentario").click(function () {
+            var IdComenSuger = @Model.IdComenSuger;
+            var IdUsuario = @Model.IdUsuario;
+            var Asunto = $("#Asunto").val();
+            var Cuerpo = $("#Cuerpo").val();
+            var FechaCreacionComenSuger = '@Model.FechaCreacionComenSuger';
+            var Respuesta = '@Model.Respuesta';
+            var FechaAtencionComenSuger = '@Model.FechaAtencionComenSuger';
+
+            ///////////////////////////////////////////////////////////
+            if ($("#Asunto").val().length === 0) {
+                $("#AsuntoVal").html('');
+                $("#AsuntoVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#Asunto").val().length > 50) {
+                $("#AsuntoVal").html('');
+                $("#AsuntoVal").append('Este Campo es puede contener maximo 50 caracteres');
+            }
+
+            if ($("#Cuerpo").val().length === 0) {
+                $("#CuerpoVal").html('');
+                $("#CuerpoVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#Cuerpo").val().length > 500) {
+                $("#CuerpoVal").html('');
+                $("#CuerpoVal").append('Este Campo es puede contener maximo 500 caracteres');
+            }
+
+            //Primero Valida que los campos que siempre van a ser obligatorios//
+            if ($("#Asunto").val().length != 0 && $("#Asunto").val().length <= 50 &&
+                $("#Cuerpo").val().length != 0 && $("#Cuerpo").val().length <= 500) {
+
+                console.log("Asunto: " + Asunto);
+                console.log("Cuerpo: " + Cuerpo);
+
+                //inserta sin validar la fecha de egreso//
+                $.ajax({
+                    url: '@Url.Action("EditComentario", "Comentarios")',
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "IdComenSuger": IdComenSuger,
+                        "IdUsuario": IdUsuario,
+                        "Asunto": Asunto,
+                        "Cuerpo": Cuerpo,
+                        "FechaCreacionComenSuger": FechaCreacionComenSuger,
+                        "Respuesta": Respuesta,
+                        "FechaAtencionComenSuger": FechaAtencionComenSuger
+                    }),
+                    success: function (data) {
+                        if (data.Result == true) {
+                            window.location = '@Url.Action("Index", "Comentarios")';
+                        }
+                        else {
+                            $("#MensajeError").html('');
+                            $("#MensajeError").append(data.Mensaje);
+                        }
+                    },
+                    error: function () {
+                        console.log("No pudo acceder al Metodo");
+                    }
+                });
+            }
+            else {
+                console.log("No se cumplio la validación de datos");
+            }
+        });
+    });
+
+</script>

@@ -1,0 +1,75 @@
+﻿@model IEnumerable<AdminMensajeria.Models.GEN_EMAILCONGIF>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Remitente)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Asunto)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Cuerpo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ContrasenaEmail)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SMTPHost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SMTPPort)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SSL)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EstatusEMail)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Remitente)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Asunto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Cuerpo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ContrasenaEmail)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SMTPHost)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SMTPPort)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SSL)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EstatusEMail)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.IdEmailConfig }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IdEmailConfig }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IdEmailConfig })
+        </td>
+    </tr>
+}
+
+</table>

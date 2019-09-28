@@ -1,0 +1,81 @@
+﻿@model IEnumerable<AdminMensajeria.Models.GEN_ESTADO>
+
+@{
+    ViewBag.Title = "Estados";
+}
+
+<h2>Estados</h2>
+
+<div class="form-horizontal">
+
+    <div class="form-group row">
+        <div class="col-md-3">
+            @Html.DropDownList("ListPais", (IEnumerable<SelectListItem>)ViewBag.ListPais, "Elige Un País", htmlAttributes: new { @class = "form-control input-sm" })
+            <span class="AlertaDanger" id="ListPaisVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-1">
+            <a id="RegistrarEstado" data-toggle="tooltip" title="Nuevo Estado" class="btn btn-default btn-sm ">
+                <span class="glyphicon glyphicon-plus"></span> Nuevo
+            </a>
+        </div>
+        <div class="col-md-8">&nbsp;</div>
+        <div class="col-md-offset-2 col-md-1">
+            <a href="@Url.Action("Configuracion", "Home")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Menu">
+                <span class="glyphicon glyphicon-home"></span> Volver
+            </a>
+        </div>
+    </div>
+
+
+    <div id="VistaEstados"></div>
+    
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ListPais').selectpicker({
+            liveSearch: true
+        });
+
+        $("button").addClass("input-sm").css({ "font-size": "12px" });
+
+        $('#ListPais').change(function () {
+            if ($('#ListPais').val() != '') {
+                var IdPais = $('#ListPais').val();
+                $("#ListPaisVal").html('');
+                $("#VistaEstados").html('');
+                $("#VistaEstados").load('@Url.Action("Estados", "Estado")' + '/' + IdPais);
+            }
+            else {
+                $("#ListPaisVal").html('');
+                $("#ListPaisVal").append('Debe elegir un país para ver los estados')
+            }
+        });
+
+        $("#RegistrarEstado").click(function () {
+            var IdPais = $("#ListPais").val();
+
+            if ($('#ListPais').val() != '') {
+                NuevoEstado(IdPais);
+            }
+            else {
+                $("#ListPaisVal").html('');
+                $("#ListPaisVal").append('Debe elegir un país para ver los estados')
+            }
+        });
+
+
+    });
+
+    function NuevoEstado(id) {
+        $("#OperTitle").html('');
+        $("#OperTitle").append('Nuevo Estado')
+        $("#OperBody").html('');
+        $("#OperBody").load('@Url.Action("Create", "Estado")' + '/' + id);
+        $('#OperModal').modal('show');
+    }
+
+</script>

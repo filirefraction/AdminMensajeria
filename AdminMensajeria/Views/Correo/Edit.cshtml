@@ -1,0 +1,251 @@
+﻿@model AdminMensajeria.Models.GEN_EMAILCONGIF
+
+@{
+    ViewBag.Title = "Editar Correo";
+}
+
+<h2>Editar Correo</h2>
+
+<div class="form-horizontal">
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.Remitente, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "correo@algo.com", @Maxlength = 100 } })
+                <label for="Remitente">Remitente (*)</label>
+            </div>
+            <span class="AlertaDanger" id="RemitenteVal"></span>
+        </div>
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.Asunto, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Notificación de Solicitud: ", @Maxlength = 250 } })
+                <label for="Asunto">Asunto (*)</label>
+            </div>
+            <span class="AlertaDanger" id="AsuntoVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-12">
+            <div class="field">
+                @Html.EditorFor(model => model.Cuerpo, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Estimado, le infomamos que se ha generado una notificación", @Maxlength = 250 } })
+                <label for="Remitente">Remitente (*)</label>
+            </div>
+            <span class="AlertaDanger" id="RemitenteVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-4">
+            <div class="field">
+                @Html.EditorFor(model => model.ContrasenaEmail, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "******", @Maxlength = 50 } })
+                <label for="ContrasenaEmail">Contraseña (*)</label>
+            </div>
+            <span class="AlertaDanger" id="ContrasenaEmailVal"></span>
+        </div>
+        <div class="col-md-4">
+            <div class="field">
+                @Html.EditorFor(model => model.SMTPHost, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Notificación de Solicitud: ", @Maxlength = 250 } })
+                <label for="Asunto">Asunto (*)</label>
+            </div>
+            <span class="AlertaDanger" id="AsuntoVal"></span>
+        </div>
+        <div class="col-md-2">
+            <div class="field">
+                @Html.EditorFor(model => model.SMTPPort, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "465: ", @type = "number" } })
+                <label for="SMTPPort">Puerto (*)</label>
+            </div>
+            <span class="AlertaDanger" id="SMTPPortVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.Cuerpo, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Estimado, le infomamos que se ha generado una notificación", @Maxlength = 250 } })
+                <label for="Remitente">Remitente (*)</label>
+            </div>
+            <span class="AlertaDanger" id="RemitenteVal"></span>
+        </div>
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.Cuerpo, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Estimado, le infomamos que se ha generado una notificación", @Maxlength = 250 } })
+                <label for="Remitente">Remitente (*)</label>
+            </div>
+            <span class="AlertaDanger" id="RemitenteVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-md-2">
+            <button id="ValidaPais" type="button" class="btn btn-primary btn-sm ">
+                <span class="glyphicon glyphicon-floppy-disk"></span> Guardar
+            </button>
+        </div>
+        <div class="col-md-7">
+            <span class="AlertaDanger" id="MensajeError"></span>
+        </div>
+        <div id="VolverCliente" class="col-md-2">
+            <a href="@Url.Action("Index","Pais")" class="btn btn-danger btn-sm">
+                <span class="glyphicon glyphicon-floppy-remove"></span> Cancelar
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#Pais").keyup(function () {
+            $("#PaisVal").html('');
+        });
+
+        ///////////////////////////////////////////////////////////////
+        $("#ValidaPais").click(function () {
+            var IdPais  =  @ViewBag.idpais;
+            var Pais    =  $("#Pais").val();
+
+            ///////////////////////////////////////////////////////////
+            if ($("#Pais").val().length === 0) {
+                $("#PaisVal").html('');
+                $("#PaisVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#Pais").val().length > 50) {
+                $("#PaisVal").html('');
+                $("#PaisVal").append('Este Campo es puede contener maximo 50 caracteres');
+            }
+
+            //Primero Valida que los campos que siempre van a ser obligatorios//
+            if ($("#Pais").val().length != 0 &&
+                $("#Pais").val().length <= 50) {
+
+                console.log("Pais: " + Pais);
+
+                //inserta sin validar la fecha de egreso//
+                $.ajax({
+                    url: '@Url.Action("EditPais", "Pais")',
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "IdPais": IdPais,
+                        "Pais": Pais
+                    }),
+                    success: function (data) {
+                        if (data.Result == true) {
+                            window.location = '@Url.Action("Index", "Pais")';
+                        }
+                        else {
+                            $("#MensajeError").html('');
+                            $("#MensajeError").append(data.Mensaje);
+                        }
+                    },
+                    error: function () {
+                        console.log("No pudo acceder al Metodo");
+                    }
+                });
+            }
+            else {
+                console.log("No se cumplio la validación de datos");
+            }
+        });
+    });
+
+</script>
+
+
+
+
+
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>GEN_EMAILCONGIF</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.IdEmailConfig)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Remitente, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.ValidationMessageFor(model => model.Remitente, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Asunto, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Asunto, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Asunto, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Cuerpo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Cuerpo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Cuerpo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContrasenaEmail, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ContrasenaEmail, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ContrasenaEmail, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SMTPHost, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SMTPHost, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SMTPHost, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SMTPPort, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SMTPPort, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SMTPPort, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SSL, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.SSL)
+                    @Html.ValidationMessageFor(model => model.SSL, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EstatusEMail, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.EstatusEMail)
+                    @Html.ValidationMessageFor(model => model.EstatusEMail, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

@@ -18,6 +18,7 @@ namespace AdminMensajeria.Models
         public GEN_COLONIA()
         {
             this.OPE_PUNTOENTREC = new HashSet<OPE_PUNTOENTREC>();
+            this.OPE_SOLICITUDPUNTOSENTREC = new HashSet<OPE_SOLICITUDPUNTOSENTREC>();
         }
     
         public int IdColonia { get; set; }
@@ -29,5 +30,7 @@ namespace AdminMensajeria.Models
         public virtual GEN_MUNICIPIO GEN_MUNICIPIO { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OPE_PUNTOENTREC> OPE_PUNTOENTREC { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OPE_SOLICITUDPUNTOSENTREC> OPE_SOLICITUDPUNTOSENTREC { get; set; }
     }
 }

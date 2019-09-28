@@ -1,0 +1,103 @@
+﻿@using (AdminMensajeria.Models.MensajeriaEntities db = new AdminMensajeria.Models.MensajeriaEntities())
+{
+    int IdCliente = ViewBag.idclientprovee;
+    var puntos = (from p in db.OPE_PUNTOENTREC
+                  join c in db.GEN_COLONIA on p.IdColonia equals c.IdColonia
+                  join cp in db.GEN_CODIGOPOSTAL on c.IdCodigoP equals cp.IdCodigoP
+                  join m in db.GEN_MUNICIPIO on c.IdMunicipio equals m.IdMunicipio
+                  join e in db.GEN_ESTADO on m.IdEstado equals e.IdEstado
+                  join pa in db.GEN_PAIS on e.IdPais equals pa.IdPais
+                  where p.IdClientProvee == IdCliente
+                  select new { p, c, cp, m, e, pa }).ToList();
+
+
+    <table id="PuntosTable" class="ui celled table compact">
+        <thead>
+            <tr>
+                <th>
+                    Descripción
+                </th>
+                <th>
+                    Contacto
+                </th>
+                              <th>
+                    Dirección
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in puntos)
+                {
+                <tr>
+                    <td style="word-break:break-word">
+                        @Html.DisplayFor(modelItem => item.p.DescripcionPunto)
+                    </td>
+                    <td style="word-break:break-word">
+                        @Html.DisplayFor(modelItem => item.p.ContactoPunto)
+                    </td>
+                    <td style="word-break:break-word">
+                        <p>@item.p.CallePunto, @item.p.NoExtPunto, @item.p.NoIntPunto,  @item.c.Colonia, @item.cp.CodigoPostal, @item.m.Municipio, @item.e.CiudadEstado, @item.pa.Pais </p>
+                    </td>
+                    <td>
+                        <button onclick="ElegirPunto(@item.p.IdPuntoEntRec)" data-toggle="tooltip" title="Elegir Este Punto de Entrega" class="btn btn-default btn-sm">
+                            <span class='glyphicon glyphicon-check'></span>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+        <script>
+    $(document).ready(function () {
+        $('#PuntosTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            }
+        });
+    });
+
+    function ElegirPunto(id) {
+        $.ajax({
+            url: '@Url.Action("InformacionPunto", "SolicitudPuntosEntRec")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                LimpiarCampos();
+                $("#IdPuntoEnt1").val(Data.idpunto);
+                $("#DescripcionPuntoEnt1").val(Data.descripcion);
+                $("#ContactoPuntoEnt1").val(Data.contacto);
+                $("#CallePuntosEnt1").val(Data.calle);
+                $("#NoExtPuntosEnt1").val(Data.noext);
+                $("#NoIntPuntosEnt1").val(Data.noint);
+                $("#ReferenciaPuntosEnt1").val(Data.referencia);
+                $("#c1Ent1").val(Data.cp);
+                $("#MunicipioEnt1").val(Data.municipio);
+                $("#EstadoEnt1").val(Data.estado);
+                $("#PaisEnt1").val(Data.pais);
+                var content = '<option value="' + Data.idcolonia + '">' + Data.colonia + '</option>';
+                $("#IdColoniaEnt1").append(content);
+                $('#IdColoniaEnt1').selectpicker('refresh');
+                $("#OtraDireccionEnt1").prop("checked", false);
+                $(".AlertaDanger").html('');
+                ActivarInputs(true);
+                CerrarModal();
+            },
+            error: function () {
+                console.log("No pudo acceder al metodo");
+            }
+        });
+    }
+
+        function CerrarModal() {
+            $("#OperTitle").html('');
+            $("#OperBody").html('');
+            $('#OperModal').modal('hide');
+        }
+
+        </script>
+
+}

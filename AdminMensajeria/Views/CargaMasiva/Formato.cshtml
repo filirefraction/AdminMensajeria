@@ -1,0 +1,541 @@
+﻿@model AdminMensajeria.Models.OPE_SOLICITUD
+@using (AdminMensajeria.Models.MensajeriaEntities db = new AdminMensajeria.Models.MensajeriaEntities())
+{
+
+    var Solicitud = (from s in db.OPE_SOLICITUD where s.IdSolicitud == Model.IdSolicitud select s).FirstOrDefault();
+    var Producto = (from p in db.OPE_SOLICITUDPRODUCTO where p.IdSolicitud == Model.IdSolicitud select p).FirstOrDefault();
+    var Remitente = (from r in db.OPE_SOLICITUDPUNTOSENTREC where r.IdSolicitud == Model.IdSolicitud && r.TipoPunto == 1 select r).FirstOrDefault();
+    var Destinatario = (from d in db.OPE_SOLICITUDPUNTOSENTREC where d.IdSolicitud == Model.IdSolicitud && d.TipoPunto == 2 select d).FirstOrDefault();
+    var ImageName = Model.IdSolicitud + ".png";
+    var Acuse = "";
+    var Estatus = "";
+    var Unidad = "";
+    if (Solicitud.RequiereAcuse) { Acuse = "Si"; } else { Acuse = "No"; };
+    switch (Solicitud.EstatusSolicitud)
+    {
+        case 1: Estatus = "Pendiente"; break;
+        case 2: Estatus = "Recibido en Mensajería"; break;
+        case 3: Estatus = "En ruta"; break;
+        case 4: Estatus = "Entregado"; break;
+        case 5: Estatus = "Cancelado"; break;
+        default: break;
+    }
+    if (Producto.IdUnidad != null)
+    {
+        Unidad = Producto.GEN_UNIDAD.DescripcionUnidad;
+    }
+
+    <style media="print">
+        label {
+            font-size: x-small;
+        }
+
+        p {
+            font-size: x-small;
+        }
+
+        .col-md-1 {
+            width: 8%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-2 {
+            width: 16%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-3 {
+            width: 25%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-4 {
+            width: 33%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-5 {
+            width: 42%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-6 {
+            width: 50%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-7 {
+            width: 58%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-8 {
+            width: 66%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-9 {
+            width: 75%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-10 {
+            width: 83%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-11 {
+            width: 92%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .col-md-12 {
+            width: 100%;
+            float: left;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .Oculto {
+            display: none;
+        }
+
+        .form-horizontal {
+            height: 435px;
+        }
+
+        .Cuerpo {
+            height: 270px;
+        }
+
+        .Page {
+            page-break-before: always;
+        }
+    </style>
+
+    <div class="Page">
+        <div class="form-horizontal" style="border: 2px solid;padding-left: 15px;padding-top: 15px;border-radius: 20px 20px 20px 20px;margin-bottom: 17px;">
+            <div class="form-group" style="border-bottom: 1px solid; margin-right: 0px; margin-bottom: 5px;">
+                <div class="col-md-3">
+                    <p><b>Número de Envío: </b> @Solicitud.IdSolicitud</p>
+                </div>
+                <div class="col-md-3">
+                    <p><b>Creado: </b> @Solicitud.FechaCreacion</p>
+                </div>
+                <div class="col-md-3">
+                    <p><b>¿Requiere Acuse Físico?: </b> @Acuse</p>
+                </div>
+                <div class="col-md-3">
+                    <p><b>Estatus: </b> @Estatus</p>
+                </div>
+            </div>
+
+            <div class="form-group" style="border-bottom: 1px solid; margin-right: 0px; margin-bottom: 5px;">
+                <div class="col-md-6">
+                    <p><b>Producto: </b> @Producto.Descripcion</p>
+                </div>
+                <div class="col-md-2">
+                    <p><b>Cantidad: </b> @Producto.Cantidad</p>
+                </div>
+                <div class="col-md-2">
+                    <p><b>Unidad: </b> @Unidad</p>
+                </div>
+                <div class="col-md-2">
+                    <p><b>Peso: </b> @Producto.Peso</p>
+                </div>
+            </div>
+
+            <div class="Cuerpo">
+                <div class="form-group" style="margin-right: 0px; margin-bottom: 0px;">
+                    <div class="col-md-6">
+                        <label for="RemitenteLugar">Información de Remitente:</label>
+                        <div id="RemitenteLugar" style="word-break:break-word">
+                            @if (Remitente.IdPuntoEntRec != null)
+                            {
+                                <p>
+                                    @Remitente.OPE_PUNTOENTREC.OPE_CLIENTPROVEE.RazonSocial - @Remitente.OPE_PUNTOENTREC.DescripcionPunto <br />
+                                    <b>Horario de Atención:</b> @Remitente.OPE_PUNTOENTREC.HoraDePunto a @Remitente.OPE_PUNTOENTREC.HoraHaPunto <br />
+                                    <b>Contacto:</b> @Remitente.OPE_PUNTOENTREC.ContactoPunto
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    @Remitente.DescripcionPuntoEntRec <br />
+                                    <b>Contacto</b> @Remitente.ContactoPuntoEntRec
+                                </p>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <p style="margin-bottom: 4px"> <b>Destinatario: </b>@Destinatario.DestinatarioPuntoEntRec</p>
+                        <div id="DestinatarioLugar" style="word-break:break-word">
+                            @if (Destinatario.IdPuntoEntRec != null)
+                            {
+                                <p>
+                                    <b>Información de Entrega:</b>
+                                    @Destinatario.OPE_PUNTOENTREC.OPE_CLIENTPROVEE.RazonSocial - @Destinatario.OPE_PUNTOENTREC.DescripcionPunto <br />
+                                    <b>Horario de Atención:</b> @Destinatario.OPE_PUNTOENTREC.HoraDePunto a @Destinatario.OPE_PUNTOENTREC.HoraHaPunto <br />
+                                    <b>Contacto:</b> @Destinatario.OPE_PUNTOENTREC.ContactoPunto
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    <b>Información de Entrega:</b>
+                                    @Destinatario.DescripcionPuntoEntRec <br />
+                                    <b>Contacto</b> @Destinatario.ContactoPuntoEntRec
+                                </p>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group" style="margin-right: 0px; margin-bottom: 5px;">
+                    <div class="col-md-6">
+                        <label for="RemitenteDireccion">Dirección:</label>
+                        <div id="RemitenteDireccion" style="word-break:break-word">
+                            @if (Remitente.IdPuntoEntRec != null)
+                            {
+                                <p>
+                                    @Remitente.OPE_PUNTOENTREC.CallePunto, @Remitente.OPE_PUNTOENTREC.NoExtPunto, @Remitente.OPE_PUNTOENTREC.NoIntPunto,
+                                    @Remitente.OPE_PUNTOENTREC.GEN_COLONIA.Colonia, @Remitente.OPE_PUNTOENTREC.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal,
+                                    @Remitente.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.Municipio, @Remitente.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado,
+                                    @Remitente.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais, @Remitente.OPE_PUNTOENTREC.Referencia
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    @Remitente.CallePuntosEntRec, @Remitente.NoExtPuntosEntRec, @Remitente.NoIntPuntosEntRec,
+                                    @Remitente.GEN_COLONIA.Colonia, @Remitente.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal,
+                                    @Remitente.GEN_COLONIA.GEN_MUNICIPIO.Municipio, @Remitente.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado,
+                                    @Remitente.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais, @Remitente.ReferenciaPuntosEntRec
+                                </p>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="DestinatarioDireccion">Dirección:</label>
+                        <div id="DestinatarioDireccion" style="word-break:break-word">
+                            @if (Destinatario.IdPuntoEntRec != null)
+                            {
+                                <p>
+                                    @Destinatario.OPE_PUNTOENTREC.CallePunto, @Destinatario.OPE_PUNTOENTREC.NoExtPunto, @Destinatario.OPE_PUNTOENTREC.NoIntPunto,
+                                    @Destinatario.OPE_PUNTOENTREC.GEN_COLONIA.Colonia, @Destinatario.OPE_PUNTOENTREC.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal,
+                                    @Destinatario.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.Municipio, @Destinatario.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado,
+                                    @Destinatario.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais, @Destinatario.OPE_PUNTOENTREC.Referencia
+                                </p>
+                            }
+                            else
+                            {
+                                if (Destinatario.IdColonia != null)
+                                {
+                                    <p>
+                                        @Destinatario.CallePuntosEntRec, @Destinatario.NoExtPuntosEntRec, @Destinatario.NoIntPuntosEntRec,
+                                        @Destinatario.GEN_COLONIA.Colonia, @Destinatario.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal,
+                                        @Destinatario.GEN_COLONIA.GEN_MUNICIPIO.Municipio, @Destinatario.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado,
+                                        @Destinatario.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais, @Destinatario.ReferenciaPuntosEntRec
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p>
+
+                                        @Destinatario.CallePuntosEntRec, @Destinatario.NoExtPuntosEntRec, @Destinatario.NoIntPuntosEntRec,
+                                        @Destinatario.ColoniaPuntosEntRec, @Destinatario.CodigoPostalPuntosEntRec,
+                                        @Destinatario.MunicipioPuntosEntRec, @Destinatario.EstadoPuntosEntRec,
+                                        @Destinatario.PaisPuntosEntRec, @Destinatario.ReferenciaPuntosEntRec
+                                    </p>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-right: 0px; margin-bottom: 0px;">
+                    <div class="col-md-6">
+                        <label for="RemitenteObservacion">Observaciones:</label>
+                        <div id="RemitenteObservacion" style="word-break:break-word">
+                            @if (Remitente.IdPuntoEntRec != null)
+                            {
+                                <p>
+                                    @Remitente.OPE_PUNTOENTREC.ObsPunto <br />
+                                    @Remitente.ObsPuntosEntRec
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    @Remitente.ObsPuntosEntRec
+                                </p>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="DestinatarioObservacion">Observaciones:</label>
+                        <div id="DestinatarioObservacion" style="word-break:break-word">
+                            @if (Destinatario.IdPuntoEntRec != null)
+                            {
+                                <p>
+                                    @Destinatario.OPE_PUNTOENTREC.ObsPunto <br />
+                                    @Destinatario.ObsPuntosEntRec
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    @Destinatario.ObsPuntosEntRec
+                                </p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" style="border-top: 1px solid; margin-bottom: 0px; margin-right: 0px;">
+                <div class="col-md-6">
+                    <label for="AceptacionRemitente">Aceptación de Remitente:</label>
+                    <div id="AceptacionRemitente" class="form-group">
+                        <div class="col-md-4"> <p><b>Nombre:</b></p></div>
+                        <div class="col-md-8" style="border-bottom: 1px solid; margin-bottom: 20px;"> <p>@Solicitud.GEN_USUARIO.NombreUsuario </p></div>
+                        <div class="col-md-4"><p><b>Firma:</b></p></div>
+                        <div class="col-md-8" style="border-bottom: 1px solid"> &nbsp; </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label for="DestinatarioObservacion">Sello:</label>
+                </div>
+                <div class="col-md-3">
+                    <div>
+                        <img src="~/Image/qr/@ImageName" style="width: 75px;height: 75px;margin-top: 10px;" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-horizontal" style="border: 2px solid;padding-left: 15px;padding-top: 15px;border-radius: 20px 20px 20px 20px;margin-bottom: 17px;">
+            <div class="form-group" style="border-bottom: 1px solid; margin-right: 0px; margin-bottom: 5px;">
+                <div class="col-md-3">
+                    <p><b>Número de Envío: </b> @Solicitud.IdSolicitud</p>
+                </div>
+                <div class="col-md-3">
+                    <p><b>Creado: </b> @Solicitud.FechaCreacion</p>
+                </div>
+                <div class="col-md-3">
+                    <p><b>¿Requiere Acuse Físico?: </b> @Acuse</p>
+                </div>
+                <div class="col-md-3">
+                    <p><b>Estatus: </b> @Estatus</p>
+                </div>
+            </div>
+
+            <div class="form-group" style="border-bottom: 1px solid; margin-right: 0px; margin-bottom: 5px;">
+                <div class="col-md-6">
+                    <p><b>Producto: </b> @Producto.Descripcion</p>
+                </div>
+                <div class="col-md-2">
+                    <p><b>Cantidad: </b> @Producto.Cantidad</p>
+                </div>
+                <div class="col-md-2">
+                    <p><b>Unidad: </b> @Unidad</p>
+                </div>
+                <div class="col-md-2">
+                    <p><b>Peso: </b> @Producto.Peso</p>
+                </div>
+            </div>
+
+            <div class="Cuerpo">
+                <div class="form-group" style="margin-right: 0px; margin-bottom: 0px;">
+                    <div class="col-md-6">
+                        <label for="RemitenteLugar">Información de Remitente:</label>
+                        <div id="RemitenteLugar" style="word-break:break-word">
+                            @if (Remitente.IdPuntoEntRec != null)
+                            {
+                                <p>
+                                    @Remitente.OPE_PUNTOENTREC.OPE_CLIENTPROVEE.RazonSocial - @Remitente.OPE_PUNTOENTREC.DescripcionPunto <br />
+                                    <b>Horario de Atención:</b> @Remitente.OPE_PUNTOENTREC.HoraDePunto a @Remitente.OPE_PUNTOENTREC.HoraHaPunto <br />
+                                    <b>Contacto:</b> @Remitente.OPE_PUNTOENTREC.ContactoPunto
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    @Remitente.DescripcionPuntoEntRec <br />
+                                    <b>Contacto</b> @Remitente.ContactoPuntoEntRec
+                                </p>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <p style="margin-bottom: 4px"> <b>Destinatario: </b>@Destinatario.DestinatarioPuntoEntRec</p>
+                        <div id="DestinatarioLugar" style="word-break:break-word">
+                            @if (Destinatario.IdPuntoEntRec != null)
+                            {
+                                <p>
+                                    <b>Información de Entrega:</b>
+                                    @Destinatario.OPE_PUNTOENTREC.OPE_CLIENTPROVEE.RazonSocial - @Destinatario.OPE_PUNTOENTREC.DescripcionPunto <br />
+                                    <b>Horario de Atención:</b> @Destinatario.OPE_PUNTOENTREC.HoraDePunto a @Destinatario.OPE_PUNTOENTREC.HoraHaPunto <br />
+                                    <b>Contacto:</b> @Destinatario.OPE_PUNTOENTREC.ContactoPunto
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    <b>Información de Entrega:</b>
+                                    @Destinatario.DescripcionPuntoEntRec <br />
+                                    <b>Contacto</b> @Destinatario.ContactoPuntoEntRec
+                                </p>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group" style="margin-right: 0px; margin-bottom: 5px;">
+                    <div class="col-md-6">
+                        <label for="RemitenteDireccion">Dirección:</label>
+                        <div id="RemitenteDireccion" style="word-break:break-word">
+                            @if (Remitente.IdPuntoEntRec != null)
+                            {
+                                <p>
+                                    @Remitente.OPE_PUNTOENTREC.CallePunto, @Remitente.OPE_PUNTOENTREC.NoExtPunto, @Remitente.OPE_PUNTOENTREC.NoIntPunto,
+                                    @Remitente.OPE_PUNTOENTREC.GEN_COLONIA.Colonia, @Remitente.OPE_PUNTOENTREC.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal,
+                                    @Remitente.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.Municipio, @Remitente.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado,
+                                    @Remitente.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais, @Remitente.OPE_PUNTOENTREC.Referencia
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    @Remitente.CallePuntosEntRec, @Remitente.NoExtPuntosEntRec, @Remitente.NoIntPuntosEntRec,
+                                    @Remitente.GEN_COLONIA.Colonia, @Remitente.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal,
+                                    @Remitente.GEN_COLONIA.GEN_MUNICIPIO.Municipio, @Remitente.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado,
+                                    @Remitente.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais, @Remitente.ReferenciaPuntosEntRec
+                                </p>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="DestinatarioDireccion">Dirección:</label>
+                        <div id="DestinatarioDireccion" style="word-break:break-word">
+                            @if (Destinatario.IdPuntoEntRec != null)
+                            {
+                                <p>
+                                    @Destinatario.OPE_PUNTOENTREC.CallePunto, @Destinatario.OPE_PUNTOENTREC.NoExtPunto, @Destinatario.OPE_PUNTOENTREC.NoIntPunto,
+                                    @Destinatario.OPE_PUNTOENTREC.GEN_COLONIA.Colonia, @Destinatario.OPE_PUNTOENTREC.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal,
+                                    @Destinatario.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.Municipio, @Destinatario.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado,
+                                    @Destinatario.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais, @Destinatario.OPE_PUNTOENTREC.Referencia
+                                </p>
+                            }
+                            else
+                            {
+                                if (Destinatario.IdColonia != null)
+                                {
+                                    <p>
+                                        @Destinatario.CallePuntosEntRec, @Destinatario.NoExtPuntosEntRec, @Destinatario.NoIntPuntosEntRec,
+                                        @Destinatario.GEN_COLONIA.Colonia, @Destinatario.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal,
+                                        @Destinatario.GEN_COLONIA.GEN_MUNICIPIO.Municipio, @Destinatario.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado,
+                                        @Destinatario.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais, @Destinatario.ReferenciaPuntosEntRec
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p>
+
+                                        @Destinatario.CallePuntosEntRec, @Destinatario.NoExtPuntosEntRec, @Destinatario.NoIntPuntosEntRec,
+                                        @Destinatario.ColoniaPuntosEntRec, @Destinatario.CodigoPostalPuntosEntRec,
+                                        @Destinatario.MunicipioPuntosEntRec, @Destinatario.EstadoPuntosEntRec,
+                                        @Destinatario.PaisPuntosEntRec, @Destinatario.ReferenciaPuntosEntRec
+                                    </p>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-right: 0px; margin-bottom: 0px;">
+                    <div class="col-md-6">
+                        <label for="RemitenteObservacion">Observaciones:</label>
+                        <div id="RemitenteObservacion" style="word-break:break-word">
+                            @if (Remitente.IdPuntoEntRec != null)
+                            {
+                                <p>
+                                    @Remitente.OPE_PUNTOENTREC.ObsPunto <br />
+                                    @Remitente.ObsPuntosEntRec
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    @Remitente.ObsPuntosEntRec
+                                </p>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="DestinatarioObservacion">Observaciones:</label>
+                        <div id="DestinatarioObservacion" style="word-break:break-word">
+                            @if (Destinatario.IdPuntoEntRec != null)
+                            {
+                                <p>
+                                    @Destinatario.OPE_PUNTOENTREC.ObsPunto <br />
+                                    @Destinatario.ObsPuntosEntRec
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    @Destinatario.ObsPuntosEntRec
+                                </p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" style="border-top: 1px solid; margin-bottom: 0px; margin-right: 0px;">
+                <div class="col-md-6">
+                    <label for="AceptacionRemitente">Aceptación de Remitente:</label>
+                    <div id="AceptacionRemitente" class="form-group">
+                        <div class="col-md-4"> <p><b>Nombre:</b></p></div>
+                        <div class="col-md-8" style="border-bottom: 1px solid; margin-bottom: 20px;"> <p>@Solicitud.GEN_USUARIO.NombreUsuario </p></div>
+                        <div class="col-md-4"><p><b>Firma:</b></p></div>
+                        <div class="col-md-8" style="border-bottom: 1px solid"> &nbsp; </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label for="DestinatarioObservacion">Sello:</label>
+                </div>
+                <div class="col-md-3">
+                    <div>
+                        <img src="~/Image/qr/@ImageName" style="width: 75px;height: 75px;margin-top: 10px;" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+}

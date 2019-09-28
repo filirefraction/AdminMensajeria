@@ -1,0 +1,42 @@
+﻿@model AdminMensajeria.Models.GEN_COLONIA
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>GEN_COLONIA</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Colonia)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Colonia)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GEN_CODIGOPOSTAL.CodigoPostal)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GEN_CODIGOPOSTAL.CodigoPostal)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GEN_MUNICIPIO.Municipio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GEN_MUNICIPIO.Municipio)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.IdColonia }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

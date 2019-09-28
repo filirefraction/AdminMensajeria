@@ -15,7 +15,7 @@ namespace AdminMensajeria.Models
     public partial class OPE_CONTACTO
     {
         public int IdContacto { get; set; }
-        public int IdClientProvee { get; set; }
+        public int IdPuntoEntRec { get; set; }
         public string Nombre { get; set; }
         public string ApellidoP { get; set; }
         public string ApellidoM { get; set; }
@@ -26,6 +26,6 @@ namespace AdminMensajeria.Models
         public Nullable<System.TimeSpan> HoraHa { get; set; }
         public bool EstatusContacto { get; set; }
     
-        public virtual OPE_CLIENTPROVEE OPE_CLIENTPROVEE { get; set; }
+        public virtual OPE_PUNTOENTREC OPE_PUNTOENTREC { get; set; }
     }
 }

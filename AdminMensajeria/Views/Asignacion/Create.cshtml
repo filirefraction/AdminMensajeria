@@ -1,0 +1,122 @@
+﻿@model AdminMensajeria.Models.OPE_GUIA
+
+
+    <div class="form-horizontal">
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                @Html.DropDownList("IdUsuario", null, "Elige un Mensajero", htmlAttributes: new { @class = "form-control" })
+                <label for="IdUsuario">Mensajero (*)</label>
+            </div>
+            <span class="AlertaDanger" id="IdUsuarioVal"></span>
+        </div>
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.FechaProgramadaGuia, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                <label for="FechaProgramadaGuia">Fecha de Ejeución (*)</label>
+            </div>
+            <span class="AlertaDanger" id="FechaProgramadaGuiaVal"></span>
+        </div>
+    </div>
+
+        <div class="form-group row">
+            <div class="col-md-2">
+                <button id="ValidaAsignacion" type="button" class="btn btn-primary btn-sm ">
+                    <span class="glyphicon glyphicon-floppy-disk"></span> Crear
+                </button>
+            </div>
+            <div class="col-md-7">
+                <span class="AlertaDanger" id="MensajeError"></span>
+            </div>
+            <div id="VolverCliente" class="col-md-2">
+                <a href="@Url.Action("Index", "Asignacion")" class="btn btn-danger btn-sm">
+                    <span class="glyphicon glyphicon-floppy-remove"></span> Cancelar
+                </a>
+            </div>
+        </div>
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $("#FechaProgramadaGuia").datetimepicker({ format: "Y/m/d H:i", /*timepicker: false, */ step: 30 });
+
+        $('#IdUsuario').selectpicker({
+            liveSearch: true
+        });
+        
+        $("button").addClass("input-sm").css({ "font-size": "12px" });
+
+        $("#IdUsuario").change(function () {
+            $("#IdUsuarioVal").html('');
+        });
+
+        $("#FechaProgramadaGuia").keyup(function () {
+            $("#FechaProgramadaGuiaVal").html('');
+        });
+
+        ///////////////////////////////////////////////////////////////
+        $("#ValidaAsignacion").click(function () {
+            var IdGuia = null;
+            var IdUsuario = $("#IdUsuario").val();
+            var FechaCreacionGuia = null;
+            var FechaProgramadaGuia = $("#FechaProgramadaGuia").val();
+            var CompletaGuia = false;
+            var EstatusGuia = true;
+
+            ///////////////////////////////////////////////////////////
+            if ($("#IdUsuario").val() == '') {
+                $("#IdUsuarioVal").html('');
+                $("#IdUsuarioVal").append('Debe elegir un Mensajero');
+            }
+
+            if ($("#FechaProgramadaGuia").val().length == 0) {
+                $("#FechaProgramadaGuiaVal").html('');
+                $("#FechaProgramadaGuiaVal").append('Este Campo es Obligatorio');
+            }
+
+
+            if ($("#IdUsuario").val() != '' && $("#FechaProgramadaGuia").val().length != 0) {
+
+                console.log("IdUsuario: " + IdUsuario);
+                console.log("FechaProgramadaGuia: " + FechaProgramadaGuia);
+
+                $.ajax({
+                    url: '@Url.Action("CreateAsignacion", "Asignacion")',
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "IdGuia": null,
+                        "IdUsuario": IdUsuario,
+                        "FechaCreacionGuia": FechaCreacionGuia,
+                        "FechaProgramadaGuia": FechaProgramadaGuia,
+                        "CompletaGuia": CompletaGuia,
+                        "EstatusGuia": EstatusGuia
+                    }),
+                    success: function (data) {
+                        if (data.Result == true) {
+                            window.location = '@Url.Action("Edit", "Asignacion")' + '/' + data.Valor;
+                        }
+                        else {
+                            $("#MensajeError").html('');
+                            $("#MensajeError").append(data.Mensaje);
+                        }
+                    },
+                    error: function () {
+                        console.log("No pudo acceder al Metodo");
+                    }
+                });
+            }
+            else {
+                console.log("No se cumplio la validación de datos");
+            }
+
+
+        });
+
+
+
+    });
+  </script>

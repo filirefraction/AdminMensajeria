@@ -1,0 +1,194 @@
+﻿@model IEnumerable<AdminMensajeria.Models.GEN_COLONIA>
+
+@{
+    ViewBag.Title = "Colonias";
+}
+
+<h2>Colonias</h2>
+
+<div class="form-horizontal">
+    <div class="form-group row">
+        <div class="col-md-3">
+            @Html.DropDownList("ListPais", (IEnumerable<SelectListItem>)ViewBag.ListPais, "1.- Elige Un País", htmlAttributes: new { @class = "form-control input-sm" })
+            <span class="AlertaDanger" id="ListPaisVal"></span>
+        </div>
+        <div class="col-md-3">
+            <select id="ListEstado" name="ListEstado" class="form-control input-sm">
+                <option value="">2.- Elige un Estado</option>
+            </select>
+            <span class="AlertaDanger" id="ListEstadoVal"></span>
+
+        </div>
+        <div class="col-md-3">
+            <select id="ListMunicipio" name="ListMunicipio" class="form-control input-sm">
+                <option value="">2.- Elige un Municipio</option>
+            </select>
+            <span class="AlertaDanger" id="ListMunicipioVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-1">
+            <a id="RegistrarColonia" data-toggle="tooltip" title="Nueva Colonia" class="btn btn-default btn-sm">
+                <span class="glyphicon glyphicon-plus"></span> Nuevo
+            </a>
+        </div>
+        <div class="col-md-8">&nbsp;</div>
+        <div class="col-md-offset-2 col-md-1">
+            <a href="@Url.Action("Configuracion", "Home")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Menu">
+                <span class="glyphicon glyphicon-home"></span> Volver
+            </a>
+        </div>
+    </div>
+
+    <div id="VistaColonias"></div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ListPais').selectpicker({
+            liveSearch: true
+        });
+
+        $('#ListEstado').selectpicker({
+            liveSearch: true
+        });
+
+        $('#ListMunicipio').selectpicker({
+            liveSearch: true
+        });
+
+        $("button").addClass("input-sm").css({ "font-size": "12px" });
+
+        $('#ListPais').change(function () {
+            if ($('#ListPais').val() != '') {
+                var IdPais = $('#ListPais').val();
+                $("#ListPaisVal").html('');
+                ObtenerEstados(IdPais);
+
+            }
+            else {
+                $("#ListPaisVal").html('');
+                $("#ListPaisVal").append('Debe elegir un país para ver los estados')
+            }
+        });
+
+        $('#ListEstado').change(function () {
+
+            if ($('#ListEstado').val() != '') {
+                var IdEstado = $('#ListEstado').val();
+                $("#ListEstadoVal").html('');
+                ObtenerMunicipios(IdEstado);
+            }
+            else {
+                $("#ListEstadoVal").html('');
+                $("#ListEstadoVal").append('Debe elegir un estado para ver los municipios');
+            }
+        });
+
+        $('#ListMunicipio').change(function () {
+
+            if ($('#ListMunicipio').val() != '') {
+                var IdMunicipio = $('#ListMunicipio').val();
+                $("#ListMunicipioVal").html('');
+                $("#VistaColonias").load('@Url.Action("Colonias", "Colonia")' + '/' + IdMunicipio);
+            }
+            else {
+                $("#ListMunicipioVal").html('');
+                $("#ListMunicipioVal").append('Debe elegir un municipio para ver las colonias');
+            }
+        });
+
+        $("#RegistrarColonia").click(function () {
+            var IdPais = $("#ListPais").val();
+            var IdEstado = $("#ListEstado").val();
+            var IdMunicpio = $("#ListMunicipio").val();
+
+
+            if ($("#ListPais").val() == '') {
+                $("#ListPaisVal").html('');
+                $("#ListPaisVal").append('Debe elegir un país para ver los estados')
+            }
+            else {
+                $("#ListPaisVal").html('');
+            }
+
+            if ($("#ListEstado").val() == '') {
+                $("#ListEstadoVal").html('');
+                $("#ListEstadoVal").append('Debe elegir un estado para ver los municipios');
+            }
+            else {
+                $("#ListEstadoVal").html('');
+            }
+
+            if ($("#ListMunicipio").val() == '') {
+                $("#ListMunicipioVal").html('');
+                $("#ListMunicipioVal").append('Debe elegir un municipio para ver las colonias');
+            }
+            else {
+                $("#ListMunicipioVal").html('');
+            }
+
+            if ($('#ListPais').val() != '' &&
+                $("#ListEstado").val() != '' &&
+                $("#ListMunicipio").val() != '') {
+                NuevaColonia(IdMunicpio);
+            }
+
+        });
+    });
+
+    function ObtenerEstados(id)
+    {
+        $.ajax({
+            url: '@Url.Action("ListaEstados", "Colonia")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                $("#ListEstado").html('');
+                $("#ListEstado").append('<option value =""> 2.- Elige un Estado</option>');
+                $.each(Data,
+                    function (index, propie) {
+                        var content = '<option value="' + propie.idestado + '">' + propie.estado + '</option>';
+                        $("#ListEstado").append(content);
+                    });
+                $('#ListEstado').selectpicker('refresh');
+            },
+            error: function () {
+                console.log("No pudo acceder al metodo");
+            }
+        });
+    }
+
+    function ObtenerMunicipios(id) {
+        $.ajax({
+            url: '@Url.Action("ListaMunicipios", "Colonia")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                $("#ListMunicipio").html('');
+                $("#ListMunicipio").append('<option value =""> 2.- Elige un Municipio</option>');
+                $.each(Data,
+                    function (index, propie) {
+                        var content = '<option value="' + propie.idmunicipio + '">' + propie.municipio + '</option>';
+                        $("#ListMunicipio").append(content);
+                    });
+                $('#ListMunicipio').selectpicker('refresh');
+            },
+            error: function () {
+                console.log("No pudo acceder al metodo");
+            }
+        });
+    }
+
+    function NuevaColonia(id) {
+        $("#OperTitle").html('');
+        $("#OperTitle").append('Nueva Colonia')
+        $("#OperBody").html('');
+        $("#OperBody").load('@Url.Action("Create", "Colonia")' + '/' + id);
+        $('#OperModal').modal('show');
+    }
+</script>

@@ -1,0 +1,88 @@
+﻿@model AdminMensajeria.Models.GEN_USUARIO
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>GEN_USUARIO</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoUsuario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TipoUsuario)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NombreUsuario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NombreUsuario)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Usuario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Usuario)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Contrasena)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Contrasena)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CorreoUsuario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CorreoUsuario)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CambiarContrasena)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CambiarContrasena)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EstatusUsuario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EstatusUsuario)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OPE_PUNTOENTREC.DescripcionPunto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OPE_PUNTOENTREC.DescripcionPunto)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewBag.Title = "Impresión Masiva";
+
+    <div class="form-group">
+
+        <div class="form-group Oculto" style="height: 20px; margin-top: 30px">
+            <div class="col-md-2">
+                <a href="@Url.Action("Index", "Solicitud")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Menu">
+                    <span class="glyphicon glyphicon-envelope"></span> Envíos
+                </a>
+            </div>
+            <div class="col-md-9">
+            </div>
+            <div class="col-md-1">
+                <a href="@Url.Action("Estandar", "Home")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Menu">
+                    <span class="glyphicon glyphicon-home"></span> Menu
+                </a>
+            </div>
+        </div>
+        <div id="formatos">
+
+
+            @foreach (var item in ViewBag.Numeros)
+            {
+                <div id="a-@item" alt="@item"></div>
+
+            }
+
+
+        </div>
+    </div>
+
+<script>
+    $(document).ready(function () {
+        $("#formatos div").each(function (index) {
+            var element = $(this).attr("alt"); // <-- en la variable element tienes tu elemento
+            $(this).load('@Url.Action("Formato", "CargaMasiva")' + '/' + element);
+        });
+        $("#ContentGral").css("margin-top", "0px");
+        $("#ContentGral").css("margin-bottom", "0px");
+    });
+</script>
+
+}

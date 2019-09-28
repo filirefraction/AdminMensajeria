@@ -1,0 +1,98 @@
+﻿@model IEnumerable<AdminMensajeria.Models.GEN_MUNICIPIO>
+
+
+<table id="MunicipioTable" class="ui celled table compact">
+    <thead>
+        <tr>
+            <th class="col-md-2"></th>
+            <th class="col-md-5">
+                @Html.DisplayNameFor(model => model.Municipio)
+            </th>
+            <th class="col-md-5">
+                @Html.DisplayNameFor(model => model.GEN_ESTADO.CiudadEstado)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    <button onclick="EditarMunicipio(@item.IdMunicipio)" data-toggle="tooltip" title="Editar Municipio" class="btn btn-default btn-sm">
+                        <span class='glyphicon glyphicon-edit'></span>
+                    </button>
+                    <button onclick="EliminarMunicipio(@item.IdMunicipio)" data-toggle="tooltip" title="Eliminar Municipio" class="btn btn-default btn-sm">
+                        <span class='glyphicon glyphicon-trash'></span>
+                    </button>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Municipio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GEN_ESTADO.CiudadEstado)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+        $('#MunicipioTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            }
+        });
+    });
+
+    function EditarMunicipio(id) {
+        $("#OperTitle").html('');
+        $("#OperTitle").append('Editar Municipio')
+        $("#OperBody").html('');
+        $("#OperBody").load('@Url.Action("Edit", "Municipio")' + '/' + id);
+        $('#OperModal').modal('show');
+    }
+
+    function EliminarMunicipio(id) {
+        $('#ConfirmTitle').html('');
+        var title = "Confirme para eliminar Municipio"
+        $('#ConfirmTitle').append(title);
+        $('#ConfirmBody').html('');
+        var body = '<button onclick="ConfirmaEliminarMunicipio(' + id + ')" type="button" class="btn btn-danger" id="modal-btn-si">Si</button>' +
+                   '<button onclick="CancelaEliminar()" type="button" class="btn btn-primary" id="modal-btn-no">No</button>';
+        $('#ConfirmBody').append(body);
+        $('#ConfirmModal').modal('show');
+
+    }
+
+    function ConfirmaEliminarMunicipio(id) {
+        $.ajax({
+            url: '@Url.Action("DeleteMunicipio", "Municipio")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                if (Data.Result == true) {
+                    $("#VistaMinicipios").html('');
+                    $("#VistaMinicipios").load('@Url.Action("Municipios", "Municipio")');
+                    CancelaEliminar();
+                }
+                else {
+                    $("#ErrorMSG").html('');
+                    $("#ErrorMSG").append(Data.Mensaje);
+                    $('#ConfirmModal').modal('hide');
+                    $('#ModalErrorMSG').modal('show')
+                }
+            },
+            error: function (data) {
+                console.log("ocurrio un error al Eliminar");
+            }
+        });
+    }
+
+    function CancelaEliminar() {
+        $('#ConfirmTitle').html('');
+        $('#ConfirmBody').html('');
+        $('#ConfirmModal').modal('hide');
+    }
+</script>

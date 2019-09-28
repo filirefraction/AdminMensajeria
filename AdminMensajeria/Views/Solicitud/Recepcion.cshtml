@@ -1,0 +1,70 @@
+﻿
+
+<div class="form-horizontal">
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                <input type="number" id="NoSeguimientoRec" class="form-control input-sm" placeholder="# Envío" />
+                <label for="NoSeguimientoRec">Ingrese Numero de Envío (*)</label>
+            </div>
+            <span class="AlertaDanger" id="NoSeguimientoRecVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group" >
+        <div class="col-md-12" id="Recibidos">
+
+            </div>
+        </div>
+
+    </div>
+
+
+<script>
+    $(document).ready(function () {
+        $("#NoSeguimientoRec").focus();
+
+        $('#NoSeguimientoRec').keyup(function () {
+            $('#NoSeguimientoRecVal').html('');
+        });
+
+        ///////////////////////////////////////////////////////////////
+        $("#NoSeguimientoRec").change(function () {
+            var NoSeguimientoRec = $('#NoSeguimientoRec').val();
+
+            if (NoSeguimientoRec.length != 0) {
+
+                $.ajax({
+                    url: '@Url.Action("RecibirPaquete", "Solicitud")' + '/' + NoSeguimientoRec,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.Result == true) {
+                            var content = '<div class="form-control" style="background-color:#EAFAF1">' + data.Mensaje + '</div>'
+                            $("#Recibidos").append(content)
+                        }
+                        else {
+                            if (data.Redirecciona == true) {
+                                window.location = '@Url.Action("Index", "Home")';
+                            }
+                            else {
+                                var content = '<div class="form-control" style="background-color:#F2D7D5">' + data.Mensaje + '</div>'
+                                $("#Recibidos").append(content)
+                            }
+                        }
+                    },
+                    error: function () {
+                        console.log("No pudo acceder al Metodo");
+                    }
+                });
+
+            }
+            $('#NoSeguimientoRec').val('');
+            $("#NoSeguimientoRec").focus();
+        });
+
+
+    });
+
+</script>

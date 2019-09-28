@@ -1,0 +1,108 @@
+﻿
+<div class="form-horizontal">
+    <div class="form-group row">
+        <div class="col-md-2">
+            <button onclick="ActualizarAsignacio()" class="btn btn-primary btn-sm ">
+                <span class="glyphicon glyphicon-refresh"></span> Actualizar
+            </button>
+        </div>
+        <div class="col-md-7">
+            <span class="AlertaDanger" id="MensajeError"></span>
+        </div>
+       
+    </div>
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                <input id="Referencia2" class="form-control input-sm" placeholder="Referencia Externa" maxlength="100" />
+                <label for="Referencia2">Ingrese Referencia</label>
+            </div>
+            <span class="AlertaDanger" id="Referencia2Val"></span>
+        </div>
+        <div class="col-md-6">
+            <div class="field">
+                <input type="number" id="NoSeguimientoRec2" class="form-control input-sm" placeholder="# Envío" />
+                <label for="NoSeguimientoRec2">Ingrese Numero de Envío (*)</label>
+            </div>
+            <span class="AlertaDanger" id="NoSeguimientoRec2Val"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-12" id="Recibidos2">
+
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $("#NoSeguimientoRec2").focus();
+
+        $('#NoSeguimientoRec2').keyup(function () {
+            $('#NoSeguimientoRec2Val').html('');
+        });
+
+        $('#Referencia2').keyup(function () {
+            $('#ReferenciaVal').html('');
+        });
+
+        ///////////////////////////////////////////////////////////////
+        $("#NoSeguimientoRec2").change(function () {
+            var NoSeguimientoRec2 = $('#NoSeguimientoRec2').val();
+            var IdGuia = @ViewBag.idguia;
+            var Referencia = $('#Referencia2').val();
+
+            if ($('#Referencia2').val().length > 100) {
+                $('#Referencia2Val').html('');
+                $('#Referencia2Val').append('Este campo puede contener maximo 100 caracteres');
+            }
+
+            if ($('#NoSeguimientoRec2').val().length != 0 && 
+                $('#Referencia2').val().length <= 100) {
+
+                $.ajax({
+                    url: '@Url.Action("AsignarEntregaRef", "Asignacion")',
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "id" : NoSeguimientoRec2, 
+                        "IdGuia" : IdGuia,
+                        "Referencia" : Referencia
+                    }),
+                    success: function (data) {
+                        if (data.Result == true) {
+                            var content = '<div class="form-control" style="background-color:#EAFAF1">' + data.Mensaje + '</div>'
+                            $("#Recibidos2").append(content)
+                        }
+                        else {
+                            if (data.Redirecciona == true) {
+                                window.location = '@Url.Action("Index", "Home")';
+                            }
+                            else {
+                                var content = '<div class="form-control" style="background-color:#F2D7D5">' + data.Mensaje + '</div>'
+                                $("#Recibidos2").append(content)
+                            }
+                        }
+                    },
+                    error: function () {
+                        console.log("No pudo acceder al Metodo");
+                    }
+                });
+
+            }
+            $('#NoSeguimientoRec2').val('');
+            $("#NoSeguimientoRec2").focus();
+        });
+
+
+    });
+
+    function ActualizarAsignacio() {
+        window.location = '@Url.Action("Edit", "Asignacion")' + '/' + @ViewBag.idguia;
+    }
+
+</script>

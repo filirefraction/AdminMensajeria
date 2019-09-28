@@ -17,6 +17,8 @@ namespace AdminMensajeria.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public OPE_PUNTOENTREC()
         {
+            this.OPE_CONTACTO = new HashSet<OPE_CONTACTO>();
+            this.GEN_USUARIO = new HashSet<GEN_USUARIO>();
             this.OPE_SOLICITUDPUNTOSENTREC = new HashSet<OPE_SOLICITUDPUNTOSENTREC>();
         }
     
@@ -31,10 +33,15 @@ namespace AdminMensajeria.Models
         public string CallePunto { get; set; }
         public string NoIntPunto { get; set; }
         public string NoExtPunto { get; set; }
+        public string Referencia { get; set; }
         public string ObsPunto { get; set; }
         public bool EstatusPunto { get; set; }
     
         public virtual GEN_COLONIA GEN_COLONIA { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OPE_CONTACTO> OPE_CONTACTO { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GEN_USUARIO> GEN_USUARIO { get; set; }
         public virtual OPE_CLIENTPROVEE OPE_CLIENTPROVEE { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OPE_SOLICITUDPUNTOSENTREC> OPE_SOLICITUDPUNTOSENTREC { get; set; }

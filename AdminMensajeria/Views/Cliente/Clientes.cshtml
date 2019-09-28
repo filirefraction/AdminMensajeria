@@ -1,0 +1,123 @@
+﻿@model IEnumerable<AdminMensajeria.Models.OPE_CLIENTPROVEE>
+
+
+<table id="ClienteTable" class="ui celled table compact">
+    <thead>
+        <tr>
+            <th class="col-md-1">
+                # Cliente
+            </th>
+            <th class="col-md-1">
+               Tipo
+            </th>
+            <th class="col-md-5">
+                Nombre
+            </th>
+            <th class="col-md-2">
+                RFC
+            </th>
+            <th class="col-md-1">
+                Estatus
+            </th>
+            <th class="col-md-2"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.IdClientProvee)</td>
+                <td>
+                    @switch (item.TipoClientProvee)
+                    {
+                        case 1: <p>Cliente</p>; break;
+                        case 2: <p>Proveedor</p>; break;
+                        default:
+                            break;
+                    }
+                </td>
+                <td style="word-break:break-word">
+                    @Html.DisplayFor(modelItem => item.RazonSocial)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RFC)
+                </td>
+                <td>
+                    @if (item.EstatusClientProvee == true)
+                    {
+                        <p>Activo</p>
+                    }
+                    else
+                    {
+                        <p>Inactivo</p>
+                    }
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit", "Cliente", new { id = item.IdClientProvee })" data-toggle="tooltip" title="Editar Cliente" class="btn btn-default btn-sm">
+                        <span class='glyphicon glyphicon-edit'></span>
+                    </a>
+                    <button onclick="EliminarCliente(@item.IdClientProvee)" data-toggle="tooltip" title="Eliminar Estado" class="btn btn-default btn-sm">
+                        <span class='glyphicon glyphicon-trash'></span>
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<script>
+    $(document).ready(function () {
+        $('#ClienteTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            }
+        });
+    });
+
+
+    function EliminarCliente(id) {
+        $('#ConfirmTitle').html('');
+        var title = "Confirme para eliminar Cliente"
+        $('#ConfirmTitle').append(title);
+        $('#ConfirmBody').html('');
+        var body = '<button onclick="ConfirmaEliminarCliente(' + id + ')" type="button" class="btn btn-danger" id="modal-btn-si">Si</button>' +
+                   '<button onclick="CancelaEliminar()" type="button" class="btn btn-primary" id="modal-btn-no">No</button>';
+        $('#ConfirmBody').append(body);
+        $('#ConfirmModal').modal('show');
+
+    }
+
+    function ConfirmaEliminarCliente(id) {
+        $.ajax({
+            url: '@Url.Action("DeleteCliente", "Cliente")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                if (Data.Result == true) {
+                    $("#VistaClientes").html('');
+                    $("#VistaClientes").load('@Url.Action("Clientes", "Cliente")');
+                    CancelaEliminar();
+                }
+                else {
+                    $("#ErrorMSG").html('');
+                    $("#ErrorMSG").append(Data.Mensaje);
+                    $('#ConfirmModal').modal('hide');
+                    $('#ModalErrorMSG').modal('show')
+                }
+            },
+            error: function (data) {
+                console.log("ocurrio un error al Eliminar");
+            }
+        });
+    }
+
+    function CancelaEliminar() {
+        $('#ConfirmTitle').html('');
+        $('#ConfirmBody').html('');
+        $('#ConfirmModal').modal('hide');
+    }
+
+
+</script>
