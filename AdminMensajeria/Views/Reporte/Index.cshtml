@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewBag.Title = "Reporte Concentrado";
+}
+
+<h2>Reporte Concentrado</h2>
+<script src="~/Scripts/table2excel.js"></script>
+
+<div class="form-horizontal">
+
+    <div class="form-group row">
+        <div class="col-md-2">
+            <div class="field">
+                <input id="FechaDesde" class="form-control input-sm" PlaceHolder="Fecha Desde" autocomplete="off" />
+                <label for="FechaDesde">Desde</label>
+            </div>
+            <span class="AlertaDanger" id="FechaDesdeVal"></span>
+        </div>
+        <div class="col-md-2">
+            <div class="field">
+                <input id="FechaHasta" class="form-control input-sm" PlaceHolder="Fecha Hasta" autocomplete="off" />
+                <label for="FechaHasta">Hasta</label>
+            </div>
+            <span class="AlertaDanger" id="FechaHastaVal"></span>
+        </div>
+        <div class="col-md-1">
+            <a id="VerReporte" class="btn btn-default btn-sm" data-toggle="tooltip" title="Ver Solicitudes" style="margin-top: 25px;">
+                <span class="glyphicon glyphicon-th-list"></span> Ver
+            </a>
+        </div>
+        <div class="col-md-1">
+            <a id="ExportarReporte" class="btn btn-default btn-sm hidden" data-toggle="tooltip" title="Exportar a Excel" style="margin-top: 25px;">
+                <span class="glyphicon glyphicon-cloud-download"></span> Excel
+            </a>
+        </div>
+        <div class="col-md-5">
+        </div>
+        <div class="col-md-1">
+            <a href="@Url.Action("Estandar", "Home")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Menu" style="margin-top: 25px;">
+                <span class="glyphicon glyphicon-home"></span> Volver
+            </a>
+        </div>
+
+    </div>
+
+    <div id="VistaReporte"></div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#FechaDesde, #FechaHasta").datetimepicker({ format: "Y-m-d", timepicker: false });
+
+            $("#FechaDesde").change(function () {
+                $("#FechaDesdeVal").html('');
+                $("#FechaHastaVal").html('');
+                $("#ExportarReporte").addClass("hidden");
+            });
+            $("#FechaHasta").change(function () {
+                $("#FechaDesdeVal").html('');
+                $("#FechaHastaVal").html('');
+                $("#ExportarReporte").addClass("hidden");
+            });
+
+            $("#VerReporte").click(function () {
+                CargarVista();
+            });
+
+            $("#ExportarReporte").click(function () {
+                var FechaDesde = $("#FechaDesde").val();
+                var FechaHasta = $("#FechaHasta").val();
+
+                $("#ReportTable").table2excel({
+                    filename: 'Reporte_Concentrado_' + FechaDesde + '_a_' + FechaHasta + '.xls'
+                });
+            });
+        });
+
+        function CargarVista() {
+            var FechaDesde = $("#FechaDesde").val();
+            var FechaHasta = $("#FechaHasta").val();
+
+            if ($("#FechaDesde").val().length == 0) {
+                $("#FechaDesdeVal").html('');
+                $("#FechaDesdeVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#FechaHasta").val().length == 0) {
+                $("#FechaHastaVal").html('');
+                $("#FechaHastaVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#FechaDesde").val() > $("#FechaHasta").val()) {
+                $("#FechaDesdeVal").html('');
+                $("#FechaDesdeVal").append('Fecha Desde no puede ser menor que Fecha Hasta');
+            }
+
+
+            if ($("#FechaDesde").val().length != 0 &&
+                $("#FechaHasta").val().length != 0 &&
+                $("#FechaDesde").val() <= $("#FechaHasta").val()) {
+
+                $("#VistaReporte").html('');
+                $("#VistaReporte").load('@Url.Action("Details", "Reporte")' + '?Desde=' + FechaDesde + '&Hasta=' + FechaHasta);
+                $("#ExportarReporte").removeClass("hidden");
+            }
+            else {
+                console.log("Validación Incorrecta");
+            }
+        }
+    </script>

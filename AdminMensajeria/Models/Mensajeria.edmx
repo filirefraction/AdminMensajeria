@@ -224,6 +224,55 @@
           <Property Name="RefExtPuntosEntRec" Type="varchar" MaxLength="50" />
           <Property Name="EstatusPuntosEntRec" Type="bit" Nullable="false" />
         </EntityType>
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="VIEW_REPORTE">
+          <Key>
+            <PropertyRef Name="NoEnvio" />
+          </Key>
+          <Property Name="NoEnvio" Type="int" Nullable="false" />
+          <Property Name="IdUsuario" Type="int" Nullable="false" />
+          <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
+          <Property Name="Estatus" Type="int" Nullable="false" />
+          <Property Name="Solicitante" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Producto" Type="varchar" MaxLength="200" />
+          <Property Name="Cantidad" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="Unidad" Type="varchar" MaxLength="50" />
+          <Property Name="Peso" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="Receptor" Type="varchar" MaxLength="100" />
+          <Property Name="FechaRecepcion" Type="datetime" />
+          <Property Name="CategoriaRemitente" Type="varchar" MaxLength="100" />
+          <Property Name="RazonSocialRemitente" Type="varchar" MaxLength="200" />
+          <Property Name="DescripcionRemitente" Type="varchar" MaxLength="100" />
+          <Property Name="ContactoRemitente" Type="varchar" MaxLength="100" />
+          <Property Name="CalleRemitente" Type="varchar" MaxLength="100" />
+          <Property Name="NoExtRemitente" Type="varchar" MaxLength="20" />
+          <Property Name="NointRemitente" Type="varchar" MaxLength="100" />
+          <Property Name="ReferenciaRemitente" Type="varchar" MaxLength="200" />
+          <Property Name="ColoniaRemitente" Type="varchar" MaxLength="100" />
+          <Property Name="CodigoPostalRemitente" Type="varchar" MaxLength="20" />
+          <Property Name="MunicipioRemitente" Type="varchar" MaxLength="100" />
+          <Property Name="EstadoRemitente" Type="varchar" MaxLength="100" />
+          <Property Name="PaisRemitente" Type="varchar" MaxLength="100" />
+          <Property Name="FechaEntregaEstimada" Type="datetime" />
+          <Property Name="DestinatarioEntrega" Type="varchar" MaxLength="200" />
+          <Property Name="CategoriaEntrega" Type="varchar" MaxLength="100" />
+          <Property Name="RazonSocialEntrega" Type="varchar" MaxLength="200" />
+          <Property Name="DescripcionEntrega" Type="varchar" MaxLength="100" />
+          <Property Name="ContactoEntrega" Type="varchar" MaxLength="100" />
+          <Property Name="CalleEntrega" Type="varchar" MaxLength="100" />
+          <Property Name="NoExtEntrega" Type="varchar" MaxLength="20" />
+          <Property Name="NointEntrega" Type="varchar" MaxLength="100" />
+          <Property Name="ReferenciaEntrega" Type="varchar" MaxLength="200" />
+          <Property Name="ColoniaEntrega" Type="varchar" MaxLength="100" />
+          <Property Name="CodigoPostalEntrega" Type="varchar" MaxLength="20" />
+          <Property Name="MunicipioEntrega" Type="varchar" MaxLength="100" />
+          <Property Name="EstadoEntrega" Type="varchar" MaxLength="100" />
+          <Property Name="PaisEntrega" Type="varchar" MaxLength="100" />
+          <Property Name="FechaAsignada" Type="datetime" />
+          <Property Name="MensajeroAsignado" Type="varchar" MaxLength="100" />
+          <Property Name="FechaEntrega" Type="datetime" />
+        </EntityType>
         <Association Name="FK_GEN_COLONIA_GEN_CODIGOPOSTAL">
           <End Role="GEN_CODIGOPOSTAL" Type="Self.GEN_CODIGOPOSTAL" Multiplicity="1" />
           <End Role="GEN_COLONIA" Type="Self.GEN_COLONIA" Multiplicity="*" />
@@ -458,6 +507,52 @@
           <EntitySet Name="OPE_SOLICITUD" EntityType="Self.OPE_SOLICITUD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OPE_SOLICITUDPRODUCTO" EntityType="Self.OPE_SOLICITUDPRODUCTO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OPE_SOLICITUDPUNTOSENTREC" EntityType="Self.OPE_SOLICITUDPUNTOSENTREC" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="VIEW_REPORTE" EntityType="Self.VIEW_REPORTE" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [VIEW_REPORTE].[NoEnvio] AS [NoEnvio], 
+    [VIEW_REPORTE].[IdUsuario] AS [IdUsuario], 
+    [VIEW_REPORTE].[FechaCreacion] AS [FechaCreacion], 
+    [VIEW_REPORTE].[Estatus] AS [Estatus], 
+    [VIEW_REPORTE].[Solicitante] AS [Solicitante], 
+    [VIEW_REPORTE].[Producto] AS [Producto], 
+    [VIEW_REPORTE].[Cantidad] AS [Cantidad], 
+    [VIEW_REPORTE].[Unidad] AS [Unidad], 
+    [VIEW_REPORTE].[Peso] AS [Peso], 
+    [VIEW_REPORTE].[Receptor] AS [Receptor], 
+    [VIEW_REPORTE].[FechaRecepcion] AS [FechaRecepcion], 
+    [VIEW_REPORTE].[CategoriaRemitente] AS [CategoriaRemitente], 
+    [VIEW_REPORTE].[RazonSocialRemitente] AS [RazonSocialRemitente], 
+    [VIEW_REPORTE].[DescripcionRemitente] AS [DescripcionRemitente], 
+    [VIEW_REPORTE].[ContactoRemitente] AS [ContactoRemitente], 
+    [VIEW_REPORTE].[CalleRemitente] AS [CalleRemitente], 
+    [VIEW_REPORTE].[NoExtRemitente] AS [NoExtRemitente], 
+    [VIEW_REPORTE].[NointRemitente] AS [NointRemitente], 
+    [VIEW_REPORTE].[ReferenciaRemitente] AS [ReferenciaRemitente], 
+    [VIEW_REPORTE].[ColoniaRemitente] AS [ColoniaRemitente], 
+    [VIEW_REPORTE].[CodigoPostalRemitente] AS [CodigoPostalRemitente], 
+    [VIEW_REPORTE].[MunicipioRemitente] AS [MunicipioRemitente], 
+    [VIEW_REPORTE].[EstadoRemitente] AS [EstadoRemitente], 
+    [VIEW_REPORTE].[PaisRemitente] AS [PaisRemitente], 
+    [VIEW_REPORTE].[FechaEntregaEstimada] AS [FechaEntregaEstimada], 
+    [VIEW_REPORTE].[DestinatarioEntrega] AS [DestinatarioEntrega], 
+    [VIEW_REPORTE].[CategoriaEntrega] AS [CategoriaEntrega], 
+    [VIEW_REPORTE].[RazonSocialEntrega] AS [RazonSocialEntrega], 
+    [VIEW_REPORTE].[DescripcionEntrega] AS [DescripcionEntrega], 
+    [VIEW_REPORTE].[ContactoEntrega] AS [ContactoEntrega], 
+    [VIEW_REPORTE].[CalleEntrega] AS [CalleEntrega], 
+    [VIEW_REPORTE].[NoExtEntrega] AS [NoExtEntrega], 
+    [VIEW_REPORTE].[NointEntrega] AS [NointEntrega], 
+    [VIEW_REPORTE].[ReferenciaEntrega] AS [ReferenciaEntrega], 
+    [VIEW_REPORTE].[ColoniaEntrega] AS [ColoniaEntrega], 
+    [VIEW_REPORTE].[CodigoPostalEntrega] AS [CodigoPostalEntrega], 
+    [VIEW_REPORTE].[MunicipioEntrega] AS [MunicipioEntrega], 
+    [VIEW_REPORTE].[EstadoEntrega] AS [EstadoEntrega], 
+    [VIEW_REPORTE].[PaisEntrega] AS [PaisEntrega], 
+    [VIEW_REPORTE].[FechaAsignada] AS [FechaAsignada], 
+    [VIEW_REPORTE].[MensajeroAsignado] AS [MensajeroAsignado], 
+    [VIEW_REPORTE].[FechaEntrega] AS [FechaEntrega]
+    FROM [dbo].[VIEW_REPORTE] AS [VIEW_REPORTE]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_GEN_COLONIA_GEN_CODIGOPOSTAL" Association="Self.FK_GEN_COLONIA_GEN_CODIGOPOSTAL">
             <End Role="GEN_CODIGOPOSTAL" EntitySet="GEN_CODIGOPOSTAL" />
             <End Role="GEN_COLONIA" EntitySet="GEN_COLONIA" />
@@ -625,6 +720,7 @@
             <End Role="OPE_SOLICITUD" EntitySet="OPE_SOLICITUD" />
             <End Role="OPE_SOLICITUDPUNTOSENTREC" EntitySet="OPE_SOLICITUDPUNTOSENTREC" />
           </AssociationSet>
+          <EntitySet Name="VIEW_REPORTE" EntityType="MensajeriaModel.VIEW_REPORTE" />
           </EntityContainer>
         <EntityType Name="GEN_CODIGOPOSTAL">
           <Key>
@@ -1097,6 +1193,53 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="VIEW_REPORTE">
+          <Key>
+            <PropertyRef Name="NoEnvio" />
+          </Key>
+          <Property Name="NoEnvio" Type="Int32" Nullable="false" />
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Estatus" Type="Int32" Nullable="false" />
+          <Property Name="Solicitante" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Producto" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Cantidad" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Unidad" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Peso" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Receptor" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FechaRecepcion" Type="DateTime" Precision="3" />
+          <Property Name="CategoriaRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RazonSocialRemitente" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DescripcionRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ContactoRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CalleRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="NoExtRemitente" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="NointRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ReferenciaRemitente" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ColoniaRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoPostalRemitente" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="MunicipioRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="EstadoRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PaisRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FechaEntregaEstimada" Type="DateTime" Precision="3" />
+          <Property Name="DestinatarioEntrega" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="CategoriaEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RazonSocialEntrega" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DescripcionEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ContactoEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CalleEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="NoExtEntrega" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="NointEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ReferenciaEntrega" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ColoniaEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoPostalEntrega" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="MunicipioEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="EstadoEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PaisEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FechaAsignada" Type="DateTime" Precision="3" />
+          <Property Name="MensajeroAsignado" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FechaEntrega" Type="DateTime" Precision="3" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1336,6 +1479,54 @@
                 <ScalarProperty Name="IdPuntoEntRec" ColumnName="IdPuntoEntRec" />
                 <ScalarProperty Name="IdSolicitud" ColumnName="IdSolicitud" />
                 <ScalarProperty Name="IdSolicitudPuntosEntRec" ColumnName="IdSolicitudPuntosEntRec" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VIEW_REPORTE">
+            <EntityTypeMapping TypeName="MensajeriaModel.VIEW_REPORTE">
+              <MappingFragment StoreEntitySet="VIEW_REPORTE">
+                <ScalarProperty Name="FechaEntrega" ColumnName="FechaEntrega" />
+                <ScalarProperty Name="MensajeroAsignado" ColumnName="MensajeroAsignado" />
+                <ScalarProperty Name="FechaAsignada" ColumnName="FechaAsignada" />
+                <ScalarProperty Name="PaisEntrega" ColumnName="PaisEntrega" />
+                <ScalarProperty Name="EstadoEntrega" ColumnName="EstadoEntrega" />
+                <ScalarProperty Name="MunicipioEntrega" ColumnName="MunicipioEntrega" />
+                <ScalarProperty Name="CodigoPostalEntrega" ColumnName="CodigoPostalEntrega" />
+                <ScalarProperty Name="ColoniaEntrega" ColumnName="ColoniaEntrega" />
+                <ScalarProperty Name="ReferenciaEntrega" ColumnName="ReferenciaEntrega" />
+                <ScalarProperty Name="NointEntrega" ColumnName="NointEntrega" />
+                <ScalarProperty Name="NoExtEntrega" ColumnName="NoExtEntrega" />
+                <ScalarProperty Name="CalleEntrega" ColumnName="CalleEntrega" />
+                <ScalarProperty Name="ContactoEntrega" ColumnName="ContactoEntrega" />
+                <ScalarProperty Name="DescripcionEntrega" ColumnName="DescripcionEntrega" />
+                <ScalarProperty Name="RazonSocialEntrega" ColumnName="RazonSocialEntrega" />
+                <ScalarProperty Name="CategoriaEntrega" ColumnName="CategoriaEntrega" />
+                <ScalarProperty Name="DestinatarioEntrega" ColumnName="DestinatarioEntrega" />
+                <ScalarProperty Name="FechaEntregaEstimada" ColumnName="FechaEntregaEstimada" />
+                <ScalarProperty Name="PaisRemitente" ColumnName="PaisRemitente" />
+                <ScalarProperty Name="EstadoRemitente" ColumnName="EstadoRemitente" />
+                <ScalarProperty Name="MunicipioRemitente" ColumnName="MunicipioRemitente" />
+                <ScalarProperty Name="CodigoPostalRemitente" ColumnName="CodigoPostalRemitente" />
+                <ScalarProperty Name="ColoniaRemitente" ColumnName="ColoniaRemitente" />
+                <ScalarProperty Name="ReferenciaRemitente" ColumnName="ReferenciaRemitente" />
+                <ScalarProperty Name="NointRemitente" ColumnName="NointRemitente" />
+                <ScalarProperty Name="NoExtRemitente" ColumnName="NoExtRemitente" />
+                <ScalarProperty Name="CalleRemitente" ColumnName="CalleRemitente" />
+                <ScalarProperty Name="ContactoRemitente" ColumnName="ContactoRemitente" />
+                <ScalarProperty Name="DescripcionRemitente" ColumnName="DescripcionRemitente" />
+                <ScalarProperty Name="RazonSocialRemitente" ColumnName="RazonSocialRemitente" />
+                <ScalarProperty Name="CategoriaRemitente" ColumnName="CategoriaRemitente" />
+                <ScalarProperty Name="FechaRecepcion" ColumnName="FechaRecepcion" />
+                <ScalarProperty Name="Receptor" ColumnName="Receptor" />
+                <ScalarProperty Name="Peso" ColumnName="Peso" />
+                <ScalarProperty Name="Unidad" ColumnName="Unidad" />
+                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+                <ScalarProperty Name="Producto" ColumnName="Producto" />
+                <ScalarProperty Name="Solicitante" ColumnName="Solicitante" />
+                <ScalarProperty Name="Estatus" ColumnName="Estatus" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="NoEnvio" ColumnName="NoEnvio" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
