@@ -271,6 +271,7 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
           <Property Name="PaisEntrega" Type="varchar" MaxLength="100" />
           <Property Name="FechaAsignada" Type="datetime" />
           <Property Name="MensajeroAsignado" Type="varchar" MaxLength="100" />
+          <Property Name="ReferenciaExterna" Type="varchar" MaxLength="50" />
           <Property Name="FechaEntrega" Type="datetime" />
         </EntityType>
         <Association Name="FK_GEN_COLONIA_GEN_CODIGOPOSTAL">
@@ -550,6 +551,7 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
     [VIEW_REPORTE].[PaisEntrega] AS [PaisEntrega], 
     [VIEW_REPORTE].[FechaAsignada] AS [FechaAsignada], 
     [VIEW_REPORTE].[MensajeroAsignado] AS [MensajeroAsignado], 
+    [VIEW_REPORTE].[ReferenciaExterna] AS [ReferenciaExterna], 
     [VIEW_REPORTE].[FechaEntrega] AS [FechaEntrega]
     FROM [dbo].[VIEW_REPORTE] AS [VIEW_REPORTE]</DefiningQuery>
           </EntitySet>
@@ -1238,6 +1240,7 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
           <Property Name="PaisEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="FechaAsignada" Type="DateTime" Precision="3" />
           <Property Name="MensajeroAsignado" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ReferenciaExterna" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="FechaEntrega" Type="DateTime" Precision="3" />
         </EntityType>
         </Schema>
@@ -1486,6 +1489,7 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
             <EntityTypeMapping TypeName="MensajeriaModel.VIEW_REPORTE">
               <MappingFragment StoreEntitySet="VIEW_REPORTE">
                 <ScalarProperty Name="FechaEntrega" ColumnName="FechaEntrega" />
+                <ScalarProperty Name="ReferenciaExterna" ColumnName="ReferenciaExterna" />
                 <ScalarProperty Name="MensajeroAsignado" ColumnName="MensajeroAsignado" />
                 <ScalarProperty Name="FechaAsignada" ColumnName="FechaAsignada" />
                 <ScalarProperty Name="PaisEntrega" ColumnName="PaisEntrega" />

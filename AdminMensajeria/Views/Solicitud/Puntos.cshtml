@@ -61,7 +61,7 @@
 
     function ElegirPunto(id) {
         $.ajax({
-            url: '@Url.Action("InformacionPunto", "SolicitudPuntosEntRec")' + '/' + id,
+            url: '@Url.Action("InformacionPunto", "Solicitud")' + '/' + id,
             type: "POST",
             contentType: "application/json; charset=utf-8",
             dataType: "json",

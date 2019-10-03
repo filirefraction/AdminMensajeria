@@ -1,217 +1,113 @@
-﻿@using (AdminMensajeria.Models.MensajeriaEntities db = new AdminMensajeria.Models.MensajeriaEntities())
-{
-    ViewBag.Title = "Index";
-
-    int IdUsu = ViewBag.idusuario;
-    int TipoUsu = ViewBag.tipousuario;
-
-    var Solicitudes = (from c in db.OPE_SOLICITUD
-                       join p2 in db.OPE_SOLICITUDPRODUCTO on c.IdSolicitud equals p2.IdSolicitud into p1
-                       from p in p1.DefaultIfEmpty()
-                       select new { c.IdSolicitud, c.FechaCreacion, c.RequiereAcuse, c.EstatusSolicitud, p.Descripcion }).Take(1).ToList();
-
-    if (TipoUsu == 1)
-    {
-        Solicitudes = (from c in db.OPE_SOLICITUD
-                       join p2 in db.OPE_SOLICITUDPRODUCTO on c.IdSolicitud equals p2.IdSolicitud into p1
-                       from p in p1.DefaultIfEmpty()
-                       select new { c.IdSolicitud, c.FechaCreacion, c.RequiereAcuse, c.EstatusSolicitud, p.Descripcion }).ToList();
-    }
-    else
-    {
-        Solicitudes = (from c in db.OPE_SOLICITUD
-                       join p2 in db.OPE_SOLICITUDPRODUCTO on c.IdSolicitud equals p2.IdSolicitud into p1
-                       from p in p1.DefaultIfEmpty()
-                       where c.IdUsuario == IdUsu
-                       select new { c.IdSolicitud, c.FechaCreacion, c.RequiereAcuse, c.EstatusSolicitud, p.Descripcion }).ToList();
-    }
-
-    <h2>Solicitud de Envío</h2>
-
-
-    <div class="form-group row">
-        <div class="col-md-2">
-            <a href="@Url.Action("Create", "Solicitud")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Nuevo Envío">
-                <span class="glyphicon glyphicon-plus"></span> Nuevo
-            </a>
-        </div>
-        <div class="col-md-9">
-            <span class="AlertaDanger" id="MensajeError"></span>
-        </div>
-        <div class="col-md-1">
-            <a href="@Url.Action("Estandar", "Home")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Menu">
-                <span class="glyphicon glyphicon-home"></span> Volver
-            </a>
-        </div>
-    </div>
-
-    <table id="SolicitudTable" class="ui celled table compact">
-        <thead>
-            <tr>
-                <th>
-                    # Envío
-                </th>
-                <th>
-                        Descripción
-                    </th>
-                <th>
-                    Fecha de Creación
-                </th>
-                <th>
-                    Requiere Acuse
-                </th>
-                <th>
-                    Estatus
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Solicitudes)
-            {
-                //var Producto = (from p in db.OPE_SOLICITUDPRODUCTO where p.IdSolicitud == item.IdSolicitud select p.Descripcion).FirstOrDefault();
-
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IdSolicitud)
-                    </td>
-                    <td>@item.Descripcion</td>
-                    @*@if (Producto != null)
-                        {
-                        }
-                        else
-                        {
-                            <td>No Resgitrado</td>
-                        }*@
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FechaCreacion)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.RequiereAcuse)
-                    </td>
-                    <td>
-                        @switch (item.EstatusSolicitud)
-                    {
-                        case 1: <p>Pendiente</p>; break;
-                        case 2: <p>Recibido en Mensajería</p>; break;
-                        case 3: <p>En ruta</p>; break;
-                        case 4: <p>Entregado</p>; break;
-                        case 5: <p>Cancelado</p>; break;
-                        default:
-                            break;
-                    }
-                    </td>
-                    <td class="col-md-2">
-                        
-                        <a href="@Url.Action("Details", "Solicitud", new { id = item.IdSolicitud })" data-toggle="tooltip" title="Detalles de Envío" class="btn btn-default btn-sm">
-                            <span class='glyphicon glyphicon-list-alt'></span>
-                        </a>
-                        <button onclick="RastrearEnvio(@item.IdSolicitud)" data-toggle="tooltip" title="Rastrear de Envío" class="btn btn-default btn-sm">
-                            <span class='glyphicon glyphicon-search'></span>
-                        </button>
-                        @if (TipoUsu == 1)
-                        {
-                        <button onclick="Entrega(@item.IdSolicitud)" data-toggle="tooltip" title="Reportar Entrega" class="btn btn-success btn-sm">
-                            <span class='glyphicon glyphicon-ok-sign'></span>
-                        </button>
-                        <button onclick="CancelarEnvio(@item.IdSolicitud)" data-toggle="tooltip" title="Cancelar Envío" class="btn btn-danger btn-sm">
-                            <span class='glyphicon glyphicon-remove-sign'></span>
-                        </button>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
+﻿@{
+    ViewBag.Title = "Envíos";
 }
+<h2>Solicitud de Envío</h2>
+
+
+<div class="form-group row">
+    <div class="col-md-2">
+        <a href="@Url.Action("Create", "Solicitud")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Nuevo Envío" style="margin-top: 25px;">
+            <span class="glyphicon glyphicon-plus"></span> Nuevo
+        </a>
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-2">
+        <div class="field">
+            <input id="FechaDesde" class="form-control input-sm" PlaceHolder="Fecha Desde" autocomplete="off" />
+            <label for="FechaDesde">Desde</label>
+        </div>
+        <span class="AlertaDanger" id="FechaDesdeVal"></span>
+    </div>
+    <div class="col-md-2">
+        <div class="field">
+            <input id="FechaHasta" class="form-control input-sm" PlaceHolder="Fecha Hasta" autocomplete="off" />
+            <label for="FechaHasta">Hasta</label>
+        </div>
+        <span class="AlertaDanger" id="FechaHastaVal"></span>
+    </div>
+    <div class="col-md-1">
+        <a id="VerSolicitudes" class="btn btn-default btn-sm" data-toggle="tooltip" title="Ver Solicitudes" style="margin-top: 25px;">
+            <span class="glyphicon glyphicon-th-list"></span> Ver
+        </a>
+    </div>
+    <div class="col-md-3">
+        <span class="AlertaDanger" id="MensajeError"></span>
+    </div>
+    <div class="col-md-1">
+        <a href="@Url.Action("Estandar", "Home")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Menu" style="margin-top: 25px;">
+            <span class="glyphicon glyphicon-home"></span> Volver
+        </a>
+    </div>
+</div>
+
+<div id="VistaSolicitudes"></div>
 <script>
     $(document).ready(function () {
-        $('#SolicitudTable').DataTable({
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            "order": [[0, "desc"]]
+        $("#FechaDesde, #FechaHasta").datetimepicker({ format: "Y-m-d", timepicker: false });
+        var d = new Date();
+        var month = d.getMonth() + 1;
+        var day1 = d.getDate() - 1;
+        var day = d.getDate();
+        
+        var fdesde = d.getFullYear() + '-' +
+            (month < 10 ? '0' : '') + month + '-' +
+            (day1 < 10 ? '0' : '') + day1;
+
+        var fhasta = d.getFullYear() + '-' +
+        (month < 10 ? '0' : '') + month + '-' +
+        (day < 10 ? '0' : '') + day;
+
+        $("#VistaSolicitudes").html('');
+        $("#VistaSolicitudes").load('@Url.Action("Solicitudes", "Solicitud")' + '?Desde=' + fdesde + '&Hasta=' + fhasta);
+
+        $("#FechaDesde").val(fdesde);
+        $("#FechaHasta").val(fhasta);
+
+        $("#FechaDesde").change(function () {
+            $("#FechaDesdeVal").html('');
+            $("#FechaHastaVal").html('');
+            $("#ExportarReporte").addClass("hidden");
+        });
+        $("#FechaHasta").change(function () {
+            $("#FechaDesdeVal").html('');
+            $("#FechaHastaVal").html('');
+            $("#ExportarReporte").addClass("hidden");
+        });
+
+        $("#VerSolicitudes").click(function () {
+            CargarVista();
         });
     });
 
-    function RastrearEnvio(id) {
-        $.ajax({
-            url: '@Url.Action("ExisteEnvio", "Home")' + '/' + id,
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (data) {
-                if (data.Result == true) {
-                    $("#OperTitle").html('');
-                    $("#OperTitle").append('Información de Envío')
-                    $("#OperBody").html('');
-                    $("#OperBody").load('@Url.Action("Rastreo", "Solicitud")' + '/' + id);
-                    $('#OperModal').modal('show');
-                }
-                else {
-                    $("#ErrorMSG").html('');
-                    $("#ErrorMSG").append('No existe el número de envío');
-                    $('#ModalErrorMSG').modal('show')
-                }
-            },
-            error: function () {
-                console.log("No pudo acceder al Metodo");
-            }
-        });
+    function CargarVista() {
+        var FechaDesde = $("#FechaDesde").val();
+        var FechaHasta = $("#FechaHasta").val();
 
-    }
+        if ($("#FechaDesde").val().length == 0) {
+            $("#FechaDesdeVal").html('');
+            $("#FechaDesdeVal").append('Este Campo es Obligatorio');
+        }
 
-    function CancelarEnvio(id) {
-        $('#ConfirmTitle').html('');
-        var title = "Confirme para Cancelar Envío"
-        $('#ConfirmTitle').append(title);
-        $('#ConfirmBody').html('');
-        var body = '<button onclick="ConfirmaCancelar(' + id + ')" type="button" class="btn btn-danger" id="modal-btn-si">Si</button>' +
-                   '<button onclick="CerrarModal()" type="button" class="btn btn-primary" id="modal-btn-no">No</button>';
-        $('#ConfirmBody').append(body);
-        $('#ConfirmModal').modal('show');
+        if ($("#FechaHasta").val().length == 0) {
+            $("#FechaHastaVal").html('');
+            $("#FechaHastaVal").append('Este Campo es Obligatorio');
+        }
 
-    }
+        if ($("#FechaDesde").val() > $("#FechaHasta").val()) {
+            $("#FechaDesdeVal").html('');
+            $("#FechaDesdeVal").append('Fecha Desde no puede ser menor que Fecha Hasta');
+        }
 
-    function ConfirmaCancelar(id) {
-        $.ajax({
-            url: '@Url.Action("CancelaEnvio", "Solicitud")' + '/' + id,
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (Data) {
-                if (Data.Result == true) {
-                    window.location = '@Url.Action("Index", "Solicitud")';
-                }
-                else {
-                    $("#ErrorMSG").html('');
-                    $("#ErrorMSG").append(Data.Mensaje);
-                    $('#ConfirmModal').modal('hide');
-                    $('#ModalErrorMSG').modal('show')
-                }
-            },
-            error: function (data) {
-                console.log("ocurrio un error al Eliminar");
-            }
-        });
-    }
 
-    function CerrarModal() {
-        $('#ConfirmTitle').html('');
-        $('#ConfirmBody').html('');
-        $('#ConfirmModal').modal('hide');
-    }
+        if ($("#FechaDesde").val().length != 0 &&
+            $("#FechaHasta").val().length != 0 &&
+            $("#FechaDesde").val() <= $("#FechaHasta").val()) {
 
-    function Entrega(id) {
-        $("#OperTitle").html('');
-        $("#OperTitle").append('Reportar Entrega de Envío')
-        $("#OperBody").html('');
-        $("#OperBody").load('@Url.Action("ReportaEntrega", "solicitud")' + '/' + id);
-        $('#OperModal').modal('show');
-    }
-
-    function Redirecciona() {
-        window.location = '@Url.Action("Index", "Solicitud")';
+            $("#VistaSolicitudes").html('');
+            $("#VistaSolicitudes").load('@Url.Action("Solicitudes", "Solicitud")' + '?Desde=' + FechaDesde + '&Hasta=' + FechaHasta);
+        }
+        else {
+            console.log("Validación Incorrecta");
+        }
     }
 </script>

@@ -52,7 +52,9 @@ namespace AdminMensajeria.Controllers
         public JsonResult CreateAsignacion(OPE_GUIA Asignacion)
         {
             Resultados resultado = new Resultados();
-            Asignacion.FechaCreacionGuia = DateTime.Now;
+            //Asignacion.FechaCreacionGuia = DateTime.Now; //Local
+            Asignacion.FechaCreacionGuia = DateTime.Now.AddHours(1); //Producción
+
 
             try
             {

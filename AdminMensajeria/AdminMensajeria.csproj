@@ -361,6 +361,7 @@
     <Content Include="Scripts\jquery-barcode.js" />
     <Content Include="Scripts\jquery-barcode.min.js" />
     <Content Include="Scripts\jquery.datetimepicker.full.min.js" />
+    <Content Include="Scripts\table2excel.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -493,6 +494,7 @@
     <Content Include="Views\Asignacion\ReportaEntregas.cshtml" />
     <Content Include="Views\Reporte\Details.cshtml" />
     <Content Include="Views\Reporte\Index.cshtml" />
+    <Content Include="Views\Solicitud\Solicitudes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

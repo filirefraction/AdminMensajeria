@@ -55,6 +55,7 @@ namespace AdminMensajeria.Models
         public string PaisEntrega { get; set; }
         public Nullable<System.DateTime> FechaAsignada { get; set; }
         public string MensajeroAsignado { get; set; }
+        public string ReferenciaExterna { get; set; }
         public Nullable<System.DateTime> FechaEntrega { get; set; }
     }
 }

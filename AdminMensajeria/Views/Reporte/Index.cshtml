@@ -4,7 +4,6 @@
 }
 
 <h2>Reporte Concentrado</h2>
-<script src="~/Scripts/table2excel.js"></script>
 
 <div class="form-horizontal">
 
@@ -28,12 +27,7 @@
                 <span class="glyphicon glyphicon-th-list"></span> Ver
             </a>
         </div>
-        <div class="col-md-1">
-            <a id="ExportarReporte" class="btn btn-default btn-sm hidden" data-toggle="tooltip" title="Exportar a Excel" style="margin-top: 25px;">
-                <span class="glyphicon glyphicon-cloud-download"></span> Excel
-            </a>
-        </div>
-        <div class="col-md-5">
+        <div class="col-md-6">
         </div>
         <div class="col-md-1">
             <a href="@Url.Action("Estandar", "Home")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Menu" style="margin-top: 25px;">
@@ -52,26 +46,17 @@
             $("#FechaDesde").change(function () {
                 $("#FechaDesdeVal").html('');
                 $("#FechaHastaVal").html('');
-                $("#ExportarReporte").addClass("hidden");
             });
             $("#FechaHasta").change(function () {
                 $("#FechaDesdeVal").html('');
                 $("#FechaHastaVal").html('');
-                $("#ExportarReporte").addClass("hidden");
             });
 
             $("#VerReporte").click(function () {
                 CargarVista();
             });
 
-            $("#ExportarReporte").click(function () {
-                var FechaDesde = $("#FechaDesde").val();
-                var FechaHasta = $("#FechaHasta").val();
-
-                $("#ReportTable").table2excel({
-                    filename: 'Reporte_Concentrado_' + FechaDesde + '_a_' + FechaHasta + '.xls'
-                });
-            });
+           
         });
 
         function CargarVista() {
@@ -100,7 +85,7 @@
 
                 $("#VistaReporte").html('');
                 $("#VistaReporte").load('@Url.Action("Details", "Reporte")' + '?Desde=' + FechaDesde + '&Hasta=' + FechaHasta);
-                $("#ExportarReporte").removeClass("hidden");
+             
             }
             else {
                 console.log("Validación Incorrecta");

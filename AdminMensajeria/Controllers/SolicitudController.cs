@@ -21,19 +21,32 @@ namespace AdminMensajeria.Controllers
         // GET: Solicitud
         public ActionResult Index()
         {
-            int IdUsuario = 0;
+           return View();
+        }
+
+        public ActionResult Solicitudes(DateTime Desde, DateTime Hasta)
+        {
+            Hasta = Hasta.AddDays(1);
+
+            int IdUsuario;
             if (Session["IdUsuario"] == null)
             {
-                return RedirectToAction("Index", "Home");
+                ViewBag.idusuario = 0;
+                ViewBag.tipousuario = 0;
+                ViewBag.desde = Desde;
+                ViewBag.hasta = Hasta;
             }
             else
             {
                 IdUsuario = (int)Session["IdUsuario"];
                 ViewBag.idusuario = IdUsuario;
                 ViewBag.tipousuario = (from u in db.GEN_USUARIO where u.IdUsuario == IdUsuario select u.TipoUsuario).FirstOrDefault();
+                ViewBag.desde = Desde;
+                ViewBag.hasta = Hasta;
             }
-            return View();
+            return PartialView("~/Views/Solicitud/Solicitudes.cshtml");
         }
+
 
         // GET: Solicitud/Details/5
         public ActionResult Details(int? id)
@@ -82,7 +95,8 @@ namespace AdminMensajeria.Controllers
 
 
             Solicitud.IdUsuario = IdUsuario; // Aqui va Variable de sesión
-            Solicitud.FechaCreacion = DateTime.Now;
+            //Solicitud.FechaCreacion = DateTime.Now; // Local
+            Solicitud.FechaCreacion = DateTime.Now.AddHours(1); //Producción
             Solicitud.Emergencia = false;
 
 
@@ -199,6 +213,20 @@ namespace AdminMensajeria.Controllers
 
             OPE_SOLICITUDPRODUCTO Producto = db.OPE_SOLICITUDPRODUCTO.Where(x => x.IdSolicitud == id).FirstOrDefault();
             OPE_SOLICITUD Solicitud = db.OPE_SOLICITUD.Where(x => x.IdSolicitud == id).FirstOrDefault();
+            OPE_SOLICITUDPUNTOSENTREC Entrega = db.OPE_SOLICITUDPUNTOSENTREC.Where(x => x.IdSolicitud == id && x.TipoPunto == 2).FirstOrDefault();
+
+            if (Entrega != null)
+            {
+                DateTime FechaEstimanda = DateTime.Now.AddHours(1);
+                int Hora = FechaEstimanda.Hour;
+                if (Hora < 10)
+                Entrega.FechaProgramada = FechaEstimanda;
+                else
+                Entrega.FechaProgramada = FechaEstimanda.AddDays(1);
+
+                db.Entry(Entrega).State = EntityState.Modified;
+                db.SaveChanges();
+            }
 
 
             if (Producto != null)
@@ -206,7 +234,8 @@ namespace AdminMensajeria.Controllers
                 if (Producto.Recibido != true)
                 {
                     Producto.Recibido = true;
-                    Producto.FechaRecepcion = DateTime.Now;
+                    //Producto.FechaRecepcion = DateTime.Now; //Local
+                    Producto.FechaRecepcion = DateTime.Now.AddHours(1); //Producción
                     Producto.Receptor = NombreUsuario;
                     Solicitud.EstatusSolicitud = 2;
                     try

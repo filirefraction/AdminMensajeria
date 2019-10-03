@@ -199,7 +199,8 @@ namespace AdminMensajeria.Controllers
 
             //Primero Reguistra Solicitud
             Solicitud.IdUsuario = IdUsuario; // Aqui va Variable de sesión
-            Solicitud.FechaCreacion = DateTime.Now;
+            //Solicitud.FechaCreacion = DateTime.Now; //Local
+            Solicitud.FechaCreacion = DateTime.Now.AddHours(1); //Producción
             Solicitud.RequiereAcuse = false;
             Solicitud.Emergencia = false;
             Solicitud.EstatusSolicitud = 1;

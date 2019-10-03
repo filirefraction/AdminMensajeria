@@ -22,7 +22,10 @@
                        where c.IdUsuario == IdUsu && c.FechaCreacion >= Desde && c.FechaCreacion < Hasta
                        select c).ToList().OrderByDescending(x => x.NoEnvio);
     }
-
+    <script src="~/Scripts/table2excel.js"></script>
+        <a id="ExportarReporte" class="btn btn-default btn-sm" data-toggle="tooltip" title="Exportar a Excel">
+            <span class="glyphicon glyphicon-cloud-download"></span> Excel
+        </a>
     <table id="ReportTable" class="ui celled table compact" style="font-size:8px">
         <thead>
             <tr>
@@ -33,7 +36,7 @@
                 <th>Descripción</th>
                 <th>R.M. Fecha</th>
                 <th>R.M. Receptor</th>
-                <th>R. Descripción</th>
+                <th class="col-md-1">R. Descripción</th>
                 <th>R. Contacto</th>
                 <th>R. Dirección</th>
                 <th>E. Descripción</th>
@@ -42,6 +45,7 @@
                 <th>E.F. Estimada</th>
                 <th>E.F. Asignada</th>
                 <th>E. Mensajero</th>
+                <th>E. Referencia</th>
                 <th>E.F. Entrega</th>
             </tr>
         </thead>
@@ -65,22 +69,33 @@
                     </td>
                     <td>@item.FechaCreacion</td>
                     <td>@item.Solicitante</td>
-                    <td>@item.Producto @item.Cantidad @item.Cantidad @item.Peso</td>
+                    <td>@item.Producto</td>
                     <td>@item.FechaRecepcion</td>
                     <td>@item.Receptor</td>
-                    <td>@item.CategoriaRemitente - @item.RazonSocialRemitente - @item.DescripcionRemitente</td>
+                    <td>@item.DescripcionRemitente</td>
                     <td>@item.ContactoRemitente</td>
                     <td>@item.CalleRemitente, @item.NoExtRemitente, @item.NointRemitente, @item.ColoniaRemitente, @item.CodigoPostalRemitente, @item.MunicipioRemitente, @item.EstadoRemitente, @item.PaisRemitente, @item.ReferenciaRemitente </td>
-                    <td>@item.CategoriaEntrega - @item.RazonSocialEntrega - @item.DescripcionEntrega</td>
+                    <td>@item.DescripcionEntrega</td>
                     <td>@item.DestinatarioEntrega</td>
                     <td>@item.CalleEntrega, @item.NoExtEntrega, @item.NointEntrega, @item.ColoniaEntrega, @item.CodigoPostalEntrega, @item.MunicipioEntrega, @item.EstadoEntrega, @item.PaisEntrega, @item.ReferenciaEntrega</td>
                     <td>@item.FechaEntregaEstimada</td>
                     <td>@item.FechaAsignada</td>
                     <td>@item.MensajeroAsignado</td>
+                    <td>@item.ReferenciaExterna</td>
                     <td>@item.FechaEntrega</td>
                 </tr>
             }
         </tbody>
     </table>
 
+    <script>
+        $("#ExportarReporte").click(function () {
+            var FechaDesde = $("#FechaDesde").val();
+            var FechaHasta = $("#FechaHasta").val();
+
+            $("#ReportTable").table2excel({
+                filename: 'Reporte_Concentrado_' + FechaDesde + '_a_' + FechaHasta + '.xls'
+            });
+        });
+    </script>
 }
