@@ -69,5 +69,30 @@ namespace AdminMensajeria.Controllers.API
 
         }
 
+        [Route("SOLICITUD/{idGuia}")]
+        [ResponseType(typeof(IEnumerable<OPE_SOLICITUDPUNTOSENTREC>))]
+        public async Task<IHttpActionResult> GetSOLICITUD(int idGuia)
+        {
+            IEnumerable<OPE_SOLICITUDPUNTOSENTREC> temp;
+
+            try
+            {
+                temp = await db.OPE_SOLICITUDPUNTOSENTREC
+                .Where(v => v.IdGuia == idGuia && v.EstatusPuntosEntRec == false).ToListAsync();
+            }
+            catch
+            {
+                return BadRequest("Error al recuperar solicitudes");
+            }
+
+            if (temp == null)
+            {
+                return BadRequest("Sin Datos.");
+            }
+
+            return Ok(temp);
+
+        }
+
     }
 }
