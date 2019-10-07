@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -228,6 +229,8 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\API\AppController.cs" />
+    <Compile Include="Controllers\API\BaseController.cs" />
     <Compile Include="Controllers\API\PuntosController.cs" />
     <Compile Include="Controllers\API\SolicitudesController.cs" />
     <Compile Include="Controllers\API\UsuariosController.cs" />
@@ -253,6 +256,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\APP\LoginApp.cs" />
+    <Compile Include="Models\APP\Guide.cs" />
     <Compile Include="Models\DTOs\PuntosDTO.cs" />
     <Compile Include="Models\DTOs\SolicitudesDTO.cs" />
     <Compile Include="Models\DTOs\UsuariosDTO.cs" />
