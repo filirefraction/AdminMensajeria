@@ -111,7 +111,7 @@ namespace AdminMensajeria.Controllers.API
                 return BadRequest("Error.");
             }
 
-            if (producto == null)
+            if (producto != null)
             {
                 if (producto.Recibido != true)
                 {
@@ -126,6 +126,106 @@ namespace AdminMensajeria.Controllers.API
                         db.Entry(solicitud).State = EntityState.Modified;
                         db.SaveChanges();
                         
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest("Error.");
+                    }
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+
+            }
+            else
+            {
+                return NotFound();
+            }
+
+            return Ok("Éxito.");
+        }
+
+        [Route("UPDATE/")]
+        [ResponseType(typeof(String))]
+        public async Task<IHttpActionResult> PostUPDATE(SolicitudUpdate model)
+        {
+            List<OPE_SOLICITUDPUNTOSENTREC> entrec = new List<OPE_SOLICITUDPUNTOSENTREC>();
+            List<OPE_SOLICITUD> solicitudes = new List<OPE_SOLICITUD>();
+
+
+            try
+            {
+                //entrec = await db.OPE_SOLICITUDPUNTOSENTREC.Where(x => x.IdGuia == model.IdGuia).ToListAsync();
+                foreach (SolicitudApp item in model.solicitudes)
+                {
+                    OPE_SOLICITUDPUNTOSENTREC temp = await db.OPE_SOLICITUDPUNTOSENTREC.Where(x => x.IdSolicitud == item.IdSolicitud && x.TipoPunto == 2).FirstAsync();
+                    entrec.Add(temp);
+                }
+
+                foreach (SolicitudApp item in model.solicitudes)
+                {
+                    OPE_SOLICITUD temp = await db.OPE_SOLICITUD.Where(x => x.IdSolicitud == item.IdSolicitud).FirstAsync();
+                    solicitudes.Add(temp);
+                }
+
+            }
+            catch
+            {
+                return BadRequest("Error.");
+            }
+
+            if (entrec.Count > 0)
+            {
+                if (!model.IsComplaint)
+                {
+                    foreach (OPE_SOLICITUDPUNTOSENTREC item in entrec)
+                    {
+                        item.NombrePuntosEntRec = model.Receptor;
+                        item.FotoPuntosEntRec = model.Img;
+                        item.FirmaPuntosEntRec = model.Sign;
+                        item.FechaReal = DateTime.Now.AddHours(1);
+                        item.Latitud = model.Latitud;
+                        item.Longitud = model.Longitud;
+                        db.Entry(item).State = EntityState.Modified;
+                    }
+
+                    foreach (OPE_SOLICITUD item in solicitudes)
+                    {
+                        item.EstatusSolicitud = 4;
+                        db.Entry(item).State = EntityState.Modified;
+
+                    }
+
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest("Error.");
+                    }
+                }
+                else
+                {
+                    foreach (OPE_SOLICITUDPUNTOSENTREC item in entrec)
+                    {
+                        item.Problema = model.IsComplaint;
+                        item.ObsProblema = model.Problema;
+                        item.FechaReal = DateTime.Now.AddHours(1);
+                        db.Entry(item).State = EntityState.Modified;
+                    }
+
+                    foreach (OPE_SOLICITUD item in solicitudes)
+                    {
+                        item.EstatusSolicitud = 4;
+                        db.Entry(item).State = EntityState.Modified;
+
+                    }
+
+                    try
+                    {
+                        db.SaveChanges();
                     }
                     catch (Exception ex)
                     {
