@@ -258,6 +258,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\APP\LoginApp.cs" />
     <Compile Include="Models\APP\Guide.cs" />
+    <Compile Include="Models\APP\Recibir.cs" />
     <Compile Include="Models\DTOs\PuntosDTO.cs" />
     <Compile Include="Models\DTOs\SolicitudesDTO.cs" />
     <Compile Include="Models\DTOs\UsuariosDTO.cs" />

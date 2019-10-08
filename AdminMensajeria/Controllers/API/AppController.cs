@@ -94,5 +94,52 @@ namespace AdminMensajeria.Controllers.API
 
         }
 
+        [Route("RECIBIR/")]
+        [ResponseType(typeof(String))]
+        public async Task<IHttpActionResult> PostRECIBIR(Recibir model)
+        {
+            OPE_SOLICITUDPRODUCTO producto;
+            OPE_SOLICITUD solicitud;
+
+            try
+            {
+                producto = await db.OPE_SOLICITUDPRODUCTO.Where(x => x.IdSolicitud == model.id).FirstOrDefaultAsync();
+                solicitud = await db.OPE_SOLICITUD.Where(x => x.IdSolicitud == model.id).FirstOrDefaultAsync();
+            }
+            catch
+            {
+                return BadRequest("Error.");
+            }
+
+            if (producto == null)
+            {
+                if (producto.Recibido != true)
+                {
+                    producto.Recibido = true;
+                    producto.FechaRecepcion = DateTime.Now.AddHours(1); //Producción
+                    producto.Receptor = model.name;
+                    solicitud.EstatusSolicitud = 2;
+
+                    try
+                    {
+                        db.Entry(producto).State = EntityState.Modified;
+                        db.Entry(solicitud).State = EntityState.Modified;
+                        db.SaveChanges();
+                        
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest("Error.");
+                    }
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+
+            return Ok("Éxito.");
+        }
+
     }
 }
