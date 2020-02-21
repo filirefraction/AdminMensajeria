@@ -17,9 +17,17 @@ namespace AdminMensajeria.Controllers
         // GET: Asignacion
         public ActionResult Index()
         {
-            var oPE_GUIA = db.OPE_GUIA.Include(o => o.GEN_USUARIO);
-            return View(oPE_GUIA.ToList());
+            return View();
         }
+
+        public ActionResult Asignaciones(DateTime Desde, DateTime Hasta)
+        {
+            Hasta = Hasta.AddDays(1);
+            ViewBag.desde = Desde;
+            ViewBag.hasta = Hasta;
+            return PartialView("~/Views/Asignacion/Asignaciones.cshtml");
+        }
+
 
         public ActionResult Entregas(int id)
         {
@@ -52,8 +60,8 @@ namespace AdminMensajeria.Controllers
         public JsonResult CreateAsignacion(OPE_GUIA Asignacion)
         {
             Resultados resultado = new Resultados();
-            //Asignacion.FechaCreacionGuia = DateTime.Now; //Local
-            Asignacion.FechaCreacionGuia = DateTime.Now.AddHours(1); //Producción
+            Asignacion.FechaCreacionGuia = DateTime.Now; //Local
+            //Asignacion.FechaCreacionGuia = DateTime.Now.AddHours(1); //Producción
 
 
             try
@@ -179,7 +187,7 @@ namespace AdminMensajeria.Controllers
                     else
                     {
                         resultado.Result = false;
-                        resultado.Mensaje = "Este Envío ya se Asigno al Número: " + Entrega.IdGuia.ToString();
+                        resultado.Mensaje = "El envío " + id.ToString() + " fue asignada anteriormente al Número: " + Entrega.IdGuia.ToString();
                     }
                 }
                 else
@@ -317,7 +325,7 @@ namespace AdminMensajeria.Controllers
             }
 
             resultado.Result = true;
-                       
+
 
             return Json(resultado, JsonRequestBehavior.AllowGet);
         }
@@ -327,6 +335,38 @@ namespace AdminMensajeria.Controllers
         {
             Resultados results = new Resultados();
             OPE_GUIA Asignacion = db.OPE_GUIA.Find(id);
+
+            var Asignados = db.OPE_SOLICITUDPUNTOSENTREC.Where(x => x.IdGuia == id).ToList();
+
+            if (Asignados != null)
+            {
+                foreach (var item in Asignados)
+                {
+                    OPE_SOLICITUDPUNTOSENTREC Entrega = item;
+                    OPE_SOLICITUD Solicitud = db.OPE_SOLICITUD.Find(Entrega.IdSolicitud);
+                    Entrega.IdGuia = null;
+                    Entrega.Problema = false;
+                    Entrega.ObsProblema = null;
+                    Entrega.FotoPuntosEntRec = null;
+                    Entrega.FirmaPuntosEntRec = null;
+                    Entrega.Latitud = null;
+                    Entrega.Longitud = null;
+                    Solicitud.EstatusSolicitud = 2;
+                    try
+                    {
+                        db.Entry(Entrega).State = EntityState.Modified;
+                        db.Entry(Solicitud).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+
+                }
+            }
+
+
 
             try
             {

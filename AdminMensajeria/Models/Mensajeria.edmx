@@ -56,6 +56,14 @@
           <Property Name="IdPais" Type="int" Nullable="false" />
           <Property Name="CiudadEstado" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.GEN_IMAGEN' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="GEN_IMAGEN">
+          <Key>
+            <PropertyRef Name="Imagen" />
+          </Key>
+          <Property Name="Imagen" Type="varchar" MaxLength="1000" Nullable="false" />
+        </EntityType>
         <EntityType Name="GEN_MUNICIPIO">
           <Key>
             <PropertyRef Name="IdMunicipio" />
@@ -229,6 +237,10 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
         <EntityType Name="VIEW_REPORTE">
           <Key>
             <PropertyRef Name="NoEnvio" />
+            
+            
+            
+            
           </Key>
           <Property Name="NoEnvio" Type="int" Nullable="false" />
           <Property Name="IdUsuario" Type="int" Nullable="false" />
@@ -508,6 +520,11 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
           <EntitySet Name="OPE_SOLICITUD" EntityType="Self.OPE_SOLICITUD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OPE_SOLICITUDPRODUCTO" EntityType="Self.OPE_SOLICITUDPRODUCTO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OPE_SOLICITUDPUNTOSENTREC" EntityType="Self.OPE_SOLICITUDPUNTOSENTREC" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GEN_IMAGEN" EntityType="Self.GEN_IMAGEN" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [GEN_IMAGEN].[Imagen] AS [Imagen]
+    FROM [dbo].[GEN_IMAGEN] AS [GEN_IMAGEN]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="VIEW_REPORTE" EntityType="Self.VIEW_REPORTE" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [VIEW_REPORTE].[NoEnvio] AS [NoEnvio], 
@@ -723,6 +740,7 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
             <End Role="OPE_SOLICITUDPUNTOSENTREC" EntitySet="OPE_SOLICITUDPUNTOSENTREC" />
           </AssociationSet>
           <EntitySet Name="VIEW_REPORTE" EntityType="MensajeriaModel.VIEW_REPORTE" />
+          <EntitySet Name="GEN_IMAGEN" EntityType="MensajeriaModel.GEN_IMAGEN" />
           </EntityContainer>
         <EntityType Name="GEN_CODIGOPOSTAL">
           <Key>
@@ -1243,6 +1261,12 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
           <Property Name="ReferenciaExterna" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="FechaEntrega" Type="DateTime" Precision="3" />
         </EntityType>
+        <EntityType Name="GEN_IMAGEN">
+          <Key>
+            <PropertyRef Name="Imagen" />
+          </Key>
+          <Property Name="Imagen" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1531,6 +1555,13 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
                 <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
                 <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
                 <ScalarProperty Name="NoEnvio" ColumnName="NoEnvio" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_IMAGEN">
+            <EntityTypeMapping TypeName="MensajeriaModel.GEN_IMAGEN">
+              <MappingFragment StoreEntitySet="GEN_IMAGEN">
+                <ScalarProperty Name="Imagen" ColumnName="Imagen" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

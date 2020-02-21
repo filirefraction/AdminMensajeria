@@ -24,6 +24,7 @@ namespace AdminMensajeria.Controllers.API
             //return db.Solicitudes;
 
             var Solicitudes = from o in db.OPE_SOLICITUD
+                              where o.EstatusSolicitud == 3
                               select new SolicitudesDTO()
                          {
                              Id = o.IdSolicitud,

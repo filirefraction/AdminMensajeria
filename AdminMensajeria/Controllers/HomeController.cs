@@ -14,6 +14,8 @@ namespace AdminMensajeria.Controllers
 
         public ActionResult Index()
         {
+            GEN_IMAGEN img = db.GEN_IMAGEN.FirstOrDefault();
+            ViewBag.Imagen = img.Imagen; 
             return View();
         }
 

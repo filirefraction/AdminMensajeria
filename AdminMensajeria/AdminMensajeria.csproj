@@ -279,6 +279,9 @@
     <Compile Include="Models\GEN_ESTADO.cs">
       <DependentUpon>Mensajeria.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GEN_IMAGEN.cs">
+      <DependentUpon>Mensajeria.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GEN_MUNICIPIO.cs">
       <DependentUpon>Mensajeria.tt</DependentUpon>
     </Compile>
@@ -474,8 +477,6 @@
     <Content Include="Views\Correo\Edit.cshtml" />
     <Content Include="Views\Correo\Index.cshtml" />
     <Content Include="Views\Unidad\Create.cshtml" />
-    <Content Include="Views\Unidad\Delete.cshtml" />
-    <Content Include="Views\Unidad\Details.cshtml" />
     <Content Include="Views\Unidad\Edit.cshtml" />
     <Content Include="Views\Unidad\Index.cshtml" />
     <Content Include="Views\Categoria\Create.cshtml" />
@@ -489,6 +490,7 @@
     <Content Include="Views\Asignacion\Edit.cshtml" />
     <Content Include="Views\Asignacion\Index.cshtml" />
     <Content Include="Views\Solicitud\Recepcion.cshtml" />
+    <None Include="Properties\PublishProfiles\app.pubxml" />
     <None Include="Properties\PublishProfiles\Fili.pubxml" />
     <Content Include="Views\Asignacion\Entregas.cshtml" />
     <Content Include="Views\CargaMasiva\Index.cshtml" />
@@ -503,6 +505,7 @@
     <Content Include="Views\Reporte\Details.cshtml" />
     <Content Include="Views\Reporte\Index.cshtml" />
     <Content Include="Views\Solicitud\Solicitudes.cshtml" />
+    <Content Include="Views\Asignacion\Asignaciones.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -862,7 +862,7 @@
                         window.location = '@Url.Action("Index", "Home")';
                     }
                     else {
-                        var mensaje = "Error al registrar solicitud: " & data.Mensaje;
+                        var mensaje = "Error al registrar solicitud: " + data.Mensaje;
                         $("#ErrorMSG").html('');
                         $("#ErrorMSG").append(mensaje);
                         $('#ModalErrorMSG').modal('show')
@@ -911,7 +911,7 @@
                     }
                 }
                 else {
-                    var mensaje = "Error al registrar producto: " & data.Mensaje;
+                    var mensaje = "Error al registrar producto: " + data.Mensaje;
                     $("#ErrorMSG").html('');
                     $("#ErrorMSG").append(mensaje);
                     $('#ModalErrorMSG').modal('show')
@@ -957,7 +957,7 @@
                     }
                 }
                 else {
-                    var mensaje = "Error al registrar Punto de recoleccion: " & data.Mensaje;
+                    var mensaje = "Error al registrar Punto de recoleccion: " + data.Mensaje;
                     $("#ErrorMSG").html('');
                     $("#ErrorMSG").append(mensaje);
                     $('#ModalErrorMSG').modal('show')
@@ -1026,7 +1026,7 @@
                     }
                 }
                 else {
-                    var mensaje = "Error al registrar Punto de recoleccion: " & data.Mensaje;
+                    var mensaje = "Error al registrar Punto de recoleccion: " + data.Mensaje;
                     $("#ErrorMSG").html('');
                     $("#ErrorMSG").append(mensaje);
                     $('#ModalErrorMSG').modal('show')
@@ -1072,7 +1072,7 @@
                         window.location = '@Url.Action("Details", "Solicitud")' + "/" + id;
                     }
                     else {
-                        var mensaje = "Error al registrar Punto de entrega: " & data.Mensaje;
+                        var mensaje = "Error al registrar Punto de entrega: " + data.Mensaje;
                         $("#ErrorMSG").html('');
                         $("#ErrorMSG").append(mensaje);
                         $('#ModalErrorMSG').modal('show')
@@ -1140,7 +1140,7 @@
                     window.location = '@Url.Action("Details", "Solicitud")' + "/" + id;
                 }
                 else {
-                    var mensaje = "Error al registrar Punto de entrega: " & data.Mensaje;
+                    var mensaje = "Error al registrar Punto de entrega: " + data.Mensaje;
                     $("#ErrorMSG").html('');
                     $("#ErrorMSG").append(mensaje);
                     $('#ModalErrorMSG').modal('show')

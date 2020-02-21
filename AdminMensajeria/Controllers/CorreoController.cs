@@ -73,20 +73,23 @@ namespace AdminMensajeria.Controllers
             return View(gEN_EMAILCONGIF);
         }
 
-        // POST: Correo/Edit/5
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IdEmailConfig,Remitente,Asunto,Cuerpo,ContrasenaEmail,SMTPHost,SMTPPort,SSL,EstatusEMail")] GEN_EMAILCONGIF gEN_EMAILCONGIF)
+        public JsonResult EditEmail(GEN_EMAILCONGIF Email)
         {
-            if (ModelState.IsValid)
+            Resultados resultado = new Resultados();
+
+            try
             {
-                db.Entry(gEN_EMAILCONGIF).State = EntityState.Modified;
+                db.Entry(Email).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                resultado.Result = true;
             }
-            return View(gEN_EMAILCONGIF);
+            catch (Exception ex)
+            {
+                resultado.Result = false;
+                resultado.Mensaje = ex.Message;
+                resultado.Valor = 0;
+            }
+            return Json(resultado, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Correo/Delete/5

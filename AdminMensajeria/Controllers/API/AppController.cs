@@ -116,7 +116,8 @@ namespace AdminMensajeria.Controllers.API
                 if (producto.Recibido != true)
                 {
                     producto.Recibido = true;
-                    producto.FechaRecepcion = DateTime.Now.AddHours(1); //Producción
+                    producto.FechaRecepcion = DateTime.Now; //Local
+                    //producto.FechaRecepcion = DateTime.Now.AddHours(1); //Producción
                     producto.Receptor = model.name;
                     solicitud.EstatusSolicitud = 2;
 
@@ -184,9 +185,11 @@ namespace AdminMensajeria.Controllers.API
                         item.NombrePuntosEntRec = model.Receptor;
                         item.FotoPuntosEntRec = model.Img;
                         item.FirmaPuntosEntRec = model.Sign;
-                        item.FechaReal = DateTime.Now.AddHours(1);
+                        item.FechaReal = DateTime.Now;
+                        //item.FechaReal = DateTime.Now.AddHours(1); //Producción
                         item.Latitud = model.Latitud;
                         item.Longitud = model.Longitud;
+                        item.EstatusPuntosEntRec = true;
                         db.Entry(item).State = EntityState.Modified;
                     }
 
@@ -212,7 +215,8 @@ namespace AdminMensajeria.Controllers.API
                     {
                         item.Problema = model.IsComplaint;
                         item.ObsProblema = model.Problema;
-                        item.FechaReal = DateTime.Now.AddHours(1);
+                        item.FechaReal = DateTime.Now;
+                        //item.FechaReal = DateTime.Now.AddHours(1);
                         db.Entry(item).State = EntityState.Modified;
                     }
 

@@ -76,8 +76,8 @@ namespace AdminMensajeria.Controllers
 
 
             Comentario.IdUsuario = IdUsuario; //Aqui va variable de sesión
-            //Comentario.FechaCreacionComenSuger = DateTime.Now; //Local
-            Comentario.FechaCreacionComenSuger = DateTime.Now.AddHours(1); //Producción
+            Comentario.FechaCreacionComenSuger = DateTime.Now; //Local
+            //Comentario.FechaCreacionComenSuger = DateTime.Now.AddHours(1); //Producción
 
             try
             {

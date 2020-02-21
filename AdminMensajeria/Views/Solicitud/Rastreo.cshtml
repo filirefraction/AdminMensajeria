@@ -36,7 +36,7 @@
         <table class="ui celled table compact">
             <thead>
                 <tr>
-                    <th id="enc1" class="col-md-3" style="background-color:#85C1E9;color:white">1.- Pendiente</th>
+                    <th id="enc1" class="col-md-3" style="background-color:#85C1E9;color:white">1.- Generada</th>
                     <th id="enc2" class="col-md-3 hidden" style="background-color:#5DADE2;color:white">2.- Recibido en Mensajería</th>
                     <th id="enc3" class="col-md-3 hidden" style="background-color:#3498DB;color:white">3.- En Ruta</th>
                     <th id="enc4" class="col-md-3 hidden" style="background-color:#2E86C1;color:white">4.- Entregado</th>
@@ -135,15 +135,29 @@
                                 </p>
                                 <label>Comprobantes:</label>
                                 <br />
-                                <a href="#" data-toggle="tooltip" title="Ver Firma" class="btn btn-default btn-sm">
-                                    <span class='glyphicon glyphicon-pencil'></span>
-                                </a>
-                                <a href="#" data-toggle="tooltip" title="Ver foto" class="btn btn-default btn-sm">
-                                    <span class='glyphicon glyphicon-camera'></span>
-                                </a>
-                                <a href="#" data-toggle="tooltip" title="Ver Ubicación" class="btn btn-default btn-sm">
-                                    <span class='glyphicon glyphicon-map-marker'></span>
-                                </a>
+                                @if (Destinatario.FirmaPuntosEntRec == null || Destinatario.FirmaPuntosEntRec == "") { }
+                                else
+                                {
+                                    <a href="@Destinatario.FirmaPuntosEntRec" target="_blank" data-toggle="tooltip" title="Ver Firma" class="btn btn-default btn-sm">
+                                        <span class='glyphicon glyphicon-pencil'></span>
+                                    </a>
+                                }
+
+                                @if (Destinatario.FotoPuntosEntRec == null || Destinatario.FotoPuntosEntRec == "") { }
+                                else
+                                {
+                                    <a href="@Destinatario.FotoPuntosEntRec" target="_blank" data-toggle="tooltip" title="Ver foto" class="btn btn-default btn-sm">
+                                        <span class='glyphicon glyphicon-camera'></span>
+                                    </a>
+                                }
+
+                                @if (Destinatario.Latitud == null || Destinatario.Latitud == "") { }
+                                else
+                                {
+                                    <a href="http://maps.google.com/maps?q=@Destinatario.Latitud,@Destinatario.Longitud" target="_blank" data-toggle="tooltip" title="Ver Ubicación" class="btn btn-default btn-sm">
+                                        <span class='glyphicon glyphicon-map-marker'></span>
+                                    </a>
+                                }
                             </td>
                         }
                     </tr>

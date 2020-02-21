@@ -95,8 +95,8 @@ namespace AdminMensajeria.Controllers
 
 
             Solicitud.IdUsuario = IdUsuario; // Aqui va Variable de sesión
-            //Solicitud.FechaCreacion = DateTime.Now; // Local
-            Solicitud.FechaCreacion = DateTime.Now.AddHours(1); //Producción
+            Solicitud.FechaCreacion = DateTime.Now; // Local
+            //Solicitud.FechaCreacion = DateTime.Now.AddHours(1); //Producción
             Solicitud.Emergencia = false;
 
 
@@ -217,7 +217,8 @@ namespace AdminMensajeria.Controllers
 
             if (Entrega != null)
             {
-                DateTime FechaEstimanda = DateTime.Now.AddHours(1);
+                DateTime FechaEstimanda = DateTime.Now;
+                //DateTime FechaEstimanda = DateTime.Now.AddHours(1);
                 int Hora = FechaEstimanda.Hour;
                 if (Hora < 10)
                 Entrega.FechaProgramada = FechaEstimanda;
@@ -234,8 +235,8 @@ namespace AdminMensajeria.Controllers
                 if (Producto.Recibido != true)
                 {
                     Producto.Recibido = true;
-                    //Producto.FechaRecepcion = DateTime.Now; //Local
-                    Producto.FechaRecepcion = DateTime.Now.AddHours(1); //Producción
+                    Producto.FechaRecepcion = DateTime.Now; //Local
+                    //Producto.FechaRecepcion = DateTime.Now.AddHours(1); //Producción
                     Producto.Receptor = NombreUsuario;
                     Solicitud.EstatusSolicitud = 2;
                     try
@@ -256,7 +257,7 @@ namespace AdminMensajeria.Controllers
                 else
                 {
                     resultado.Result = false;
-                    resultado.Mensaje = "Este Producto ya se Recibió";
+                    resultado.Mensaje = "El producto de la solicitud " + id.ToString() + " se Recibió anteriormente";
                 }
             }
             else

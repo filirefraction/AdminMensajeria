@@ -12,7 +12,7 @@
         </div>
         <div class="col-md-6">
             <div class="field">
-                @Html.EditorFor(model => model.FechaProgramadaGuia, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                @Html.EditorFor(model => model.FechaProgramadaGuia, new { htmlAttributes = new { @class = "form-control input-sm", @autocomplete = "off" } })
                 <label for="FechaProgramadaGuia">Fecha de Ejeución (*)</label>
             </div>
             <span class="AlertaDanger" id="FechaProgramadaGuiaVal"></span>

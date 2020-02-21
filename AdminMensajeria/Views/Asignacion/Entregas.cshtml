@@ -24,7 +24,12 @@
             </div>
 
         </div>
-    </div>
+        <div class="col-md-3" style="margin-top: 20px;">
+
+            <label>Total de enviós asignado: @Solicitud.Count()</label>
+        </div>
+
+        </div>
 
     <table id="EntregasTable" class="ui celled table compact">
         <thead>
@@ -57,7 +62,8 @@
             @foreach (var item in Solicitud)
                 {
                 <tr>
-                    <td style="word-break:break-word">
+                    <td style="
+    break:break-word">
                         @Html.DisplayFor(modelItem => item.s.IdSolicitud)
                     </td>
                     <td style="word-break:break-word">
@@ -114,7 +120,7 @@
                     <td>
                         @switch (item.s.EstatusSolicitud)
                         {
-                            case 1: <p>Pendiente</p>; break;
+                            case 1: <p>Generada</p>; break;
                             case 2: <p>Recibido en Mensajería</p>; break;
                             case 3: <p>En ruta</p>; break;
                             case 4: <p>Entregado</p>; break;
@@ -244,7 +250,7 @@
 
             function AsingaReferencias() {
                 $("#OperTitle").html('');
-                $("#OperTitle").append('Asirnar Envios con Referencia')
+                $("#OperTitle").append('Asignar Envios con Referencia')
                 $("#OperBody").html('');
                 $("#OperBody").load('@Url.Action("AsignaReferencia", "Asignacion")' + '/' + @IdGuia );
                 $('#OperModal').modal('show');

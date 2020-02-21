@@ -9,6 +9,13 @@
             </div>
             <span class="AlertaDanger" id="NoSeguimientoRecVal"></span>
         </div>
+        <div class="col-md-6">
+            <div class="field">
+                <input type="number" id="TotalRec" class="form-control input-sm" value="0" disabled />
+                <label for="TotalRec">Total de Paquetes Recibidos</label>
+            </div>
+            <span class="AlertaDanger" id="TotalRecVal"></span>
+        </div>
     </div>
 
     <div class="form-group" >
@@ -31,6 +38,7 @@
         ///////////////////////////////////////////////////////////////
         $("#NoSeguimientoRec").change(function () {
             var NoSeguimientoRec = $('#NoSeguimientoRec').val();
+            var TotalRec = $('#TotalRec').val();
 
             if (NoSeguimientoRec.length != 0) {
 
@@ -41,16 +49,18 @@
                     dataType: "json",
                     success: function (data) {
                         if (data.Result == true) {
-                            var content = '<div class="form-control" style="background-color:#EAFAF1">' + data.Mensaje + '</div>'
-                            $("#Recibidos").append(content)
+                            var content = '<div style="background-color:#EAFAF1;word-break:break-word; border-style: solid; border-width: 1px;">' + data.Mensaje + '</div>'
+                            $("#Recibidos").prepend(content)
+                            var total = parseInt(TotalRec) + parseInt(1);
+                            $('#TotalRec').val(total);
                         }
                         else {
                             if (data.Redirecciona == true) {
                                 window.location = '@Url.Action("Index", "Home")';
                             }
                             else {
-                                var content = '<div class="form-control" style="background-color:#F2D7D5">' + data.Mensaje + '</div>'
-                                $("#Recibidos").append(content)
+                                var content = '<div style="background-color:#F2D7D5;word-break:break-word; border-style: solid; border-width: 1px;">' + data.Mensaje + '</div>'
+                                $("#Recibidos").prepend(content)
                             }
                         }
                     },

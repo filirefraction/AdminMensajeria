@@ -20,43 +20,30 @@ namespace AdminMensajeria.Controllers
             return View(db.GEN_UNIDAD.ToList());
         }
 
-        // GET: Unidad/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            GEN_UNIDAD gEN_UNIDAD = db.GEN_UNIDAD.Find(id);
-            if (gEN_UNIDAD == null)
-            {
-                return HttpNotFound();
-            }
-            return View(gEN_UNIDAD);
-        }
-
         // GET: Unidad/Create
         public ActionResult Create()
         {
-            return View();
+            return PartialView("~/Views/Unidad/Create.cshtml");
         }
 
-        // POST: Unidad/Create
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "IdUnidad,DescripcionUnidad,Codigo,Simbolo,EstatusUnidad")] GEN_UNIDAD gEN_UNIDAD)
+        public JsonResult CreateUnidad(GEN_UNIDAD Unidad)
         {
-            if (ModelState.IsValid)
+            Resultados resultado = new Resultados();
+            try
             {
-                db.GEN_UNIDAD.Add(gEN_UNIDAD);
+                db.GEN_UNIDAD.Add(Unidad);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                resultado.Result = true;
             }
-
-            return View(gEN_UNIDAD);
+            catch (Exception ex)
+            {
+                resultado.Result = false;
+                resultado.Mensaje = ex.Message;
+                resultado.Valor = 0;
+            }
+            return Json(resultado, JsonRequestBehavior.AllowGet);
         }
+
 
         // GET: Unidad/Edit/5
         public ActionResult Edit(int? id)
@@ -70,49 +57,47 @@ namespace AdminMensajeria.Controllers
             {
                 return HttpNotFound();
             }
-            return View(gEN_UNIDAD);
+            return PartialView("~/Views/Unidad/Edit.cshtml", gEN_UNIDAD);
+
         }
 
-        // POST: Unidad/Edit/5
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IdUnidad,DescripcionUnidad,Codigo,Simbolo,EstatusUnidad")] GEN_UNIDAD gEN_UNIDAD)
+        public JsonResult EditUnidad(GEN_UNIDAD Unidad)
         {
-            if (ModelState.IsValid)
+            Resultados resultado = new Resultados();
+            try
             {
-                db.Entry(gEN_UNIDAD).State = EntityState.Modified;
+                db.Entry(Unidad).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                resultado.Result = true;
             }
-            return View(gEN_UNIDAD);
+            catch (Exception ex)
+            {
+                resultado.Result = false;
+                resultado.Mensaje = ex.Message;
+                resultado.Valor = 0;
+            }
+            return Json(resultado, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: Unidad/Delete/5
-        public ActionResult Delete(int? id)
+        public JsonResult DeleteUnidad(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            GEN_UNIDAD gEN_UNIDAD = db.GEN_UNIDAD.Find(id);
-            if (gEN_UNIDAD == null)
-            {
-                return HttpNotFound();
-            }
-            return View(gEN_UNIDAD);
-        }
+            Resultados results = new Resultados();
+            GEN_UNIDAD Unidad = db.GEN_UNIDAD.Find(id);
 
-        // POST: Unidad/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            GEN_UNIDAD gEN_UNIDAD = db.GEN_UNIDAD.Find(id);
-            db.GEN_UNIDAD.Remove(gEN_UNIDAD);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                db.GEN_UNIDAD.Remove(Unidad);
+                db.SaveChanges();
+                results.Result = true;
+                results.Mensaje = "País Eliminado Correctamente";
+            }
+            catch (Exception ex)
+            {
+                results.Result = false;
+                results.Mensaje = ex.Message;
+            }
+
+            return Json(results, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)

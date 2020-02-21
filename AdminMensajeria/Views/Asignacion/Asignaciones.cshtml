@@ -1,0 +1,140 @@
+﻿@using (AdminMensajeria.Models.MensajeriaEntities db = new AdminMensajeria.Models.MensajeriaEntities())
+{
+    ViewBag.Title = "Index";
+
+    DateTime Desde = ViewBag.desde;
+    DateTime Hasta = ViewBag.hasta;
+
+    var Asinaciones = (from g in db.OPE_GUIA
+                       join u in db.GEN_USUARIO on g.IdUsuario equals u.IdUsuario
+                       where g.FechaProgramadaGuia >= Desde && g.FechaProgramadaGuia < Hasta
+                       select new { g.IdGuia, g.FechaProgramadaGuia, g.CompletaGuia, g.EstatusGuia, u.NombreUsuario }).ToList();
+
+
+<table id="AsignacionTable" class="ui celled table compact">
+    <thead>
+        <tr>
+            <th class="col-md-1">
+                # de Asignación
+            </th>
+            <th>
+                Fecha de Ejecución
+            </th>
+            <th>
+                Entregas Completas
+            </th>
+            <th>
+                Estatus
+            </th>
+            <th>
+                Mensajero
+            </th>
+            <th class="col-md-2"></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Asinaciones)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdGuia)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaProgramadaGuia)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompletaGuia)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EstatusGuia)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NombreUsuario)
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit", "Asignacion", new { id = item.IdGuia })" data-toggle="tooltip" title="Editar Asignación" class="btn btn-default btn-sm">
+                        <span class='glyphicon glyphicon-edit'></span>
+                    </a>
+                    <a href="@Url.Action("Details", "Asignacion", new { id = item.IdGuia })" data-toggle="tooltip" title="Imprimir Formato" class="btn btn-default btn-sm">
+                        <span class='glyphicon glyphicon-list-alt'></span>
+                    </a>
+                    <button onclick="Entregas(@item.IdGuia)" data-toggle="tooltip" title="Reportar Entrega" class="btn btn-success btn-sm">
+                        <span class='glyphicon glyphicon-ok-sign'></span>
+                    </button>
+                    <button onclick="EliminarAsignacion(@item.IdGuia)" data-toggle="tooltip" title="Eliminar Asignación" class="btn btn-default btn-sm">
+                        <span class='glyphicon glyphicon-trash'></span>
+                    </button>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+}
+
+<script>
+    $(document).ready(function () {
+        $('#AsignacionTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "order": [[0, "desc"]]
+        });
+    });
+
+
+    function EliminarAsignacion(id) {
+        $('#ConfirmTitle').html('');
+        var title = "Confirme para eliminar Asignacion"
+        $('#ConfirmTitle').append(title);
+        $('#ConfirmBody').html('');
+        var warning = '<span class="AlertaDanger">¡Importante! si elimina el registro los enviós asignados regresaran a estatus "Recibido en Mensajería" esto incluye a los enviós que ya tengan reporte de entrega.</span><br>';
+        var body = '<button onclick="ConfirmaEliminarAsignacion(' + id + ')" type="button" class="btn btn-danger" id="modal-btn-si">Si</button>' +
+                   '<button onclick="CancelaEliminar()" type="button" class="btn btn-primary" id="modal-btn-no">No</button>';
+        $('#ConfirmBody').append(warning);
+        $('#ConfirmBody').append(body);
+        $('#ConfirmModal').modal('show');
+
+    }
+
+    function ConfirmaEliminarAsignacion(id) {
+        $.ajax({
+            url: '@Url.Action("DeleteAsignacion", "Asignacion")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                if (Data.Result == true) {
+                    window.location = '@Url.Action("Index", "Asignacion")';
+                }
+                else {
+                    $("#ErrorMSG").html('');
+                    $("#ErrorMSG").append(Data.Mensaje);
+                    $('#ConfirmModal').modal('hide');
+                    $('#ModalErrorMSG').modal('show')
+                }
+            },
+            error: function (data) {
+                console.log("ocurrio un error al Eliminar");
+            }
+        });
+    }
+
+    function CancelaEliminar() {
+        $('#ConfirmTitle').html('');
+        $('#ConfirmBody').html('');
+        $('#ConfirmModal').modal('hide');
+    }
+
+
+    function Entregas(id) {
+        $("#OperTitle").html('');
+        $("#OperTitle").append('Reportar Entrega de Envíos')
+        $("#OperBody").html('');
+        $("#OperBody").load('@Url.Action("ReportaEntregas", "Asignacion")' + '/' + id);
+        $('#OperModal').modal('show');
+    }
+
+</script>
