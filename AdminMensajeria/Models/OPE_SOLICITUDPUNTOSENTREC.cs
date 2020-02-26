@@ -24,6 +24,7 @@ namespace AdminMensajeria.Models
         public string DestinatarioPuntoEntRec { get; set; }
         public string DescripcionPuntoEntRec { get; set; }
         public string ContactoPuntoEntRec { get; set; }
+        public string DirCompletaPuntoEntRec { get; set; }
         public string CallePuntosEntRec { get; set; }
         public string NoExtPuntosEntRec { get; set; }
         public string NoIntPuntosEntRec { get; set; }

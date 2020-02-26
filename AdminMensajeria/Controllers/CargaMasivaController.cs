@@ -1,8 +1,9 @@
 ﻿using AdminMensajeria.Models;
 using ExcelDataReader;
 using System;
+using System.Net;
+using Newtonsoft.Json;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -12,13 +13,35 @@ using System.Web;
 using System.Web.Mvc;
 using ZXing;
 using ZXing.Common;
+using RestSharp;
+
 
 namespace AdminMensajeria.Controllers
 {
+ 
 
     public class CargaMasivaController : Controller
     {
         private MensajeriaEntities db = new MensajeriaEntities();
+
+
+
+
+    
+
+
+
+        public ActionResult DesdeApi()
+        {
+           
+
+
+            return View();
+
+        }
+
+
+
 
         // GET: CargaMasiva
         public ActionResult Index()
@@ -60,7 +83,7 @@ namespace AdminMensajeria.Controllers
         {
             data = data.OrderBy(c => c).ToArray();
             ArrayList idList = new ArrayList();
-            
+
             foreach (var item in data)
             {
                 idList.Add(item);
@@ -72,10 +95,12 @@ namespace AdminMensajeria.Controllers
             return Json(JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Test()
-        {
-            return View();
-        }
+
+
+
+
+
+
 
 
         public JsonResult CargarTabla(HttpPostedFileWrapper upload)

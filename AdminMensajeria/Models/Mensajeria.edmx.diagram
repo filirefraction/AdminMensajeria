@@ -33,15 +33,15 @@
         <AssociationConnector Association="MensajeriaModel.FK_OPE_CLIENTPROVEE_OPE_CATEGORIA" />
         <AssociationConnector Association="MensajeriaModel.FK_OPE_PUNTOENTREC_OPE_CLIENTPROVEE" />
         <EntityTypeShape EntityType="MensajeriaModel.OPE_SOLICITUDPRODUCTO" Width="1.5" PointX="16.5" PointY="7.75" />
-        <EntityTypeShape EntityType="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC" Width="1.5" PointX="16.5" PointY="12" />
-        <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_GEN_COLONIA" />
         <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD" />
-        <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA" />
-        <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_PUNTOENTREC" />
         <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_OPE_SOLICITUD" />
-        <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD" />
         <EntityTypeShape EntityType="MensajeriaModel.VIEW_REPORTE" Width="1.5" PointX="0.75" PointY="12.75" />
         <EntityTypeShape EntityType="MensajeriaModel.GEN_IMAGEN" Width="1.5" PointX="3.375" PointY="0.75" />
+        <EntityTypeShape EntityType="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC" Width="1.5" PointX="16.5" PointY="11.875" />
+        <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_GEN_COLONIA" />
+        <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA" />
+        <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_PUNTOENTREC" />
+        <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

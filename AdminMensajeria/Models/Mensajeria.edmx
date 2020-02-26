@@ -211,6 +211,7 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.GEN_IMAGEN' no tiene
           <Property Name="DestinatarioPuntoEntRec" Type="varchar" MaxLength="200" />
           <Property Name="DescripcionPuntoEntRec" Type="varchar" MaxLength="100" />
           <Property Name="ContactoPuntoEntRec" Type="varchar" MaxLength="100" />
+          <Property Name="DirCompletaPuntoEntRec" Type="varchar" MaxLength="2000" />
           <Property Name="CallePuntosEntRec" Type="varchar" MaxLength="100" />
           <Property Name="NoExtPuntosEntRec" Type="varchar" MaxLength="20" />
           <Property Name="NoIntPuntosEntRec" Type="varchar" MaxLength="100" />
@@ -714,14 +715,20 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
             <End Role="OPE_PUNTOENTREC" EntitySet="OPE_PUNTOENTREC" />
           </AssociationSet>
           <EntitySet Name="OPE_SOLICITUDPRODUCTO" EntityType="MensajeriaModel.OPE_SOLICITUDPRODUCTO" />
+          <AssociationSet Name="FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD" Association="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD">
+            <End Role="GEN_UNIDAD" EntitySet="GEN_UNIDAD" />
+            <End Role="OPE_SOLICITUDPRODUCTO" EntitySet="OPE_SOLICITUDPRODUCTO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OPE_SOLICITUDPRODUCTO_OPE_SOLICITUD" Association="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_OPE_SOLICITUD">
+            <End Role="OPE_SOLICITUD" EntitySet="OPE_SOLICITUD" />
+            <End Role="OPE_SOLICITUDPRODUCTO" EntitySet="OPE_SOLICITUDPRODUCTO" />
+          </AssociationSet>
+          <EntitySet Name="VIEW_REPORTE" EntityType="MensajeriaModel.VIEW_REPORTE" />
+          <EntitySet Name="GEN_IMAGEN" EntityType="MensajeriaModel.GEN_IMAGEN" />
           <EntitySet Name="OPE_SOLICITUDPUNTOSENTREC" EntityType="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC" />
           <AssociationSet Name="FK_OPE_SOLICITUDPUNTOSENTREC_GEN_COLONIA" Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_GEN_COLONIA">
             <End Role="GEN_COLONIA" EntitySet="GEN_COLONIA" />
             <End Role="OPE_SOLICITUDPUNTOSENTREC" EntitySet="OPE_SOLICITUDPUNTOSENTREC" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD" Association="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD">
-            <End Role="GEN_UNIDAD" EntitySet="GEN_UNIDAD" />
-            <End Role="OPE_SOLICITUDPRODUCTO" EntitySet="OPE_SOLICITUDPRODUCTO" />
           </AssociationSet>
           <AssociationSet Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA" Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA">
             <End Role="OPE_GUIA" EntitySet="OPE_GUIA" />
@@ -731,16 +738,10 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
             <End Role="OPE_PUNTOENTREC" EntitySet="OPE_PUNTOENTREC" />
             <End Role="OPE_SOLICITUDPUNTOSENTREC" EntitySet="OPE_SOLICITUDPUNTOSENTREC" />
           </AssociationSet>
-          <AssociationSet Name="FK_OPE_SOLICITUDPRODUCTO_OPE_SOLICITUD" Association="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_OPE_SOLICITUD">
-            <End Role="OPE_SOLICITUD" EntitySet="OPE_SOLICITUD" />
-            <End Role="OPE_SOLICITUDPRODUCTO" EntitySet="OPE_SOLICITUDPRODUCTO" />
-          </AssociationSet>
           <AssociationSet Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD" Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD">
             <End Role="OPE_SOLICITUD" EntitySet="OPE_SOLICITUD" />
             <End Role="OPE_SOLICITUDPUNTOSENTREC" EntitySet="OPE_SOLICITUDPUNTOSENTREC" />
           </AssociationSet>
-          <EntitySet Name="VIEW_REPORTE" EntityType="MensajeriaModel.VIEW_REPORTE" />
-          <EntitySet Name="GEN_IMAGEN" EntityType="MensajeriaModel.GEN_IMAGEN" />
           </EntityContainer>
         <EntityType Name="GEN_CODIGOPOSTAL">
           <Key>
@@ -1102,57 +1103,6 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
           <NavigationProperty Name="GEN_UNIDAD" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD" FromRole="OPE_SOLICITUDPRODUCTO" ToRole="GEN_UNIDAD" />
           <NavigationProperty Name="OPE_SOLICITUD" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_OPE_SOLICITUD" FromRole="OPE_SOLICITUDPRODUCTO" ToRole="OPE_SOLICITUD" />
         </EntityType>
-        <EntityType Name="OPE_SOLICITUDPUNTOSENTREC">
-          <Key>
-            <PropertyRef Name="IdSolicitudPuntosEntRec" />
-          </Key>
-          <Property Name="IdSolicitudPuntosEntRec" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdSolicitud" Type="Int32" Nullable="false" />
-          <Property Name="IdPuntoEntRec" Type="Int32" />
-          <Property Name="IdGuia" Type="Int32" />
-          <Property Name="IdColonia" Type="Int32" />
-          <Property Name="TipoPunto" Type="Int32" Nullable="false" />
-          <Property Name="FechaProgramada" Type="DateTime" Precision="3" />
-          <Property Name="DestinatarioPuntoEntRec" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="DescripcionPuntoEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ContactoPuntoEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CallePuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="NoExtPuntosEntRec" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="NoIntPuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ReferenciaPuntosEntRec" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ColoniaPuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CodigoPostalPuntosEntRec" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="MunicipioPuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="EstadoPuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="PaisPuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ObsPuntosEntRec" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="FechaReal" Type="DateTime" Precision="3" />
-          <Property Name="NombrePuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FirmaPuntosEntRec" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="FotoPuntosEntRec" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="Latitud" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="Longitud" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="Problema" Type="Boolean" Nullable="false" />
-          <Property Name="ObsProblema" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="RefExtPuntosEntRec" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="EstatusPuntosEntRec" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="GEN_COLONIA" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_GEN_COLONIA" FromRole="OPE_SOLICITUDPUNTOSENTREC" ToRole="GEN_COLONIA" />
-          <NavigationProperty Name="OPE_GUIA" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA" FromRole="OPE_SOLICITUDPUNTOSENTREC" ToRole="OPE_GUIA" />
-          <NavigationProperty Name="OPE_PUNTOENTREC" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_PUNTOENTREC" FromRole="OPE_SOLICITUDPUNTOSENTREC" ToRole="OPE_PUNTOENTREC" />
-          <NavigationProperty Name="OPE_SOLICITUD" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD" FromRole="OPE_SOLICITUDPUNTOSENTREC" ToRole="OPE_SOLICITUD" />
-        </EntityType>
-        <Association Name="FK_OPE_SOLICITUDPUNTOSENTREC_GEN_COLONIA">
-          <End Type="MensajeriaModel.GEN_COLONIA" Role="GEN_COLONIA" Multiplicity="0..1" />
-          <End Type="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC" Role="OPE_SOLICITUDPUNTOSENTREC" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GEN_COLONIA">
-              <PropertyRef Name="IdColonia" />
-            </Principal>
-            <Dependent Role="OPE_SOLICITUDPUNTOSENTREC">
-              <PropertyRef Name="IdColonia" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD">
           <End Type="MensajeriaModel.GEN_UNIDAD" Role="GEN_UNIDAD" Multiplicity="0..1" />
           <End Type="MensajeriaModel.OPE_SOLICITUDPRODUCTO" Role="OPE_SOLICITUDPRODUCTO" Multiplicity="*" />
@@ -1165,30 +1115,6 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA">
-          <End Type="MensajeriaModel.OPE_GUIA" Role="OPE_GUIA" Multiplicity="0..1" />
-          <End Type="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC" Role="OPE_SOLICITUDPUNTOSENTREC" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OPE_GUIA">
-              <PropertyRef Name="IdGuia" />
-            </Principal>
-            <Dependent Role="OPE_SOLICITUDPUNTOSENTREC">
-              <PropertyRef Name="IdGuia" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_PUNTOENTREC">
-          <End Type="MensajeriaModel.OPE_PUNTOENTREC" Role="OPE_PUNTOENTREC" Multiplicity="0..1" />
-          <End Type="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC" Role="OPE_SOLICITUDPUNTOSENTREC" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OPE_PUNTOENTREC">
-              <PropertyRef Name="IdPuntoEntRec" />
-            </Principal>
-            <Dependent Role="OPE_SOLICITUDPUNTOSENTREC">
-              <PropertyRef Name="IdPuntoEntRec" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_OPE_SOLICITUDPRODUCTO_OPE_SOLICITUD">
           <End Type="MensajeriaModel.OPE_SOLICITUD" Role="OPE_SOLICITUD" Multiplicity="1" />
           <End Type="MensajeriaModel.OPE_SOLICITUDPRODUCTO" Role="OPE_SOLICITUDPRODUCTO" Multiplicity="*" />
@@ -1197,18 +1123,6 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
               <PropertyRef Name="IdSolicitud" />
             </Principal>
             <Dependent Role="OPE_SOLICITUDPRODUCTO">
-              <PropertyRef Name="IdSolicitud" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD">
-          <End Type="MensajeriaModel.OPE_SOLICITUD" Role="OPE_SOLICITUD" Multiplicity="1" />
-          <End Type="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC" Role="OPE_SOLICITUDPUNTOSENTREC" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OPE_SOLICITUD">
-              <PropertyRef Name="IdSolicitud" />
-            </Principal>
-            <Dependent Role="OPE_SOLICITUDPUNTOSENTREC">
               <PropertyRef Name="IdSolicitud" />
             </Dependent>
           </ReferentialConstraint>
@@ -1267,6 +1181,94 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
           </Key>
           <Property Name="Imagen" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="OPE_SOLICITUDPUNTOSENTREC">
+          <Key>
+            <PropertyRef Name="IdSolicitudPuntosEntRec" />
+          </Key>
+          <Property Name="IdSolicitudPuntosEntRec" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdSolicitud" Type="Int32" Nullable="false" />
+          <Property Name="IdPuntoEntRec" Type="Int32" />
+          <Property Name="IdGuia" Type="Int32" />
+          <Property Name="IdColonia" Type="Int32" />
+          <Property Name="TipoPunto" Type="Int32" Nullable="false" />
+          <Property Name="FechaProgramada" Type="DateTime" Precision="3" />
+          <Property Name="DestinatarioPuntoEntRec" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DescripcionPuntoEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ContactoPuntoEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DirCompletaPuntoEntRec" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="CallePuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="NoExtPuntosEntRec" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="NoIntPuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ReferenciaPuntosEntRec" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ColoniaPuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoPostalPuntosEntRec" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="MunicipioPuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="EstadoPuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PaisPuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ObsPuntosEntRec" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="FechaReal" Type="DateTime" Precision="3" />
+          <Property Name="NombrePuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FirmaPuntosEntRec" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="FotoPuntosEntRec" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Latitud" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Longitud" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Problema" Type="Boolean" Nullable="false" />
+          <Property Name="ObsProblema" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="RefExtPuntosEntRec" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EstatusPuntosEntRec" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="GEN_COLONIA" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_GEN_COLONIA" FromRole="OPE_SOLICITUDPUNTOSENTREC" ToRole="GEN_COLONIA" />
+          <NavigationProperty Name="OPE_GUIA" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA" FromRole="OPE_SOLICITUDPUNTOSENTREC" ToRole="OPE_GUIA" />
+          <NavigationProperty Name="OPE_PUNTOENTREC" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_PUNTOENTREC" FromRole="OPE_SOLICITUDPUNTOSENTREC" ToRole="OPE_PUNTOENTREC" />
+          <NavigationProperty Name="OPE_SOLICITUD" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD" FromRole="OPE_SOLICITUDPUNTOSENTREC" ToRole="OPE_SOLICITUD" />
+        </EntityType>
+        <Association Name="FK_OPE_SOLICITUDPUNTOSENTREC_GEN_COLONIA">
+          <End Type="MensajeriaModel.GEN_COLONIA" Role="GEN_COLONIA" Multiplicity="0..1" />
+          <End Type="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC" Role="OPE_SOLICITUDPUNTOSENTREC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_COLONIA">
+              <PropertyRef Name="IdColonia" />
+            </Principal>
+            <Dependent Role="OPE_SOLICITUDPUNTOSENTREC">
+              <PropertyRef Name="IdColonia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA">
+          <End Type="MensajeriaModel.OPE_GUIA" Role="OPE_GUIA" Multiplicity="0..1" />
+          <End Type="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC" Role="OPE_SOLICITUDPUNTOSENTREC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPE_GUIA">
+              <PropertyRef Name="IdGuia" />
+            </Principal>
+            <Dependent Role="OPE_SOLICITUDPUNTOSENTREC">
+              <PropertyRef Name="IdGuia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_PUNTOENTREC">
+          <End Type="MensajeriaModel.OPE_PUNTOENTREC" Role="OPE_PUNTOENTREC" Multiplicity="0..1" />
+          <End Type="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC" Role="OPE_SOLICITUDPUNTOSENTREC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPE_PUNTOENTREC">
+              <PropertyRef Name="IdPuntoEntRec" />
+            </Principal>
+            <Dependent Role="OPE_SOLICITUDPUNTOSENTREC">
+              <PropertyRef Name="IdPuntoEntRec" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD">
+          <End Type="MensajeriaModel.OPE_SOLICITUD" Role="OPE_SOLICITUD" Multiplicity="1" />
+          <End Type="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC" Role="OPE_SOLICITUDPUNTOSENTREC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPE_SOLICITUD">
+              <PropertyRef Name="IdSolicitud" />
+            </Principal>
+            <Dependent Role="OPE_SOLICITUDPUNTOSENTREC">
+              <PropertyRef Name="IdSolicitud" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1473,42 +1475,6 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="OPE_SOLICITUDPUNTOSENTREC">
-            <EntityTypeMapping TypeName="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC">
-              <MappingFragment StoreEntitySet="OPE_SOLICITUDPUNTOSENTREC">
-                <ScalarProperty Name="EstatusPuntosEntRec" ColumnName="EstatusPuntosEntRec" />
-                <ScalarProperty Name="RefExtPuntosEntRec" ColumnName="RefExtPuntosEntRec" />
-                <ScalarProperty Name="ObsProblema" ColumnName="ObsProblema" />
-                <ScalarProperty Name="Problema" ColumnName="Problema" />
-                <ScalarProperty Name="Longitud" ColumnName="Longitud" />
-                <ScalarProperty Name="Latitud" ColumnName="Latitud" />
-                <ScalarProperty Name="FotoPuntosEntRec" ColumnName="FotoPuntosEntRec" />
-                <ScalarProperty Name="FirmaPuntosEntRec" ColumnName="FirmaPuntosEntRec" />
-                <ScalarProperty Name="NombrePuntosEntRec" ColumnName="NombrePuntosEntRec" />
-                <ScalarProperty Name="FechaReal" ColumnName="FechaReal" />
-                <ScalarProperty Name="ObsPuntosEntRec" ColumnName="ObsPuntosEntRec" />
-                <ScalarProperty Name="PaisPuntosEntRec" ColumnName="PaisPuntosEntRec" />
-                <ScalarProperty Name="EstadoPuntosEntRec" ColumnName="EstadoPuntosEntRec" />
-                <ScalarProperty Name="MunicipioPuntosEntRec" ColumnName="MunicipioPuntosEntRec" />
-                <ScalarProperty Name="CodigoPostalPuntosEntRec" ColumnName="CodigoPostalPuntosEntRec" />
-                <ScalarProperty Name="ColoniaPuntosEntRec" ColumnName="ColoniaPuntosEntRec" />
-                <ScalarProperty Name="ReferenciaPuntosEntRec" ColumnName="ReferenciaPuntosEntRec" />
-                <ScalarProperty Name="NoIntPuntosEntRec" ColumnName="NoIntPuntosEntRec" />
-                <ScalarProperty Name="NoExtPuntosEntRec" ColumnName="NoExtPuntosEntRec" />
-                <ScalarProperty Name="CallePuntosEntRec" ColumnName="CallePuntosEntRec" />
-                <ScalarProperty Name="ContactoPuntoEntRec" ColumnName="ContactoPuntoEntRec" />
-                <ScalarProperty Name="DescripcionPuntoEntRec" ColumnName="DescripcionPuntoEntRec" />
-                <ScalarProperty Name="DestinatarioPuntoEntRec" ColumnName="DestinatarioPuntoEntRec" />
-                <ScalarProperty Name="FechaProgramada" ColumnName="FechaProgramada" />
-                <ScalarProperty Name="TipoPunto" ColumnName="TipoPunto" />
-                <ScalarProperty Name="IdColonia" ColumnName="IdColonia" />
-                <ScalarProperty Name="IdGuia" ColumnName="IdGuia" />
-                <ScalarProperty Name="IdPuntoEntRec" ColumnName="IdPuntoEntRec" />
-                <ScalarProperty Name="IdSolicitud" ColumnName="IdSolicitud" />
-                <ScalarProperty Name="IdSolicitudPuntosEntRec" ColumnName="IdSolicitudPuntosEntRec" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="VIEW_REPORTE">
             <EntityTypeMapping TypeName="MensajeriaModel.VIEW_REPORTE">
               <MappingFragment StoreEntitySet="VIEW_REPORTE">
@@ -1562,6 +1528,43 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
             <EntityTypeMapping TypeName="MensajeriaModel.GEN_IMAGEN">
               <MappingFragment StoreEntitySet="GEN_IMAGEN">
                 <ScalarProperty Name="Imagen" ColumnName="Imagen" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OPE_SOLICITUDPUNTOSENTREC">
+            <EntityTypeMapping TypeName="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC">
+              <MappingFragment StoreEntitySet="OPE_SOLICITUDPUNTOSENTREC">
+                <ScalarProperty Name="EstatusPuntosEntRec" ColumnName="EstatusPuntosEntRec" />
+                <ScalarProperty Name="RefExtPuntosEntRec" ColumnName="RefExtPuntosEntRec" />
+                <ScalarProperty Name="ObsProblema" ColumnName="ObsProblema" />
+                <ScalarProperty Name="Problema" ColumnName="Problema" />
+                <ScalarProperty Name="Longitud" ColumnName="Longitud" />
+                <ScalarProperty Name="Latitud" ColumnName="Latitud" />
+                <ScalarProperty Name="FotoPuntosEntRec" ColumnName="FotoPuntosEntRec" />
+                <ScalarProperty Name="FirmaPuntosEntRec" ColumnName="FirmaPuntosEntRec" />
+                <ScalarProperty Name="NombrePuntosEntRec" ColumnName="NombrePuntosEntRec" />
+                <ScalarProperty Name="FechaReal" ColumnName="FechaReal" />
+                <ScalarProperty Name="ObsPuntosEntRec" ColumnName="ObsPuntosEntRec" />
+                <ScalarProperty Name="PaisPuntosEntRec" ColumnName="PaisPuntosEntRec" />
+                <ScalarProperty Name="EstadoPuntosEntRec" ColumnName="EstadoPuntosEntRec" />
+                <ScalarProperty Name="MunicipioPuntosEntRec" ColumnName="MunicipioPuntosEntRec" />
+                <ScalarProperty Name="CodigoPostalPuntosEntRec" ColumnName="CodigoPostalPuntosEntRec" />
+                <ScalarProperty Name="ColoniaPuntosEntRec" ColumnName="ColoniaPuntosEntRec" />
+                <ScalarProperty Name="ReferenciaPuntosEntRec" ColumnName="ReferenciaPuntosEntRec" />
+                <ScalarProperty Name="NoIntPuntosEntRec" ColumnName="NoIntPuntosEntRec" />
+                <ScalarProperty Name="NoExtPuntosEntRec" ColumnName="NoExtPuntosEntRec" />
+                <ScalarProperty Name="CallePuntosEntRec" ColumnName="CallePuntosEntRec" />
+                <ScalarProperty Name="DirCompletaPuntoEntRec" ColumnName="DirCompletaPuntoEntRec" />
+                <ScalarProperty Name="ContactoPuntoEntRec" ColumnName="ContactoPuntoEntRec" />
+                <ScalarProperty Name="DescripcionPuntoEntRec" ColumnName="DescripcionPuntoEntRec" />
+                <ScalarProperty Name="DestinatarioPuntoEntRec" ColumnName="DestinatarioPuntoEntRec" />
+                <ScalarProperty Name="FechaProgramada" ColumnName="FechaProgramada" />
+                <ScalarProperty Name="TipoPunto" ColumnName="TipoPunto" />
+                <ScalarProperty Name="IdColonia" ColumnName="IdColonia" />
+                <ScalarProperty Name="IdGuia" ColumnName="IdGuia" />
+                <ScalarProperty Name="IdPuntoEntRec" ColumnName="IdPuntoEntRec" />
+                <ScalarProperty Name="IdSolicitud" ColumnName="IdSolicitud" />
+                <ScalarProperty Name="IdSolicitudPuntosEntRec" ColumnName="IdSolicitudPuntosEntRec" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
