@@ -6,6 +6,8 @@
     int TipoUsu = ViewBag.tipousuario;
     DateTime Desde = ViewBag.desde;
     DateTime Hasta = ViewBag.hasta;
+    bool ctrlFolio = (from u in db.SIS_CONFIG where u.IdConfig == 1 select u.AplicaConfig).FirstOrDefault();
+
 
     var Solicitudes = (from c in db.VIEW_REPORTE
                        select c).Take(1).ToList().OrderByDescending(x => x.NoEnvio);
@@ -26,10 +28,14 @@
         <a id="ExportarReporte" class="btn btn-default btn-sm" data-toggle="tooltip" title="Exportar a Excel">
             <span class="glyphicon glyphicon-cloud-download"></span> Excel
         </a>
+
+    if (ctrlFolio)
+    {
     <table id="ReportTable" class="ui celled table compact" style="font-size:8px">
         <thead>
             <tr>
                 <th>Envío</th>
+                <th>Folio</th>
                 <th>Estatus</th>
                 <th>F. Creación</th>
                 <th>Solicitante</th>
@@ -52,20 +58,21 @@
         <tbody>
             @foreach (var item in Solicitudes)
             {
-       
+
                 <tr>
                     <td>@item.NoEnvio</td>
+                    <td>@item.Folio</td>
                     <td>
                         @switch (item.Estatus)
-                    {
-                        case 1: <p>Generada</p>; break;
-                        case 2: <p>Recibido en Mensajería</p>; break;
-                        case 3: <p>En ruta</p>; break;
-                        case 4: <p>Entregado</p>; break;
-                        case 5: <p>Cancelado</p>; break;
-                        default:
-                            break;
-                    }
+                        {
+                            case 1: <p>Generada</p>; break;
+                            case 2: <p>Recibido en Mensajería</p>; break;
+                            case 3: <p>En ruta</p>; break;
+                            case 4: <p>Entregado</p>; break;
+                            case 5: <p>Cancelado</p>; break;
+                            default:
+                                break;
+                        }
                     </td>
                     <td>@item.FechaCreacion</td>
                     <td>@item.Solicitante</td>
@@ -77,7 +84,14 @@
                     <td>@item.CalleRemitente, @item.NoExtRemitente, @item.NointRemitente, @item.ColoniaRemitente, @item.CodigoPostalRemitente, @item.MunicipioRemitente, @item.EstadoRemitente, @item.PaisRemitente, @item.ReferenciaRemitente </td>
                     <td>@item.DescripcionEntrega</td>
                     <td>@item.DestinatarioEntrega</td>
+                    @if (item.DirecionCompletaEntrega != null)
+                    {
+                        <td>@item.DirecionCompletaEntrega</td>
+                    }
+                    else
+                    {
                     <td>@item.CalleEntrega, @item.NoExtEntrega, @item.NointEntrega, @item.ColoniaEntrega, @item.CodigoPostalEntrega, @item.MunicipioEntrega, @item.EstadoEntrega, @item.PaisEntrega, @item.ReferenciaEntrega</td>
+                    }
                     <td>@item.FechaEntregaEstimada</td>
                     <td>@item.FechaAsignada</td>
                     <td>@item.MensajeroAsignado</td>
@@ -87,7 +101,78 @@
             }
         </tbody>
     </table>
+    }
+    else
+    {
+        <table id="ReportTable" class="ui celled table compact" style="font-size:8px">
+            <thead>
+                <tr>
+                    <th>Envío</th>
+                    <th>Estatus</th>
+                    <th>F. Creación</th>
+                    <th>Solicitante</th>
+                    <th>Descripción</th>
+                    <th>R.M. Fecha</th>
+                    <th>R.M. Receptor</th>
+                    <th class="col-md-1">R. Descripción</th>
+                    <th>R. Contacto</th>
+                    <th>R. Dirección</th>
+                    <th>E. Descripción</th>
+                    <th>E. Destinatario</th>
+                    <th>E. Dirección</th>
+                    <th>E.F. Estimada</th>
+                    <th>E.F. Asignada</th>
+                    <th>E. Mensajero</th>
+                    <th>E. Referencia</th>
+                    <th>E.F. Entrega</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Solicitudes)
+                {
 
+                    <tr>
+                        <td>@item.NoEnvio</td>
+                        <td>
+                            @switch (item.Estatus)
+                        {
+                            case 1: <p>Generada</p>; break;
+                            case 2: <p>Recibido en Mensajería</p>; break;
+                            case 3: <p>En ruta</p>; break;
+                            case 4: <p>Entregado</p>; break;
+                            case 5: <p>Cancelado</p>; break;
+                            default:
+                                break;
+                        }
+                        </td>
+                        <td>@item.FechaCreacion</td>
+                        <td>@item.Solicitante</td>
+                        <td>@item.Producto</td>
+                        <td>@item.FechaRecepcion</td>
+                        <td>@item.Receptor</td>
+                        <td>@item.DescripcionRemitente</td>
+                        <td>@item.ContactoRemitente</td>
+                        <td>@item.CalleRemitente, @item.NoExtRemitente, @item.NointRemitente, @item.ColoniaRemitente, @item.CodigoPostalRemitente, @item.MunicipioRemitente, @item.EstadoRemitente, @item.PaisRemitente, @item.ReferenciaRemitente </td>
+                        <td>@item.DescripcionEntrega</td>
+                        <td>@item.DestinatarioEntrega</td>
+                        @if (item.DirecionCompletaEntrega != null)
+                        {
+                            <td>@item.DirecionCompletaEntrega</td>
+                        }
+                        else
+                        {
+                            <td>@item.CalleEntrega, @item.NoExtEntrega, @item.NointEntrega, @item.ColoniaEntrega, @item.CodigoPostalEntrega, @item.MunicipioEntrega, @item.EstadoEntrega, @item.PaisEntrega, @item.ReferenciaEntrega</td>
+                        }
+                        <td>@item.FechaEntregaEstimada</td>
+                        <td>@item.FechaAsignada</td>
+                        <td>@item.MensajeroAsignado</td>
+                        <td>@item.ReferenciaExterna</td>
+                        <td>@item.FechaEntrega</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
     <script>
         $("#ExportarReporte").click(function () {
             var FechaDesde = $("#FechaDesde").val();

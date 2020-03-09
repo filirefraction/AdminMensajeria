@@ -1,4 +1,7 @@
 ﻿
+@{
+    int ctrlFolio = ViewBag.ctrlFolio;
+}
 <div class="form-horizontal">
     <div class="form-group row">
         <div class="col-md-2">
@@ -39,6 +42,17 @@
 
 <script>
     $(document).ready(function () {
+        var ctlFolio = '@ctrlFolio';
+
+        if (ctlFolio == 1) {
+            $('#NoSeguimientoRec2').attr('type', 'text');
+            $('#NoSeguimientoRec2').attr('placeholder', 'Indique Folio');
+        }
+        else {
+            $('#NoSeguimientoRec2').attr('type', 'number');
+            $('#NoSeguimientoRec2').attr('placeholder', 'Indique # de Envío');
+        }
+
         $("#NoSeguimientoRec2").focus();
 
         $('#NoSeguimientoRec2').keyup(function () {
@@ -71,7 +85,8 @@
                     data: JSON.stringify({
                         "id" : NoSeguimientoRec2, 
                         "IdGuia" : IdGuia,
-                        "Referencia" : Referencia
+                        "Referencia" : Referencia,
+                        'ctlFolio' : ctlFolio
                     }),
                     success: function (data) {
                         if (data.Result == true) {

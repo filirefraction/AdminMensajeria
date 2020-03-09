@@ -1,181 +1,228 @@
-﻿
-@{
+﻿@using (AdminMensajeria.Models.MensajeriaEntities db = new AdminMensajeria.Models.MensajeriaEntities())
+{
     ViewBag.Title = "Inicio";
-}
-
-@{
     int IdUsuario = ViewBag.idusuario;
     int TipoUsuario = ViewBag.tipousuario;
     int CambiarPass = ViewBag.cambiar;
-}
+    int ctrlFolio = ViewBag.ctrlFolio;
 
-<div class="row">
-    <div class="text-center">
-        <div class="row msgRecib">
-            <h2>Bienvenido(a) <span class="glyphicon glyphicon-user" aria-hidden="true" style="color:#00368e;"></span></h2>
-            <h4>¿Qué desea hacer?</h4>
-        </div>
 
-        @switch (TipoUsuario)
-        {
-            case 1:
-                <div class="row">
-                    <div class="text-center">
-                        <div class="col-md-12">
-                            <div class="col-md-1" style="margin-left: 68px;" ></div>
-                            <div class="col-md-10">
-                                <div class="row">
-                                    <a href="@Url.Action("Create", "Solicitud")" data-toggle="tooltip" title="Nuevo Envío"><div class="btn btn-primary col-md-6 bigBtnRep">NUEVO<br />ENVÍO</div></a>
-                                    <a href="@Url.Action("Index", "Solicitud")" data-toggle="tooltip" title="Historial de Envíos"><div class="btn btn-primary col-md-6 bigBtnRep">VER HISTORIAL<br />DE ENVÍOS</div></a>
-                                    <div onclick="RecibeProducto()" data-toggle="tooltip" title="Recibir Productos"><div class="btn btn-primary col-md-6 bigBtnRep">RECIBIR<br />PRODUCTOS</div></div>
-                                    <a href="@Url.Action("Index", "Asignacion")" data-toggle="tooltip" title="Historial de Envíos"><div class="btn btn-primary col-md-6 bigBtnRep">ASIGNAR<br /> ENVÍOS</div></a>
-                                    <a href="@Url.Action("Index", "CargaMasiva")" data-toggle="tooltip" title="carga Masiva"><div class="btn btn-primary col-md-6 bigBtnRep">CARGA <br /> MASIVA</div></a>
-                                </div>
-                                <div class="row">
-                                    <div class="btn btn-primary col-md-6 bigBtnRep" style="padding-top:30px !important;">
-                                        <div class="field">
-                                            <input class="form-control input-sm" id="NoSeguimiento" name="NoSeguimiento" type="number" placeholder="Indique # de Envío" />
-                                            <label for="NoSeguimiento">RASTREAR ENVÍO</label>
+
+    <div class="row">
+        <div class="text-center">
+            <div class="row msgRecib">
+                <h2>Bienvenido(a) <span class="glyphicon glyphicon-user" aria-hidden="true" style="color:#00368e;"></span></h2>
+                <h4>¿Qué desea hacer?</h4>
+            </div>
+
+            @switch (TipoUsuario)
+            {
+                case 1:
+                    <div class="row">
+                        <div class="text-center">
+                            <div class="col-md-12">
+                                <div class="col-md-1" style="margin-left: 68px;"></div>
+                                <div class="col-md-10">
+                                    <div class="row">
+                                        <a href="@Url.Action("Create", "Solicitud")" data-toggle="tooltip" title="Nuevo Envío"><div class="btn btn-primary col-md-6 bigBtnRep">NUEVO<br />ENVÍO</div></a>
+                                        <a href="@Url.Action("Index", "Solicitud")" data-toggle="tooltip" title="Historial de Envíos"><div class="btn btn-primary col-md-6 bigBtnRep">VER HISTORIAL<br />DE ENVÍOS</div></a>
+                                        <div onclick="RecibeProducto()" data-toggle="tooltip" title="Recibir Productos"><div class="btn btn-primary col-md-6 bigBtnRep">RECIBIR<br />PRODUCTOS</div></div>
+                                        <a href="@Url.Action("Index", "Asignacion")" data-toggle="tooltip" title="Historial de Envíos"><div class="btn btn-primary col-md-6 bigBtnRep">ASIGNAR<br /> ENVÍOS</div></a>
+
+                                        <div class="btn btn-primary col-md-6 bigBtnRep" style="padding-top:30px !important;">
+                                            <spam>IMPORTAR DESDE: </spam>
+                                            <br />
+                                            <a href="@Url.Action("Index", "CargaMasiva")" data-toggle="tooltip" title="carga Masiva" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-list-alt"></span> Excel </a>
+                                            <br />
+                                            <br />
+                                            <a href="@Url.Action("Index", "WebApi")" data-toggle="tooltip" title="carga Masiva" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-cloud-download"></span>&nbsp;  API &nbsp; </a>
+
                                         </div>
-                                        <span class="AlertaDanger" id="NoSeguimientoVal"></span>
-                                        <br />
-                                        <button id="ValidaRastreo" name="ValidaRastreo" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-search"></span> Buscar </button>
+
                                     </div>
-                                    <a href="@Url.Action("Index", "Comentarios")" data-toggle="tooltip" title="Ver Comentarios"><div class="btn btn-primary col-md-6 bigBtnRep">COMENTARIOS O <br /> SUGERENCIAS</div></a>
-                                    <a href="@Url.Action("Index", "Cliente")" data-toggle="tooltip" title="Ir a Clientes"><div class="btn btn-primary col-md-6 bigBtnRep">CLIENTES</div></a>
-                                    <a href="@Url.Action("Index", "Reporte")" data-toggle="tooltip" title="Reportes"><div class="btn btn-primary col-md-6 bigBtnRep">REPORTE</div></a>
-                                    <a href="@Url.Action("Configuracion", "Home")" data-toggle="tooltip" title="Ir a Configuración"><div class="btn btn-primary col-md-6 bigBtnRep">CONFIGURACIÓN</div></a>
+                                    <div class="row">
+                                        <div class="btn btn-primary col-md-6 bigBtnRep" style="padding-top:30px !important;">
+                                            <div class="field">
+                                                <input class="form-control input-sm" id="NoSeguimiento" name="NoSeguimiento" />
+                                                <label for="NoSeguimiento">RASTREAR ENVÍO</label>
+                                            </div>
+                                            <span class="AlertaDanger" id="NoSeguimientoVal"></span>
+                                            <br />
+                                            <button id="ValidaRastreo" name="ValidaRastreo" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-search"></span> Buscar </button>
+                                        </div>
+                                        <a href="@Url.Action("Index", "Comentarios")" data-toggle="tooltip" title="Ver Comentarios"><div class="btn btn-primary col-md-6 bigBtnRep">COMENTARIOS O <br /> SUGERENCIAS</div></a>
+                                        <a href="@Url.Action("Index", "Cliente")" data-toggle="tooltip" title="Ir a Clientes"><div class="btn btn-primary col-md-6 bigBtnRep">CLIENTES</div></a>
+                                        <a href="@Url.Action("Index", "Reporte")" data-toggle="tooltip" title="Reportes"><div class="btn btn-primary col-md-6 bigBtnRep">REPORTE</div></a>
+                                        <a href="@Url.Action("Configuracion", "Home")" data-toggle="tooltip" title="Ir a Configuración"><div class="btn btn-primary col-md-6 bigBtnRep">CONFIGURACIÓN</div></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>;
-                break;
-            case 3:
-                <div class="col-md-12">
-                    <div class="col-md-3" style="margin-left: 35px;"></div>
-                    <div class="col-md-6">
-                        <div class="row">
-                            <a href="@Url.Action("Create", "Solicitud")" data-toggle="tooltip" title="Nuevo Envío"><div class="btn btn-primary col-md-6 bigBtnRep">NUEVO<br />ENVÍO</div></a>
-                            <a href="@Url.Action("Index", "Solicitud")" data-toggle="tooltip" title="Historial de Envíos"><div class="btn btn-primary col-md-6 bigBtnRep">VER HISTORIAL<br />DE ENVÍOS</div></a>
-                            <a href="@Url.Action("Index", "CargaMasiva")" data-toggle="tooltip" title="carga Masiva"><div class="btn btn-primary col-md-6 bigBtnRep">CARGA <br /> MASIVA</div></a>
-                        </div>
-                        <div class="row">
-                            <div class="btn btn-primary col-md-6 bigBtnRep" style="padding-top:30px !important;">
-                                <div class="field">
-                                    <input class="form-control input-sm" id="NoSeguimiento" name="NoSeguimiento" type="number" placeholder="Indique # de Envío" />
-                                    <label for="NoSeguimiento">RASTREAR ENVÍO</label>
-                                </div>
-                                <span class="AlertaDanger" id="NoSeguimientoVal"></span>
-                                <br />
-                                <button id="ValidaRastreo" name="ValidaRastreo" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-search"></span> Buscar </button>
+                    </div>;
+                    break;
+                case 3:
+                    <div class="col-md-12">
+                        <div class="col-md-3" style="margin-left: 35px;"></div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <a href="@Url.Action("Create", "Solicitud")" data-toggle="tooltip" title="Nuevo Envío"><div class="btn btn-primary col-md-6 bigBtnRep">NUEVO<br />ENVÍO</div></a>
+                                <a href="@Url.Action("Index", "Solicitud")" data-toggle="tooltip" title="Historial de Envíos"><div class="btn btn-primary col-md-6 bigBtnRep">VER HISTORIAL<br />DE ENVÍOS</div></a>
+                                <a href="@Url.Action("Index", "CargaMasiva")" data-toggle="tooltip" title="carga Masiva"><div class="btn btn-primary col-md-6 bigBtnRep">CARGA <br /> MASIVA</div></a>
                             </div>
-                            <a href="@Url.Action("Index", "Comentarios")" data-toggle="tooltip" title="Ver Comentarios"><div class="btn btn-primary col-md-6 bigBtnRep">COMENTARIOS O <br /> SUGERENCIAS</div></a>
-                            <a href="@Url.Action("Index", "Reporte")" data-toggle="tooltip" title="Reportes"><div class="btn btn-primary col-md-6 bigBtnRep">REPORTE</div></a>
-                        </div>
-                    </div>
-                    <div class="col-md-3"></div>
-                </div>;
-                break;
-            default:
-                <div class="col-md-12">
-                    <div class="col-md-4" style="margin-left: 25px;"></div>
-                    <div class="col-md-4">
-                        <div class="row">
-                            <a href="@Url.Action("Create", "Solicitud")" data-toggle="tooltip" title="Nuevo Envío"><div class="btn btn-primary col-md-6 bigBtnRep">NUEVO<br />ENVÍO</div></a>
-                            <a href="@Url.Action("Index", "Solicitud")" data-toggle="tooltip" title="Historial de Envíos"><div class="btn btn-primary col-md-6 bigBtnRep">VER HISTORIAL<br />DE ENVÍOS</div></a>
-                         </div>
-                        <div class="row">
-                            <div class="btn btn-primary col-md-6 bigBtnRep" style="padding-top:30px !important;">
-                                <div class="field">
-                                    <input class="form-control input-sm" id="NoSeguimiento" name="NoSeguimiento" type="number" placeholder="Indique # de Envío" />
-                                    <label for="NoSeguimiento">RASTREAR ENVÍO</label>
+                            <div class="row">
+                                <div class="btn btn-primary col-md-6 bigBtnRep" style="padding-top:30px !important;">
+                                    <div class="field">
+                                        <input class="form-control input-sm" id="NoSeguimiento" name="NoSeguimiento" />
+                                        <label for="NoSeguimiento">RASTREAR ENVÍO</label>
+                                    </div>
+                                    <span class="AlertaDanger" id="NoSeguimientoVal"></span>
+                                    <br />
+                                    <button id="ValidaRastreo" name="ValidaRastreo" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-search"></span> Buscar </button>
                                 </div>
-                                <span class="AlertaDanger" id="NoSeguimientoVal"></span>
-                                <br />
-                                <button id="ValidaRastreo" name="ValidaRastreo" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-search"></span> Buscar </button>
+                                <a href="@Url.Action("Index", "Comentarios")" data-toggle="tooltip" title="Ver Comentarios"><div class="btn btn-primary col-md-6 bigBtnRep">COMENTARIOS O <br /> SUGERENCIAS</div></a>
+                                <a href="@Url.Action("Index", "Reporte")" data-toggle="tooltip" title="Reportes"><div class="btn btn-primary col-md-6 bigBtnRep">REPORTE</div></a>
                             </div>
+                        </div>
+                        <div class="col-md-3"></div>
+                    </div>;
+                    break;
+                default:
+                    <div class="col-md-12">
+                        <div class="col-md-4" style="margin-left: 25px;"></div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <a href="@Url.Action("Create", "Solicitud")" data-toggle="tooltip" title="Nuevo Envío"><div class="btn btn-primary col-md-6 bigBtnRep">NUEVO<br />ENVÍO</div></a>
+                                <a href="@Url.Action("Index", "Solicitud")" data-toggle="tooltip" title="Historial de Envíos"><div class="btn btn-primary col-md-6 bigBtnRep">VER HISTORIAL<br />DE ENVÍOS</div></a>
+                            </div>
+                            <div class="row">
+                                <div class="btn btn-primary col-md-6 bigBtnRep" style="padding-top:30px !important;">
+                                    <div class="field">
+                                        <input class="form-control input-sm" id="NoSeguimiento" name="NoSeguimiento"/>
+                                        <label for="NoSeguimiento">RASTREAR ENVÍO</label>
+                                    </div>
+                                    <span class="AlertaDanger" id="NoSeguimientoVal"></span>
+                                    <br />
+                                    <button id="ValidaRastreo" name="ValidaRastreo" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-search"></span> Buscar </button>
+                                </div>
 
-                            <a href="@Url.Action("Index", "Comentarios")" data-toggle="tooltip" title="Ver Comentarios"><div class="btn btn-primary col-md-6 bigBtnRep">COMENTARIOS O <br /> SUGERENCIAS</div></a>
+                                <a href="@Url.Action("Index", "Comentarios")" data-toggle="tooltip" title="Ver Comentarios"><div class="btn btn-primary col-md-6 bigBtnRep">COMENTARIOS O <br /> SUGERENCIAS</div></a>
+                            </div>
+                            <div class="row">
+                                <a href="@Url.Action("Index", "Reporte")" data-toggle="tooltip" title="Reportes"><div class="btn btn-primary col-md-6 bigBtnRep">REPORTE</div></a>
+                            </div>
                         </div>
-                        <div class="row">
-                            <a href="@Url.Action("Index", "Reporte")" data-toggle="tooltip" title="Reportes"><div class="btn btn-primary col-md-6 bigBtnRep">REPORTE</div></a>
-                        </div>
-                    </div>
-                    <div class="col-md-4"></div>
-                </div>;
-                break;
-        }
+                        <div class="col-md-4"></div>
+                    </div>;
+                    break;
+            }
 
+        </div>
     </div>
-</div>
 
 
-<script>
-    $(document).ready(function () {
+    <script>
+        $(document).ready(function () {
+            var ctlFolio = '@ctrlFolio';
 
-        if (@CambiarPass == 1) {
+            if (@CambiarPass == 1) {
                 $("#OperTitle").html('');
                 $("#OperTitle").append('Por Favor Cambie Su Contraseña')
                 $("#OperBody").html('');
                 $("#OperBody").load('@Url.Action("Cambiar", "Home")' + '/' + @IdUsuario);
                 $('#OperModal').modal('show');
+            }
+
+            if (ctlFolio == 1) {
+                $('#NoSeguimiento').attr('type', 'text');
+                $('#NoSeguimiento').attr('placeholder', 'Indique Folio');
+            }
+            else{
+                $('#NoSeguimiento').attr('type', 'number');
+                $('#NoSeguimiento').attr('placeholder', 'Indique # de Envío');
+            }
+
+            $('#NoSeguimiento').keyup(function () {
+                $('#NoSeguimientoVal').html('');
+            });
+
+            ///////////////////////////////////////////////////////////////
+            $("#ValidaRastreo").click(function () {
+                var NoSeguimiento = $('#NoSeguimiento').val();
+
+                //////////////////////
+                if (NoSeguimiento.length == 0) {
+                    $("#NoSeguimientoVal").html('');
+                    $("#NoSeguimientoVal").append('Campo es Obligatorio');
+                }
+
+                if (NoSeguimiento != 0) {
+
+                    if (ctlFolio == 1) {
+                        $.ajax({
+                            url: '@Url.Action("ExisteFolio", "Home")' + '/' + NoSeguimiento,
+                            type: "POST",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (data) {
+                                if (data.Result == true) {
+                                    $("#OperTitle").html('');
+                                    $("#OperTitle").append('Información de Envío')
+                                    $("#OperBody").html('');
+                                    $("#OperBody").load('@Url.Action("Rastreo", "Solicitud")' + '?id=' + NoSeguimiento + '&ctlFolio=' + ctlFolio);
+                                    $('#OperModal').modal('show');
+                                }
+                                else {
+                                    $("#ErrorMSG").html('');
+                                    $("#ErrorMSG").append('No existe el número de envío');
+                                    $('#ModalErrorMSG').modal('show')
+                                }
+                            },
+                            error: function () {
+                                console.log("No pudo acceder al Metodo");
+                            }
+                        });
+                    }
+                    else{
+                        $.ajax({
+                            url: '@Url.Action("ExisteEnvio", "Home")' + '/' + NoSeguimiento,
+                            type: "POST",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (data) {
+                                if (data.Result == true) {
+                                    $("#OperTitle").html('');
+                                    $("#OperTitle").append('Información de Envío')
+                                    $("#OperBody").html('');
+                                    $("#OperBody").load('@Url.Action("Rastreo", "Solicitud")' + '?id=' + NoSeguimiento + '&ctlFolio=' + ctlFolio);
+                                    $('#OperModal').modal('show');
+                                }
+                                else {
+                                    $("#ErrorMSG").html('');
+                                    $("#ErrorMSG").append('No existe el número de envío');
+                                    $('#ModalErrorMSG').modal('show')
+                                }
+                            },
+                            error: function () {
+                                console.log("No pudo acceder al Metodo");
+                            }
+                        });
+                    }
+                }
+
+            });
+
+
+        });
+
+        function RecibeProducto() {
+            $("#OperTitle").html('');
+            $("#OperTitle").append('Recepción de Productos')
+            $("#OperBody").html('');
+            $("#OperBody").load('@Url.Action("Recepcion", "Solicitud")');
+            $('#OperModal').modal('show');
         }
 
-        $('#NoSeguimiento').keyup(function () {
-            $('#NoSeguimientoVal').html('');
-        });
-
-        ///////////////////////////////////////////////////////////////
-        $("#ValidaRastreo").click(function () {
-            var NoSeguimiento = $('#NoSeguimiento').val();
-
-            //////////////////////
-            if (NoSeguimiento.length == 0) {
-                $("#NoSeguimientoVal").html('');
-                $("#NoSeguimientoVal").append('Campo es Obligatorio');
-            }
-
-            if (NoSeguimiento != 0) {
-
-                $.ajax({
-                    url: '@Url.Action("ExisteEnvio", "Home")' + '/' + NoSeguimiento,
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (data) {
-                        if (data.Result == true) {
-                            $("#OperTitle").html('');
-                            $("#OperTitle").append('Información de Envío')
-                            $("#OperBody").html('');
-                            $("#OperBody").load('@Url.Action("Rastreo", "Solicitud")' + '/' + NoSeguimiento);
-                            $('#OperModal').modal('show');
-                        }
-                        else {
-                            $("#ErrorMSG").html('');
-                            $("#ErrorMSG").append('No existe el número de envío');
-                            $('#ModalErrorMSG').modal('show')
-                        }
-                    },
-                    error: function () {
-                        console.log("No pudo acceder al Metodo");
-                    }
-                });
-
-            }
-
-        });
+    </script>
 
 
-    });
-
-    function RecibeProducto() {
-        $("#OperTitle").html('');
-        $("#OperTitle").append('Recepción de Productos')
-        $("#OperBody").html('');
-        $("#OperBody").load('@Url.Action("Recepcion", "Solicitud")');
-        $('#OperModal').modal('show');
-    }
-
-</script>
-
+}

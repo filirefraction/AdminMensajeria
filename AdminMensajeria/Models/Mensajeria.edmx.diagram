@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="01bcf22e7b114b99a32d4f9cc2d1d55d" Name="Diagram1" ZoomLevel="114">
+      <Diagram DiagramId="01bcf22e7b114b99a32d4f9cc2d1d55d" Name="Diagram1" ZoomLevel="86">
         <EntityTypeShape EntityType="MensajeriaModel.GEN_CODIGOPOSTAL" Width="1.5" PointX="5.25" PointY="6.625" />
         <EntityTypeShape EntityType="MensajeriaModel.GEN_COLONIA" Width="1.5" PointX="7.5" PointY="9.125" />
         <EntityTypeShape EntityType="MensajeriaModel.GEN_EMAILCONGIF" Width="1.5" PointX="0.75" PointY="0.75" />
@@ -35,13 +35,14 @@
         <EntityTypeShape EntityType="MensajeriaModel.OPE_SOLICITUDPRODUCTO" Width="1.5" PointX="16.5" PointY="7.75" />
         <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD" />
         <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_OPE_SOLICITUD" />
-        <EntityTypeShape EntityType="MensajeriaModel.VIEW_REPORTE" Width="1.5" PointX="0.75" PointY="12.75" />
         <EntityTypeShape EntityType="MensajeriaModel.GEN_IMAGEN" Width="1.5" PointX="3.375" PointY="0.75" />
         <EntityTypeShape EntityType="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC" Width="1.5" PointX="16.5" PointY="11.875" />
         <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_GEN_COLONIA" />
         <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA" />
         <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_PUNTOENTREC" />
         <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD" />
+        <EntityTypeShape EntityType="MensajeriaModel.SIS_CONFIG" Width="1.5" PointX="3.375" PointY="2.75" />
+        <EntityTypeShape EntityType="MensajeriaModel.VIEW_REPORTE" Width="1.5" PointX="0.75" PointY="12.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

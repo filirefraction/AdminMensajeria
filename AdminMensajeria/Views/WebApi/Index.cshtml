@@ -1,7 +1,63 @@
 ﻿
-@{
-    ViewBag.Title = "Index";
-}
+<div class="form-horizontal">
+    <h2>Carga de Envíos Desde API</h2>
 
-<h2>Desde Api</h2>
+    <div class="form-group">
+        <div class="col-md-3">
+            <div class="input-group input-file">
+                <input id="FechaDesde" type="text" class="form-control" placeholder="Indique Fecha" autocomplete="off" />
+                <span class="AlertaDanger" id="FechaDesdeVal"></span>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <button onclick="CargarTablaAPI()" class="btn btn-default">
+                <span class="glyphicon glyphicon-transfer"></span> Cargar
+            </button>
+        </div>
+        <div class="col-md-1">
+            <button onclick="LimpiarTablaAPI()" class="btn btn-default">
+                <span class="glyphicon glyphicon-minus"></span> Limpiar
+            </button>
+        </div>
+        <div class="col-md-6">
+        &nbsp;
+        </div>
+         <div class="col-md-1">
+        <a href="@Url.Action("Estandar", "Home")" class="btn btn-default" data-toggle="tooltip" title="Menu">
+            <span class="glyphicon glyphicon-home"></span> Volver
+        </a>
+    </div>
+    </div>
 
+    <div id="Registros">
+
+    </div>
+
+</div>
+
+<script>
+     $(document).ready(function () {
+         $("#FechaDesde").datetimepicker({ format: "Y-m-d", timepicker: false });
+     });
+
+     $("#FechaDesde").change(function () {
+         $("#FechaDesdeVal").html('');
+     });
+
+     function CargarTablaAPI() {
+         var fechaDesde = $('#FechaDesde').val();
+
+         if ($('#FechaDesde').val().length == 0) {
+             $("#FechaDesdeVal").html('');
+             $("#FechaDesdeVal").append('Debe elegir un tipo de registro');
+         } else {
+             $("#Registros").html('');
+             $("#Registros").load('@Url.Action("ConsumeAPI", "WebApi")' + '?Desde=' + fechaDesde);
+         }
+
+    }
+
+    function LimpiarTablaAPI() {
+        $("#Registros").html('');
+    }
+</script>

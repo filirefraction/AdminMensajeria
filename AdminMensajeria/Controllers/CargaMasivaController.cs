@@ -24,25 +24,6 @@ namespace AdminMensajeria.Controllers
     {
         private MensajeriaEntities db = new MensajeriaEntities();
 
-
-
-
-    
-
-
-
-        public ActionResult DesdeApi()
-        {
-           
-
-
-            return View();
-
-        }
-
-
-
-
         // GET: CargaMasiva
         public ActionResult Index()
         {

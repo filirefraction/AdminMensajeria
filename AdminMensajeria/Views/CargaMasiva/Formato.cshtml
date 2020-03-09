@@ -263,6 +263,14 @@
                                 }
                                 else
                                 {
+                                    if (Destinatario.DirCompletaPuntoEntRec != null)
+                                    {
+                                        <p>
+                                            @Destinatario.DirCompletaPuntoEntRec
+                                        </p>
+                                    }
+                                    else
+                                    {
                                     <p>
 
                                         @Destinatario.CallePuntosEntRec, @Destinatario.NoExtPuntosEntRec, @Destinatario.NoIntPuntosEntRec,
@@ -270,6 +278,7 @@
                                         @Destinatario.MunicipioPuntosEntRec, @Destinatario.EstadoPuntosEntRec,
                                         @Destinatario.PaisPuntosEntRec, @Destinatario.ReferenciaPuntosEntRec
                                     </p>
+                                    }
                                 }
                             }
                         </div>
@@ -336,6 +345,7 @@
             </div>
 
         </div>
+
         <div class="form-horizontal" style="border: 2px solid;padding-left: 15px;padding-top: 15px;border-radius: 20px 20px 20px 20px;margin-bottom: 17px;">
             <div class="form-group" style="border-bottom: 1px solid; margin-right: 0px; margin-bottom: 5px;">
                 <div class="col-md-3">
@@ -463,13 +473,22 @@
                                 }
                                 else
                                 {
-                                    <p>
+                                    if (Destinatario.DirCompletaPuntoEntRec != null)
+                                    {
+                                        <p>
+                                            @Destinatario.DirCompletaPuntoEntRec
+                                        </p>
+                                    }
+                                    else
+                                    {
+                                        <p>
 
-                                        @Destinatario.CallePuntosEntRec, @Destinatario.NoExtPuntosEntRec, @Destinatario.NoIntPuntosEntRec,
-                                        @Destinatario.ColoniaPuntosEntRec, @Destinatario.CodigoPostalPuntosEntRec,
-                                        @Destinatario.MunicipioPuntosEntRec, @Destinatario.EstadoPuntosEntRec,
-                                        @Destinatario.PaisPuntosEntRec, @Destinatario.ReferenciaPuntosEntRec
-                                    </p>
+                                            @Destinatario.CallePuntosEntRec, @Destinatario.NoExtPuntosEntRec, @Destinatario.NoIntPuntosEntRec,
+                                            @Destinatario.ColoniaPuntosEntRec, @Destinatario.CodigoPostalPuntosEntRec,
+                                            @Destinatario.MunicipioPuntosEntRec, @Destinatario.EstadoPuntosEntRec,
+                                            @Destinatario.PaisPuntosEntRec, @Destinatario.ReferenciaPuntosEntRec
+                                        </p>
+                                    }
                                 }
                             }
                         </div>
@@ -536,6 +555,7 @@
             </div>
 
         </div>
+
     </div>
 
 }

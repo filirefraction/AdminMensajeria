@@ -19,6 +19,13 @@ namespace AdminMensajeria.Controllers
             return View();
         }
 
+        public ActionResult NewIndex()
+        {
+            GEN_IMAGEN img = db.GEN_IMAGEN.FirstOrDefault();
+            ViewBag.Imagen = img.Imagen;
+            return View();
+        }
+
         public ActionResult Cambiar(int id)
         {
             ViewBag.IdUsuario = id;
@@ -54,6 +61,20 @@ namespace AdminMensajeria.Controllers
             Resultados resultado = new Resultados();
 
             var solicitud = (from s in db.OPE_SOLICITUD where s.IdSolicitud == id select s).ToList();
+
+            if (solicitud.Count > 0)
+                resultado.Result = true;
+            else
+                resultado.Result = false;
+
+            return Json(resultado, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult ExisteFolio(string id)
+        {
+            Resultados resultado = new Resultados();
+
+            var solicitud = (from s in db.OPE_SOLICITUD where s.Folio == id select s).ToList();
 
             if (solicitud.Count > 0)
                 resultado.Result = true;
@@ -131,11 +152,18 @@ namespace AdminMensajeria.Controllers
             ViewBag.idusuario = IdUsuario;
             ViewBag.tipousuario = (from u in db.GEN_USUARIO where u.IdUsuario == IdUsuario select u.TipoUsuario).FirstOrDefault();
             bool cambiar = (from u in db.GEN_USUARIO where u.IdUsuario == IdUsuario select u.CambiarContrasena).FirstOrDefault();
+            bool ctrlFolio = (from u in db.SIS_CONFIG where u.IdConfig == 1 select u.AplicaConfig).FirstOrDefault();
+
 
             if (cambiar == true)
                 ViewBag.cambiar = 1;
             else
                 ViewBag.cambiar = 0;
+
+            if (ctrlFolio == true)
+                ViewBag.ctrlFolio = 1;
+            else
+                ViewBag.ctrlFolio = 0;
 
 
             return View();

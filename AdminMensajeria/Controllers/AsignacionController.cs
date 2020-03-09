@@ -32,6 +32,13 @@ namespace AdminMensajeria.Controllers
         public ActionResult Entregas(int id)
         {
             ViewBag.idguia = id;
+            bool ctrlFolio = (from u in db.SIS_CONFIG where u.IdConfig == 1 select u.AplicaConfig).FirstOrDefault();
+
+            if (ctrlFolio == true)
+                ViewBag.ctrlFolio = 1;
+            else
+                ViewBag.ctrlFolio = 0;
+
             return PartialView();
         }
 
@@ -147,14 +154,43 @@ namespace AdminMensajeria.Controllers
         public ActionResult AsignaReferencia(int id)
         {
             ViewBag.idguia = id;
+            bool ctrlFolio = (from u in db.SIS_CONFIG where u.IdConfig == 1 select u.AplicaConfig).FirstOrDefault();
+
+            if (ctrlFolio == true)
+                ViewBag.ctrlFolio = 1;
+            else
+                ViewBag.ctrlFolio = 0;
+
             return PartialView("~/Views/Asignacion/AsignaReferencia.cshtml");
         }
 
-        public JsonResult AsignarEntregaRef(int id, int IdGuia, string Referencia)
+        public JsonResult AsignarEntregaRef(string id, int IdGuia, string Referencia, int ctlFolio)
         {
-            OPE_SOLICITUD Solicitud = db.OPE_SOLICITUD.Where(x => x.IdSolicitud == id).FirstOrDefault();
-            OPE_SOLICITUDPUNTOSENTREC Entrega = db.OPE_SOLICITUDPUNTOSENTREC.Where(x => x.IdSolicitud == id && x.TipoPunto == 2).FirstOrDefault();
-            OPE_SOLICITUDPRODUCTO Producto = db.OPE_SOLICITUDPRODUCTO.Where(x => x.IdSolicitud == id).FirstOrDefault();
+            OPE_SOLICITUD Solicitud = db.OPE_SOLICITUD.FirstOrDefault();
+            OPE_SOLICITUDPUNTOSENTREC Entrega = db.OPE_SOLICITUDPUNTOSENTREC.FirstOrDefault();
+            OPE_SOLICITUDPRODUCTO Producto = db.OPE_SOLICITUDPRODUCTO.FirstOrDefault();
+
+            if (ctlFolio == 0)
+            {
+                int idi = Convert.ToInt32(id);
+                Solicitud = db.OPE_SOLICITUD.Where(x => x.IdSolicitud == idi).FirstOrDefault();
+                Entrega = db.OPE_SOLICITUDPUNTOSENTREC.Where(x => x.IdSolicitud == idi && x.TipoPunto == 2).FirstOrDefault();
+                Producto = db.OPE_SOLICITUDPRODUCTO.Where(x => x.IdSolicitud == idi).FirstOrDefault();
+            }
+            else
+            {
+                Solicitud = db.OPE_SOLICITUD.Where(x => x.Folio == id).FirstOrDefault();
+                if (Solicitud != null)
+                {
+                Producto = db.OPE_SOLICITUDPRODUCTO.Where(x => x.IdSolicitud == Solicitud.IdSolicitud).FirstOrDefault();
+                Entrega = db.OPE_SOLICITUDPUNTOSENTREC.Where(x => x.IdSolicitud == Solicitud.IdSolicitud && x.TipoPunto == 2).FirstOrDefault();
+                }
+                else
+                {
+                    Entrega = null;
+                    Producto = null;
+                }
+            }
 
 
             Resultados resultado = new Resultados();
@@ -207,11 +243,33 @@ namespace AdminMensajeria.Controllers
             return Json(resultado, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult AsignarEntrega(int id, int IdGuia)
+        public JsonResult AsignarEntrega(string id, int IdGuia, int ctlFolio)
         {
-            OPE_SOLICITUD Solicitud = db.OPE_SOLICITUD.Where(x => x.IdSolicitud == id).FirstOrDefault();
-            OPE_SOLICITUDPUNTOSENTREC Entrega = db.OPE_SOLICITUDPUNTOSENTREC.Where(x => x.IdSolicitud == id && x.TipoPunto == 2).FirstOrDefault();
-            OPE_SOLICITUDPRODUCTO Producto = db.OPE_SOLICITUDPRODUCTO.Where(x => x.IdSolicitud == id).FirstOrDefault();
+            OPE_SOLICITUD Solicitud = db.OPE_SOLICITUD.FirstOrDefault();
+            OPE_SOLICITUDPUNTOSENTREC Entrega = db.OPE_SOLICITUDPUNTOSENTREC.FirstOrDefault();
+            OPE_SOLICITUDPRODUCTO Producto = db.OPE_SOLICITUDPRODUCTO.FirstOrDefault();
+
+            if (ctlFolio == 0)
+            {
+                int idi = Convert.ToInt32(id);
+                Solicitud = db.OPE_SOLICITUD.Where(x => x.IdSolicitud == idi).FirstOrDefault();
+                Entrega = db.OPE_SOLICITUDPUNTOSENTREC.Where(x => x.IdSolicitud == idi && x.TipoPunto == 2).FirstOrDefault();
+                Producto = db.OPE_SOLICITUDPRODUCTO.Where(x => x.IdSolicitud == idi).FirstOrDefault();
+            }
+            else
+            {
+                Solicitud = db.OPE_SOLICITUD.Where(x => x.Folio == id).FirstOrDefault();
+                if (Solicitud != null)
+                {
+                    Producto = db.OPE_SOLICITUDPRODUCTO.Where(x => x.IdSolicitud == Solicitud.IdSolicitud).FirstOrDefault();
+                    Entrega = db.OPE_SOLICITUDPUNTOSENTREC.Where(x => x.IdSolicitud == Solicitud.IdSolicitud && x.TipoPunto == 2).FirstOrDefault();
+                }
+                else
+                {
+                    Entrega = null;
+                    Producto = null;
+                }
+            }
 
 
             Resultados resultado = new Resultados();

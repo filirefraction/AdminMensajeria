@@ -107,14 +107,22 @@
                                 }
                                 else
                                 {
+                                    if (Destinatario.DirCompletaPuntoEntRec != null)
+                                    {
+                                        <p>
+                                            @Destinatario.DirCompletaPuntoEntRec
+                                        </p>
+                                    }
+                                    else
+                                    {
                                     <p>
                                         @Destinatario.CallePuntosEntRec, @Destinatario.NoExtPuntosEntRec, @Destinatario.NoIntPuntosEntRec,
                                         @Destinatario.ColoniaPuntosEntRec, @Destinatario.CodigoPostalPuntosEntRec,
                                         @Destinatario.MunicipioPuntosEntRec, @Destinatario.EstadoPuntosEntRec,
                                         @Destinatario.PaisPuntosEntRec, @Destinatario.ReferenciaPuntosEntRec
                                     </p>
+                                    }
                                 }
-
                             }
                         </td>
 

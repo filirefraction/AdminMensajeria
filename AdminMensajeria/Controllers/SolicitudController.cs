@@ -21,7 +21,7 @@ namespace AdminMensajeria.Controllers
         // GET: Solicitud
         public ActionResult Index()
         {
-           return View();
+            return View();
         }
 
         public ActionResult Solicitudes(DateTime Desde, DateTime Hasta)
@@ -175,25 +175,35 @@ namespace AdminMensajeria.Controllers
             return PartialView("~/Views/Solicitud/Puntos.cshtml");
         }
 
-        public ActionResult Rastreo(int? id)
+        public ActionResult Rastreo(string id, int ctlFolio)
         {
-            if (id == null)
+            if (ctlFolio == 0)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                int idi = Convert.ToInt32(id);
+                OPE_SOLICITUD oPE_SOLICITUD = db.OPE_SOLICITUD.Find(idi);
+                return PartialView("~/Views/Solicitud/Rastreo.cshtml", oPE_SOLICITUD);
+
             }
-            OPE_SOLICITUD oPE_SOLICITUD = db.OPE_SOLICITUD.Find(id);
-            if (oPE_SOLICITUD == null)
+            else
             {
-                return HttpNotFound();
+                OPE_SOLICITUD oPE_SOLICITUD = (from c in db.OPE_SOLICITUD where c.Folio == id select c).FirstOrDefault();
+                return PartialView("~/Views/Solicitud/Rastreo.cshtml", oPE_SOLICITUD);
             }
-            return PartialView("~/Views/Solicitud/Rastreo.cshtml", oPE_SOLICITUD);
         }
 
         public ActionResult Recepcion()
         {
+            bool ctrlFolio = (from u in db.SIS_CONFIG where u.IdConfig == 1 select u.AplicaConfig).FirstOrDefault();
+
+            if (ctrlFolio == true)
+                ViewBag.ctrlFolio = 1;
+            else
+                ViewBag.ctrlFolio = 0;
+
             return PartialView("~/Views/Solicitud/Recepcion.cshtml");
         }
-        public JsonResult RecibirPaquete(int id)
+
+        public JsonResult RecibirPaquete(string id, int ctlFolio)
         {
             Resultados resultado = new Resultados();
 
@@ -210,10 +220,37 @@ namespace AdminMensajeria.Controllers
                 NombreUsuario = (from n in db.GEN_USUARIO where n.IdUsuario == IdUsuario select n.NombreUsuario).FirstOrDefault();
             }
 
+            //carga cualquier dato para generar variable modelo
+            OPE_SOLICITUD Solicitud = db.OPE_SOLICITUD.FirstOrDefault();
+            OPE_SOLICITUDPRODUCTO Producto = db.OPE_SOLICITUDPRODUCTO.FirstOrDefault();
+            OPE_SOLICITUDPUNTOSENTREC Entrega = db.OPE_SOLICITUDPUNTOSENTREC.FirstOrDefault();
 
-            OPE_SOLICITUDPRODUCTO Producto = db.OPE_SOLICITUDPRODUCTO.Where(x => x.IdSolicitud == id).FirstOrDefault();
-            OPE_SOLICITUD Solicitud = db.OPE_SOLICITUD.Where(x => x.IdSolicitud == id).FirstOrDefault();
-            OPE_SOLICITUDPUNTOSENTREC Entrega = db.OPE_SOLICITUDPUNTOSENTREC.Where(x => x.IdSolicitud == id && x.TipoPunto == 2).FirstOrDefault();
+            //sobre escribe las variables de modelo con los parametros recibidos
+
+            if (ctlFolio == 0)
+            {
+                int idi = Convert.ToInt32(id);
+                Solicitud = db.OPE_SOLICITUD.Where(x => x.IdSolicitud == idi).FirstOrDefault();
+                Producto = db.OPE_SOLICITUDPRODUCTO.Where(x => x.IdSolicitud == idi).FirstOrDefault();
+                Entrega = db.OPE_SOLICITUDPUNTOSENTREC.Where(x => x.IdSolicitud == idi && x.TipoPunto == 2).FirstOrDefault();
+            }
+            else
+            {
+                Solicitud = db.OPE_SOLICITUD.Where(x => x.Folio == id).FirstOrDefault();
+                if (Solicitud != null)
+                {
+                    Producto = db.OPE_SOLICITUDPRODUCTO.Where(x => x.IdSolicitud == Solicitud.IdSolicitud).FirstOrDefault();
+                    Entrega = db.OPE_SOLICITUDPUNTOSENTREC.Where(x => x.IdSolicitud == Solicitud.IdSolicitud && x.TipoPunto == 2).FirstOrDefault();
+                }
+                else
+                {
+                    Entrega = null;
+                    Producto = null;
+                }
+            }
+
+
+            
 
             if (Entrega != null)
             {
@@ -221,9 +258,9 @@ namespace AdminMensajeria.Controllers
                 //DateTime FechaEstimanda = DateTime.Now.AddHours(1);
                 int Hora = FechaEstimanda.Hour;
                 if (Hora < 10)
-                Entrega.FechaProgramada = FechaEstimanda;
+                    Entrega.FechaProgramada = FechaEstimanda;
                 else
-                Entrega.FechaProgramada = FechaEstimanda.AddDays(1);
+                    Entrega.FechaProgramada = FechaEstimanda.AddDays(1);
 
                 db.Entry(Entrega).State = EntityState.Modified;
                 db.SaveChanges();
@@ -446,10 +483,6 @@ namespace AdminMensajeria.Controllers
 
             return Json(Complemento, JsonRequestBehavior.AllowGet);
         }
-
-
-
-
 
         protected override void Dispose(bool disposing)
         {
