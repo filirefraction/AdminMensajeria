@@ -79,6 +79,11 @@ namespace AdminMensajeria.Controllers.API
             {
                 temp = await db.OPE_SOLICITUDPUNTOSENTREC
                 .Where(v => v.IdGuia == idGuia && v.EstatusPuntosEntRec == false).ToListAsync();
+
+                foreach (OPE_SOLICITUDPUNTOSENTREC item in temp)
+                {
+                    item.OPE_SOLICITUD = await db.OPE_SOLICITUD.Where(x => x.IdSolicitud == item.IdSolicitud).FirstOrDefaultAsync();
+                }
             }
             catch
             {
