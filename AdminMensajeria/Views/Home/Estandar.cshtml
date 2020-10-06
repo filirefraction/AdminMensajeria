@@ -5,7 +5,7 @@
     int TipoUsuario = ViewBag.tipousuario;
     int CambiarPass = ViewBag.cambiar;
     int ctrlFolio = ViewBag.ctrlFolio;
-
+    bool utiapi = (from u in db.SIS_CONFIG where u.IdConfig == 3 select u.AplicaConfig).FirstOrDefault();
 
 
     <div class="row">
@@ -35,7 +35,10 @@
                                             <a href="@Url.Action("Index", "CargaMasiva")" data-toggle="tooltip" title="carga Masiva" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-list-alt"></span> Excel </a>
                                             <br />
                                             <br />
-                                            <a href="@Url.Action("Index", "WebApi")" data-toggle="tooltip" title="carga Masiva" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-cloud-download"></span>&nbsp;  API &nbsp; </a>
+                                            @if (utiapi)
+                                            {
+                                                <a href="@Url.Action("Index", "WebApi")" data-toggle="tooltip" title="carga Masiva" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-cloud-download"></span>&nbsp;  API &nbsp; </a>
+                                            }
 
                                         </div>
 
@@ -97,7 +100,7 @@
                             <div class="row">
                                 <div class="btn btn-primary col-md-6 bigBtnRep" style="padding-top:30px !important;">
                                     <div class="field">
-                                        <input class="form-control input-sm" id="NoSeguimiento" name="NoSeguimiento"/>
+                                        <input class="form-control input-sm" id="NoSeguimiento" name="NoSeguimiento" />
                                         <label for="NoSeguimiento">RASTREAR ENVÍO</label>
                                     </div>
                                     <span class="AlertaDanger" id="NoSeguimientoVal"></span>

@@ -265,6 +265,7 @@
     <Compile Include="Controllers\API\BaseController.cs" />
     <Compile Include="Controllers\API\PuntosController.cs" />
     <Compile Include="Controllers\API\SolicitudesController.cs" />
+    <Compile Include="Controllers\API\UbicacionController.cs" />
     <Compile Include="Controllers\API\UsuariosController.cs" />
     <Compile Include="Controllers\AsignacionController.cs" />
     <Compile Include="Controllers\CargaMasivaController.cs" />
@@ -282,6 +283,7 @@
     <Compile Include="Controllers\RastreoController.cs" />
     <Compile Include="Controllers\ReporteController.cs" />
     <Compile Include="Controllers\SolicitudController.cs" />
+    <Compile Include="Controllers\trackingController.cs" />
     <Compile Include="Controllers\UnidadController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Controllers\Utilidades.cs" />
@@ -295,6 +297,9 @@
     <Compile Include="Models\APP\Recibir.cs" />
     <Compile Include="Models\APP\SolicitudApp.cs" />
     <Compile Include="Models\APP\SolicitudUpdate.cs" />
+    <Compile Include="Models\BET_UBICACION.cs">
+      <DependentUpon>Mensajeria.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DTOs\PuntosDTO.cs" />
     <Compile Include="Models\DTOs\SolicitudesDTO.cs" />
     <Compile Include="Models\DTOs\UsuariosDTO.cs" />
@@ -369,6 +374,7 @@
     <Compile Include="Models\OPE_SOLICITUDPUNTOSENTREC.cs">
       <DependentUpon>Mensajeria.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PartialOPE_SOLICITUD.cs" />
     <Compile Include="Models\Resultados.cs" />
     <Compile Include="Models\SIS_CONFIG.cs">
       <DependentUpon>Mensajeria.tt</DependentUpon>
@@ -547,8 +553,8 @@
     <Content Include="Views\CargaMasiva\DesdeApi.cshtml" />
     <Content Include="Views\WebApi\Index.cshtml" />
     <Content Include="Views\WebApi\ConsumeAPI.cshtml" />
-    <Content Include="Views\Home\NewIndex.cshtml" />
     <Content Include="Views\Rastreo\Index.cshtml" />
+    <Content Include="Views\tracking\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

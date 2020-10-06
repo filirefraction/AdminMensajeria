@@ -45,9 +45,14 @@
                 <th class="col-md-1">R. Descripción</th>
                 <th>R. Contacto</th>
                 <th>R. Dirección</th>
+                <th>R. Observación</th>
+                <th>E. Grupo</th>
+                <th>E. Destino</th>
                 <th>E. Descripción</th>
                 <th>E. Destinatario</th>
+                <th>E. Contacto</th>
                 <th>E. Dirección</th>
+                <th>E. Observación</th>
                 <th>E.F. Estimada</th>
                 <th>E.F. Asignada</th>
                 <th>E. Mensajero</th>
@@ -82,8 +87,12 @@
                     <td>@item.DescripcionRemitente</td>
                     <td>@item.ContactoRemitente</td>
                     <td>@item.CalleRemitente, @item.NoExtRemitente, @item.NointRemitente, @item.ColoniaRemitente, @item.CodigoPostalRemitente, @item.MunicipioRemitente, @item.EstadoRemitente, @item.PaisRemitente, @item.ReferenciaRemitente </td>
+                    <td>@item.ObsRemitente</td>
+                    <td>@item.CategoriaEntrega</td>
+                    <td>@item.RazonSocialEntrega</td>
                     <td>@item.DescripcionEntrega</td>
                     <td>@item.DestinatarioEntrega</td>
+                    <td>@item.ContactoEntrega</td>
                     @if (item.DirecionCompletaEntrega != null)
                     {
                         <td>@item.DirecionCompletaEntrega</td>
@@ -92,6 +101,7 @@
                     {
                     <td>@item.CalleEntrega, @item.NoExtEntrega, @item.NointEntrega, @item.ColoniaEntrega, @item.CodigoPostalEntrega, @item.MunicipioEntrega, @item.EstadoEntrega, @item.PaisEntrega, @item.ReferenciaEntrega</td>
                     }
+                    <td>@item.ObsEntrega</td>
                     <td>@item.FechaEntregaEstimada</td>
                     <td>@item.FechaAsignada</td>
                     <td>@item.MensajeroAsignado</td>
@@ -117,9 +127,14 @@
                     <th class="col-md-1">R. Descripción</th>
                     <th>R. Contacto</th>
                     <th>R. Dirección</th>
+                    <th>R. Observación</th>
+                    <th>E. Grupo</th>
+                    <th>E. Destino</th>
                     <th>E. Descripción</th>
                     <th>E. Destinatario</th>
+                    <th>E. Contacto</th>
                     <th>E. Dirección</th>
+                    <th>E. Observación</th>
                     <th>E.F. Estimada</th>
                     <th>E.F. Asignada</th>
                     <th>E. Mensajero</th>
@@ -153,8 +168,12 @@
                         <td>@item.DescripcionRemitente</td>
                         <td>@item.ContactoRemitente</td>
                         <td>@item.CalleRemitente, @item.NoExtRemitente, @item.NointRemitente, @item.ColoniaRemitente, @item.CodigoPostalRemitente, @item.MunicipioRemitente, @item.EstadoRemitente, @item.PaisRemitente, @item.ReferenciaRemitente </td>
+                        <td>@item.ObsRemitente</td>
+                        <td>@item.CategoriaEntrega</td>
+                        <td>@item.RazonSocialEntrega</td>
                         <td>@item.DescripcionEntrega</td>
                         <td>@item.DestinatarioEntrega</td>
+                        <td>@item.ContactoEntrega</td>
                         @if (item.DirecionCompletaEntrega != null)
                         {
                             <td>@item.DirecionCompletaEntrega</td>
@@ -163,6 +182,7 @@
                         {
                             <td>@item.CalleEntrega, @item.NoExtEntrega, @item.NointEntrega, @item.ColoniaEntrega, @item.CodigoPostalEntrega, @item.MunicipioEntrega, @item.EstadoEntrega, @item.PaisEntrega, @item.ReferenciaEntrega</td>
                         }
+                        <td>@item.ObsEntrega</td>
                         <td>@item.FechaEntregaEstimada</td>
                         <td>@item.FechaAsignada</td>
                         <td>@item.MensajeroAsignado</td>

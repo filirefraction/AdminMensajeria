@@ -21,13 +21,22 @@
 
     <!--Controles de producto de solicitud-->
     <div class="form-group">
-        <div class="col-md-6">
+        <div class="col-md-3">
             <div class="field">
                 <input id="Descripcion" class="form-control input-sm" PlaceHolder="Sobre con membresía" maxlength="100" />
                 <label for="Descripcion">Descripción de Producto (*)</label>
             </div>
             <span class="AlertaDanger" id="DescripcionVal"></span>
         </div>
+        
+        <div class="col-md-3">
+            <div class="field">
+                <input id="Folio" class="form-control input-sm" PlaceHolder="XXX001" maxlength="100" />
+                <label for="Descripcion">Folio</label>
+            </div>
+            <span class="AlertaDanger" id="FolioVal"></span>
+        </div>
+
         <div class="col-md-2">
             <div class="field">
                 <input id="Cantidad" class="form-control input-sm" type="Number" PlaceHolder="1" maxlength="18" />
@@ -374,6 +383,10 @@
             $('#DescripcionVal').html('');
         });
 
+        $('#Folio').keyup(function () {
+            $('#FolioVal').html('');
+        });
+
         $('#Cantidad').keyup(function () {
             $('#CantidadVal').html('');
         });
@@ -585,6 +598,11 @@
                 $("#DescripcionVal").append('Este Campo es puede contener maximo 100 caracteres');
             }
 
+            if ($("#Folio").val().length > 100) {
+                $("#FolioVal").html('');
+                $("#FolioVal").append('Este Campo es puede contener maximo 100 caracteres');
+            }
+
             if ($("#Cantidad").val().length > 18) {
                 $("#CantidadVal").html('');
                 $("#CantidadVal").append('Este Campo es puede contener maximo 18 caracteres');
@@ -596,6 +614,7 @@
             }
 
             if ($("#Descripcion").val().length != 0 && $("#Descripcion").val().length <= 100 &&
+                $("#Descripcion").val().length <= 100 &&
                 $("#Cantidad").val().length <= 18 && $("#Peso").val().length <= 18) {
                 ProductoValido = true;
                 console.log("Datos de Producto Validos");
@@ -831,7 +850,7 @@
         var IdSolicitud = null;
         var IdUsuario = null;
         var IdClientProvee = null;
-        var Folio = null;
+        var Folio = $('#Folio').val();
         var FechaCreacion = null;
         var RequiereAcuse = $("#RequiereAcuse").prop("checked");
         var Emergencia = false;

@@ -19,12 +19,6 @@ namespace AdminMensajeria.Controllers
             return View();
         }
 
-        public ActionResult NewIndex()
-        {
-            GEN_IMAGEN img = db.GEN_IMAGEN.FirstOrDefault();
-            ViewBag.Imagen = img.Imagen;
-            return View();
-        }
 
         public ActionResult Cambiar(int id)
         {

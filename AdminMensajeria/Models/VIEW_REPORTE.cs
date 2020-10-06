@@ -40,6 +40,7 @@ namespace AdminMensajeria.Models
         public string EstadoRemitente { get; set; }
         public string PaisRemitente { get; set; }
         public Nullable<System.DateTime> FechaEntregaEstimada { get; set; }
+        public string ObsRemitente { get; set; }
         public string DestinatarioEntrega { get; set; }
         public string CategoriaEntrega { get; set; }
         public string RazonSocialEntrega { get; set; }
@@ -59,5 +60,6 @@ namespace AdminMensajeria.Models
         public string MensajeroAsignado { get; set; }
         public string ReferenciaExterna { get; set; }
         public Nullable<System.DateTime> FechaEntrega { get; set; }
+        public string ObsEntrega { get; set; }
     }
 }

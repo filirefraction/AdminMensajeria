@@ -12,8 +12,11 @@ namespace AdminMensajeria.Controllers
         private MensajeriaEntities db = new MensajeriaEntities();
 
         // GET: Rastreo
-        public ActionResult Index(string id, int ctlFolio)
+        public ActionResult Index(/*string id, int ctlFolio*/)
         {
+            string id = "172";
+            int ctlFolio = 0;
+
             if (ctlFolio == 0)
             {
                 int idi = Convert.ToInt32(id);

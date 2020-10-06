@@ -1,41 +1,167 @@
-﻿@{ ViewBag.Title = "Inicio de Sesión"; }
+﻿@using (AdminMensajeria.Models.MensajeriaEntities db = new AdminMensajeria.Models.MensajeriaEntities())
+{
+    ViewBag.Title = "Bienvenido";
+    bool ctrlFolio = (from u in db.SIS_CONFIG where u.IdConfig == 1 select u.AplicaConfig).FirstOrDefault();
+    bool separarFolio = (from u in db.SIS_CONFIG where u.IdConfig == 2 select u.AplicaConfig).FirstOrDefault();
+    int spFolio, ctlFolio;
+
+    if (ctrlFolio)
+    {
+        ctlFolio = 1;
+    }
+    else
+    {
+        ctlFolio = 0;
+    }
+
+    if (separarFolio)
+    {
+        spFolio = 1;
+    }
+    else
+    {
+        spFolio = 0;
+    }
 
 
-   
-    <div class="form-horizontal portada" style="background: url(@ViewBag.Imagen) no-repeat fixed center;">
-        <center>
-            <div class="DivCenter">
-                <div class="form-group">
-                    <div class="col-md-12">
-                        <div class="field">
-                            <input id="uxu" class="form-control input-sm" placeholder="Juan.perez" maxlength="100">
-                            <label for="uxu">Usuario</label>
+    <div class="portada" style="background: url(@ViewBag.Imagen) no-repeat fixed center;">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="panel panel-login">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <a href="#" class="active" id="login-form-link">Iniciar Sesión</a>
+                            </div>
+                            <div class="col-xs-6">
+                                <a href="#" id="register-form-link">Rastreo de Envíos</a>
+                            </div>
                         </div>
-                        <span class="AlertaDanger" id="uxuVal"></span>
+                        <hr>
                     </div>
-                    <div class="col-md-12">
-                        <div class="field">
-                            <input id="c0m" class="form-control input-sm" type="password" placeholder="******" maxlength="100">
-                            <label for="c0m">Contraseña</label>
-                        </div>
-                        <span class="AlertaDanger" id="c0mVal"></span>
-                    </div>
-                </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <form id="login-form" role="form" style="display: block;">
+                                    <div class="form-group">
+                                        <div class="field">
+                                            <input type="text" name="uxu" id="uxu" tabindex="1" class="form-control input-sm" placeholder="juan.perez">
+                                            <label for="uxu">Usuario</label>
+                                        </div>
+                                        <span class="AlertaDanger" id="uxuVal"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="field">
+                                            <input type="password" name="c0m" id="c0m" tabindex="2" class="form-control input-sm" placeholder="Contraseña">
+                                            <label for="c0m">Contraseña</label>
+                                        </div>
+                                        <span class="AlertaDanger" id="c0mVal"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-sm-6 col-sm-offset-3">
+                                                <input type="submit" name="login-submit" id="login-submit" tabindex="4" class="form-control btn btn-primary" value="Iniciar sesión">
+                                            </div>
+                                        </div>
+                                    </div>
 
-                <div class="form-group">
-                    <div class="col-md-12">
-                        <button id="inisec" type="button" class="btn btn-primary btn-sm ">
-                            <span class="glyphicon glyphicon-log-in"></span> Entrar
-                        </button>
+                                </form>
+                                @if (ctrlFolio)
+                                {
+                                    if (separarFolio)
+                                    {
+                                        <form id="rastrear-form" role="form" style="display: none;">
+                                            <div class="form-group">
+                                                <div class="field">
+                                                    <input type="number" name="nocliente" id="nocliente" tabindex="1" class="form-control input-sm" placeholder="Número de Cliente">
+                                                    <label for="nocliente">Indique Número de Cliente</label>
+                                                </div>
+                                                <span class="AlertaDanger" id="noclienteVal"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="field">
+                                                    <input type="text" name="noconfirmacion" id="noconfirmacion" tabindex="1" class="form-control input-sm" placeholder="Clave de Confirmación">
+                                                    <label for="noconfirmacion">Indique Clave de Confirmación</label>
+                                                </div>
+                                                <span class="AlertaDanger" id="noconfirmacionVal"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-sm-6 col-sm-offset-3">
+                                                        <input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-success" value="Rastrear">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form id="rastrear-form" role="form" style="display: none;">
+                                            <div class="form-group">
+                                                <div class="field">
+                                                    <input type="text" name="noconfirmacion" id="noconfirmacion" tabindex="1" class="form-control input-sm" placeholder="Clave de Confirmación">
+                                                    <label for="noconfirmacion">Indique Clave de Confirmación</label>
+                                                </div>
+                                                <span class="AlertaDanger" id="noconfirmacionVal"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-sm-6 col-sm-offset-3">
+                                                        <input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-success" value="Rastrear">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    }
+
+                                }
+                                else
+                                {
+                                    <form id="rastrear-form" role="form" style="display: none;">
+                                        <div class="form-group">
+                                            <div class="field">
+                                                <input type="number" name="noseguimiento" id="noseguimiento" tabindex="1" class="form-control input-sm" placeholder="Número de Envío">
+                                                <label for="noseguimiento">Indique Número de Seguimiento</label>
+                                            </div>
+                                            <span class="AlertaDanger" id="noseguimientoVal"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-sm-6 col-sm-offset-3">
+                                                    <input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-success" value="Rastrear">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                }
+
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-</center>
+        </div>
     </div>
 
-<script>
+    <script>
     $(document).ready(function () {
+
+        $('#login-form-link').click(function (e) {
+            $("#login-form").delay(100).fadeIn(100);
+            $("#rastrear-form").fadeOut(100);
+            $('#register-form-link').removeClass('active');
+            $(this).addClass('active');
+            e.preventDefault();
+        });
+
+        $('#register-form-link').click(function (e) {
+            $("#rastrear-form").delay(100).fadeIn(100);
+            $("#login-form").fadeOut(100);
+            $('#login-form-link').removeClass('active');
+            $(this).addClass('active');
+            e.preventDefault();
+        });
+
         $("#uxu").keyup(function () {
             $("#uxuVal").html('');
         });
@@ -44,9 +170,23 @@
             $("#c0mVal").html('');
         });
 
+        $("#nocliente").keyup(function () {
+            $("#noclienteVal").html('');
+        });
 
-        ///////////////////////////////////////////////////////////////
-        $("#inisec").click(function () {
+        $("#noconfirmacion").keyup(function () {
+            $("#noconfirmacionVal").html('');
+        });
+
+        $("#noseguimiento").keyup(function () {
+            $("#noseguimientoVal").html('');
+        });
+
+        //Iniciar Sesión
+
+        $("#login-form").submit(function (event) {
+            event.preventDefault();
+
             var uxu = $("#uxu").val();
             var c0m = $("#c0m").val();
 
@@ -73,8 +213,7 @@
 
             //Primero Valida que los campos que siempre van a ser obligatorios//
             if ($("#uxu").val().length != 0 && $("#uxu").val().length <= 100 &&
-                $("#c0m").val().length != 0 && $("#c0m").val().length <= 100 ) {
-
+                $("#c0m").val().length != 0 && $("#c0m").val().length <= 100) {
 
                 //inserta sin validar la fecha de egreso//
                 $.ajax({
@@ -106,6 +245,110 @@
                 console.log("No se cumplio la validación de datos");
             }
         });
-    });
 
-</script>
+
+        $("#rastrear-form").submit(function (event) {
+            event.preventDefault();
+
+            if (@ctlFolio == 0)
+            {
+                var NoSeguimiento = $('#noseguimiento').val();
+
+                if (NoSeguimiento.length == 0) {
+                    $("#noseguimientoVal").html('');
+                    $("#noseguimientoVal").append('Campo es Obligatorio');
+                }
+            }
+            else
+            {
+                if (@spFolio  == 1) {
+                    var NoSeguimiento = $('#nocliente').val() + $('#noconfirmacion').val();
+
+                    if ($("#noconfirmacion").val().length == 0) {
+                        $("#noconfirmacionVal").html('');
+                        $("#noconfirmacionVal").append('Campo es Obligatorio');
+                    }
+
+                    if ($("#nocliente").val().length == 0) {
+                        $("#noclienteVal").html('');
+                        $("#noclienteVal").append('Campo es Obligatorio');
+                    }
+                }
+                else
+                {
+                    var NoSeguimiento = $('#noconfirmacion').val();
+
+                    if ($('#noconfirmacion').val().length == 0) {
+                        $("#noconfirmacionVal").html('');
+                        $("#noconfirmacionVal").append('Campo es Obligatorio');
+                    }
+                }
+            }
+
+
+            //////////////////////
+            if (NoSeguimiento.length == 0) {
+                $("#NoSeguimientoVal").html('');
+                $("#NoSeguimientoVal").append('Campo es Obligatorio');
+            }
+
+            if (NoSeguimiento != 0) {
+
+                if (@ctlFolio == 1) {
+                    $.ajax({
+                        url: '@Url.Action("ExisteFolio", "Home")' + '/' + NoSeguimiento,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.Result == true) {
+                                $("#OperTitle").html('');
+                                $("#OperTitle").append('Información de Envío')
+                                $("#OperBody").html('');
+                                $("#OperBody").load('@Url.Action("Rastreo", "Solicitud")' + '?id=' + NoSeguimiento + '&ctlFolio=' + @ctlFolio);
+                                $('#OperModal').modal('show');
+                            }
+                            else {
+                                $("#ErrorMSG").html('');
+                                $("#ErrorMSG").append('No existe el número de envío');
+                                $('#ModalErrorMSG').modal('show')
+                            }
+                        },
+                        error: function () {
+                            console.log("No pudo acceder al Metodo");
+                        }
+                    });
+                }
+                else {
+                    $.ajax({
+                        url: '@Url.Action("ExisteEnvio", "Home")' + '/' + NoSeguimiento,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.Result == true) {
+                                $("#OperTitle").html('');
+                                $("#OperTitle").append('Información de Envío')
+                                $("#OperBody").html('');
+                                $("#OperBody").load('@Url.Action("Rastreo", "Solicitud")' + '?id=' + NoSeguimiento + '&ctlFolio=' + @ctlFolio);
+                                $('#OperModal').modal('show');
+                            }
+                            else {
+                                $("#ErrorMSG").html('');
+                                $("#ErrorMSG").append('No existe el número de envío');
+                                $('#ModalErrorMSG').modal('show')
+                            }
+                        },
+                        error: function () {
+                            console.log("No pudo acceder al Metodo");
+                        }
+                    });
+                }
+            }
+
+        });
+
+    });
+    </script>
+
+}

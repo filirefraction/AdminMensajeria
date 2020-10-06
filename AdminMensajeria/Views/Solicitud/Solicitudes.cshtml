@@ -96,13 +96,13 @@
                             <button onclick="RastrearEnvio(@item.IdSolicitud)" data-toggle="tooltip" title="Rastrear de Envío" class="btn btn-default btn-sm">
                                 <span class='glyphicon glyphicon-search'></span>
                             </button>
+                            <button onclick="CancelarEnvio(@item.IdSolicitud)" data-toggle="tooltip" title="Cancelar Envío" class="btn btn-danger btn-sm">
+                                <span class='glyphicon glyphicon-remove-sign'></span>
+                            </button>
                             @if (TipoUsu == 1)
                         {
                                 <button onclick="Entrega(@item.IdSolicitud)" data-toggle="tooltip" title="Reportar Entrega" class="btn btn-success btn-sm">
                                     <span class='glyphicon glyphicon-ok-sign'></span>
-                                </button>
-                                <button onclick="CancelarEnvio(@item.IdSolicitud)" data-toggle="tooltip" title="Cancelar Envío" class="btn btn-danger btn-sm">
-                                    <span class='glyphicon glyphicon-remove-sign'></span>
                                 </button>
                             }
                         </td>
@@ -177,13 +177,13 @@
                         <button onclick="RastrearEnvio(@item.IdSolicitud)" data-toggle="tooltip" title="Rastrear de Envío" class="btn btn-default btn-sm">
                             <span class='glyphicon glyphicon-search'></span>
                         </button>
+                        <button onclick="CancelarEnvio(@item.IdSolicitud)" data-toggle="tooltip" title="Cancelar Envío" class="btn btn-danger btn-sm">
+                            <span class='glyphicon glyphicon-remove-sign'></span>
+                        </button>
                         @if (TipoUsu == 1)
                         {
                             <button onclick="Entrega(@item.IdSolicitud)" data-toggle="tooltip" title="Reportar Entrega" class="btn btn-success btn-sm">
                                 <span class='glyphicon glyphicon-ok-sign'></span>
-                            </button>
-                            <button onclick="CancelarEnvio(@item.IdSolicitud)" data-toggle="tooltip" title="Cancelar Envío" class="btn btn-danger btn-sm">
-                                <span class='glyphicon glyphicon-remove-sign'></span>
                             </button>
                         }
                     </td>

@@ -1,7 +1,123 @@
-﻿
-@{
-    ViewBag.Title = "Index";
+﻿@model AdminMensajeria.Models.OPE_SOLICITUD
+@using (AdminMensajeria.Models.MensajeriaEntities db = new AdminMensajeria.Models.MensajeriaEntities())
+{
+    var Solicitud = (from s in db.OPE_SOLICITUD where s.IdSolicitud == Model.IdSolicitud select s).FirstOrDefault();
+    var Producto = (from p in db.OPE_SOLICITUDPRODUCTO where p.IdSolicitud == Model.IdSolicitud select p).FirstOrDefault();
+    var Remitente = (from r in db.OPE_SOLICITUDPUNTOSENTREC where r.IdSolicitud == Model.IdSolicitud && r.TipoPunto == 1 select r).FirstOrDefault();
+    var Destinatario = (from d in db.OPE_SOLICITUDPUNTOSENTREC where d.IdSolicitud == Model.IdSolicitud && d.TipoPunto == 2 select d).FirstOrDefault();
+
+    <div class="form-horizontal">
+        <div class="row">
+            <div class="col-md-2 field">
+                <span id="noguia">@Solicitud.IdSolicitud</span>
+                <label for="noguia">Número de Guía:</label>
+            </div>
+            <div class="col-md-2 field">
+                <span id="folio">@Solicitud.Folio</span>
+                <label for="folio">Folio:</label>
+            </div>
+            <div class="col-md-3 field">
+                <span id="fcreacion">@Solicitud.FechaCreacion</span>
+                <label for="fcreacion">Fecha de Creación:</label>
+            </div>
+            <div class="col-md-3 field">
+                <span id="usuario">@Solicitud.GEN_USUARIO.NombreUsuario</span>
+                <label for="usuario">Creado por:</label>
+            </div>
+            <div class="col-md-2 field">
+                <span id="estatus"></span>
+                <label for="estatus">Estatus:</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 field">
+                @if (Remitente.IdPuntoEntRec != null)
+                {
+                <span id="remidireccion">
+                    @Remitente.OPE_PUNTOENTREC.CallePunto, @Remitente.OPE_PUNTOENTREC.NoExtPunto, @Remitente.OPE_PUNTOENTREC.NoIntPunto,
+                    @Remitente.OPE_PUNTOENTREC.GEN_COLONIA.Colonia, @Remitente.OPE_PUNTOENTREC.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal,
+                    @Remitente.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.Municipio, @Remitente.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado,
+                    @Remitente.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais, @Remitente.OPE_PUNTOENTREC.Referencia
+                </span>
+                }
+                else
+                {
+                <span id="remidireccion">
+                    @Remitente.CallePuntosEntRec, @Remitente.NoExtPuntosEntRec, @Remitente.NoIntPuntosEntRec,
+                    @Remitente.GEN_COLONIA.Colonia, @Remitente.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal,
+                    @Remitente.GEN_COLONIA.GEN_MUNICIPIO.Municipio, @Remitente.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado,
+                    @Remitente.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais, @Remitente.ReferenciaPuntosEntRec
+                </span>
+                }
+                <label for="remidireccion">Dirección Remitente:</label>
+            </div>
+            <div class="col-md-6 field">
+                @if (Destinatario.IdPuntoEntRec != null)
+                {
+                    <span id="destdireccion">
+                        @Destinatario.OPE_PUNTOENTREC.CallePunto, @Destinatario.OPE_PUNTOENTREC.NoExtPunto, @Destinatario.OPE_PUNTOENTREC.NoIntPunto,
+                        @Destinatario.OPE_PUNTOENTREC.GEN_COLONIA.Colonia, @Destinatario.OPE_PUNTOENTREC.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal,
+                        @Destinatario.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.Municipio, @Destinatario.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado,
+                        @Destinatario.OPE_PUNTOENTREC.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais, @Destinatario.OPE_PUNTOENTREC.Referencia
+                    </span>
+                }
+                else
+                {
+                    if (Destinatario.IdColonia != null)
+                    {
+                        <span id="destdireccion">
+                            @Destinatario.CallePuntosEntRec, @Destinatario.NoExtPuntosEntRec, @Destinatario.NoIntPuntosEntRec,
+                            @Destinatario.GEN_COLONIA.Colonia, @Destinatario.GEN_COLONIA.GEN_CODIGOPOSTAL.CodigoPostal,
+                            @Destinatario.GEN_COLONIA.GEN_MUNICIPIO.Municipio, @Destinatario.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.CiudadEstado,
+                            @Destinatario.GEN_COLONIA.GEN_MUNICIPIO.GEN_ESTADO.GEN_PAIS.Pais, @Destinatario.ReferenciaPuntosEntRec
+                        </span>
+                    }
+                    else
+                    {
+                        if (Destinatario.DirCompletaPuntoEntRec != null)
+                        {
+                            <span id="destdireccion">
+                                @Destinatario.DirCompletaPuntoEntRec
+                            </span>
+                        }
+                        else
+                        {
+                            <span id="destdireccion">
+                                @Destinatario.CallePuntosEntRec, @Destinatario.NoExtPuntosEntRec, @Destinatario.NoIntPuntosEntRec,
+                                @Destinatario.ColoniaPuntosEntRec, @Destinatario.CodigoPostalPuntosEntRec,
+                                @Destinatario.MunicipioPuntosEntRec, @Destinatario.EstadoPuntosEntRec,
+                                @Destinatario.PaisPuntosEntRec, @Destinatario.ReferenciaPuntosEntRec
+                            </span>
+                        }
+                    }
+                }
+                <label for="destdireccion">Dirección Destino:</label>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            switch (@Model.EstatusSolicitud) {
+                case 1:
+                    $('#estatus').append('Generada');
+                case 2:
+                    $('#estatus').append('Recibido en Mensajería');
+
+                    break;
+                case 3:
+                    $('#estatus').append('En Ruta');
+
+                    break;
+                case 4:
+                    $('#estatus').append('Entregado');
+                    break;
+                case 5:
+                    $('#estatus').append('Cancelado');
+                    break;
+                default:
+
+            }
+        });
+    </script>
 }
-
-<h2>Index</h2>
-

@@ -45,5 +45,6 @@ namespace AdminMensajeria.Models
         public virtual DbSet<OPE_SOLICITUDPUNTOSENTREC> OPE_SOLICITUDPUNTOSENTREC { get; set; }
         public virtual DbSet<SIS_CONFIG> SIS_CONFIG { get; set; }
         public virtual DbSet<VIEW_REPORTE> VIEW_REPORTE { get; set; }
+        public virtual DbSet<BET_UBICACION> BET_UBICACION { get; set; }
     }
 }

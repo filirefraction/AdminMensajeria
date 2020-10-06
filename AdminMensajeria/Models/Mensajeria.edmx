@@ -5,6 +5,17 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="MensajeriaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BET_UBICACION">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IDUSER" Type="int" />
+          <Property Name="LATITUD" Type="float" />
+          <Property Name="LONGITUD" Type="float" />
+          <Property Name="FECHA" Type="datetime" />
+          <Property Name="DESCRIPCION" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="GEN_CODIGOPOSTAL">
           <Key>
             <PropertyRef Name="IdCodigoP" />
@@ -57,7 +68,7 @@
           <Property Name="CiudadEstado" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.GEN_IMAGEN' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'softinno_mensajeriamtg.dbo.GEN_IMAGEN' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="GEN_IMAGEN">
           <Key>
             <PropertyRef Name="Imagen" />
@@ -242,10 +253,14 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.GEN_IMAGEN' no tiene
           <Property Name="AplicaConfig" Type="bit" Nullable="false" />
         </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'softinno_mensajeriamtg.dbo.VIEW_REPORTE' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="VIEW_REPORTE">
           <Key>
             <PropertyRef Name="NoEnvio" />
+            
+            
+            
+            
           </Key>
           <Property Name="NoEnvio" Type="int" Nullable="false" />
           <Property Name="Folio" Type="varchar" MaxLength="100" />
@@ -273,6 +288,7 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
           <Property Name="EstadoRemitente" Type="varchar" MaxLength="100" />
           <Property Name="PaisRemitente" Type="varchar" MaxLength="100" />
           <Property Name="FechaEntregaEstimada" Type="datetime" />
+          <Property Name="ObsRemitente" Type="varchar" MaxLength="500" />
           <Property Name="DestinatarioEntrega" Type="varchar" MaxLength="200" />
           <Property Name="CategoriaEntrega" Type="varchar" MaxLength="100" />
           <Property Name="RazonSocialEntrega" Type="varchar" MaxLength="200" />
@@ -292,6 +308,7 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
           <Property Name="MensajeroAsignado" Type="varchar" MaxLength="100" />
           <Property Name="ReferenciaExterna" Type="varchar" MaxLength="50" />
           <Property Name="FechaEntrega" Type="datetime" />
+          <Property Name="ObsEntrega" Type="varchar" MaxLength="500" />
         </EntityType>
         <Association Name="FK_GEN_COLONIA_GEN_CODIGOPOSTAL">
           <End Role="GEN_CODIGOPOSTAL" Type="Self.GEN_CODIGOPOSTAL" Multiplicity="1" />
@@ -510,6 +527,7 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="MensajeriaModelStoreContainer">
+          <EntitySet Name="BET_UBICACION" EntityType="Self.BET_UBICACION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GEN_CODIGOPOSTAL" EntityType="Self.GEN_CODIGOPOSTAL" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GEN_COLONIA" EntityType="Self.GEN_COLONIA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GEN_COMENSUGER" EntityType="Self.GEN_COMENSUGER" Schema="dbo" store:Type="Tables" />
@@ -561,6 +579,7 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
     [VIEW_REPORTE].[EstadoRemitente] AS [EstadoRemitente], 
     [VIEW_REPORTE].[PaisRemitente] AS [PaisRemitente], 
     [VIEW_REPORTE].[FechaEntregaEstimada] AS [FechaEntregaEstimada], 
+    [VIEW_REPORTE].[ObsRemitente] AS [ObsRemitente], 
     [VIEW_REPORTE].[DestinatarioEntrega] AS [DestinatarioEntrega], 
     [VIEW_REPORTE].[CategoriaEntrega] AS [CategoriaEntrega], 
     [VIEW_REPORTE].[RazonSocialEntrega] AS [RazonSocialEntrega], 
@@ -579,7 +598,8 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
     [VIEW_REPORTE].[FechaAsignada] AS [FechaAsignada], 
     [VIEW_REPORTE].[MensajeroAsignado] AS [MensajeroAsignado], 
     [VIEW_REPORTE].[ReferenciaExterna] AS [ReferenciaExterna], 
-    [VIEW_REPORTE].[FechaEntrega] AS [FechaEntrega]
+    [VIEW_REPORTE].[FechaEntrega] AS [FechaEntrega], 
+    [VIEW_REPORTE].[ObsEntrega] AS [ObsEntrega]
     FROM [dbo].[VIEW_REPORTE] AS [VIEW_REPORTE]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_GEN_COLONIA_GEN_CODIGOPOSTAL" Association="Self.FK_GEN_COLONIA_GEN_CODIGOPOSTAL">
@@ -752,6 +772,7 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
           </AssociationSet>
           <EntitySet Name="SIS_CONFIG" EntityType="MensajeriaModel.SIS_CONFIG" />
           <EntitySet Name="VIEW_REPORTE" EntityType="MensajeriaModel.VIEW_REPORTE" />
+          <EntitySet Name="BET_UBICACION" EntityType="MensajeriaModel.BET_UBICACION" />
           </EntityContainer>
         <EntityType Name="GEN_CODIGOPOSTAL">
           <Key>
@@ -1269,6 +1290,7 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
           <Property Name="EstadoRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="PaisRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="FechaEntregaEstimada" Type="DateTime" Precision="3" />
+          <Property Name="ObsRemitente" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="DestinatarioEntrega" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="CategoriaEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="RazonSocialEntrega" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
@@ -1288,6 +1310,18 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
           <Property Name="MensajeroAsignado" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ReferenciaExterna" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="FechaEntrega" Type="DateTime" Precision="3" />
+          <Property Name="ObsEntrega" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="BET_UBICACION">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IDUSER" Type="Int32" />
+          <Property Name="LATITUD" Type="Double" />
+          <Property Name="LONGITUD" Type="Double" />
+          <Property Name="FECHA" Type="DateTime" Precision="3" />
+          <Property Name="DESCRIPCION" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -1551,6 +1585,7 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
           <EntitySetMapping Name="VIEW_REPORTE">
             <EntityTypeMapping TypeName="MensajeriaModel.VIEW_REPORTE">
               <MappingFragment StoreEntitySet="VIEW_REPORTE">
+                <ScalarProperty Name="ObsEntrega" ColumnName="ObsEntrega" />
                 <ScalarProperty Name="FechaEntrega" ColumnName="FechaEntrega" />
                 <ScalarProperty Name="ReferenciaExterna" ColumnName="ReferenciaExterna" />
                 <ScalarProperty Name="MensajeroAsignado" ColumnName="MensajeroAsignado" />
@@ -1570,6 +1605,7 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
                 <ScalarProperty Name="RazonSocialEntrega" ColumnName="RazonSocialEntrega" />
                 <ScalarProperty Name="CategoriaEntrega" ColumnName="CategoriaEntrega" />
                 <ScalarProperty Name="DestinatarioEntrega" ColumnName="DestinatarioEntrega" />
+                <ScalarProperty Name="ObsRemitente" ColumnName="ObsRemitente" />
                 <ScalarProperty Name="FechaEntregaEstimada" ColumnName="FechaEntregaEstimada" />
                 <ScalarProperty Name="PaisRemitente" ColumnName="PaisRemitente" />
                 <ScalarProperty Name="EstadoRemitente" ColumnName="EstadoRemitente" />
@@ -1596,6 +1632,18 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
                 <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
                 <ScalarProperty Name="Folio" ColumnName="Folio" />
                 <ScalarProperty Name="NoEnvio" ColumnName="NoEnvio" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BET_UBICACION">
+            <EntityTypeMapping TypeName="MensajeriaModel.BET_UBICACION">
+              <MappingFragment StoreEntitySet="BET_UBICACION">
+                <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+                <ScalarProperty Name="FECHA" ColumnName="FECHA" />
+                <ScalarProperty Name="LONGITUD" ColumnName="LONGITUD" />
+                <ScalarProperty Name="LATITUD" ColumnName="LATITUD" />
+                <ScalarProperty Name="IDUSER" ColumnName="IDUSER" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
