@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web;
 using System.Web.Mvc;
 
@@ -14,6 +15,8 @@ namespace AdminMensajeria.Controllers
 
         public ActionResult Index()
         {
+            GEN_IMAGEN genImagen = this.db.GEN_IMAGEN.FirstOrDefault<GEN_IMAGEN>();
+            ViewBag.Imagen = genImagen.Imagen;
             return View();
         }
 
@@ -49,64 +52,65 @@ namespace AdminMensajeria.Controllers
 
         public JsonResult ExisteEnvio(int id)
         {
-            Resultados resultado = new Resultados();
+            Resultados resultados = new Resultados();
+            DbSet<OPE_SOLICITUD> opeSolicitud = this.db.OPE_SOLICITUD;
+            Expression<Func<OPE_SOLICITUD, bool>> predicate = (Expression<Func<OPE_SOLICITUD, bool>>)(s => s.IdSolicitud == id);
+            resultados.Result = opeSolicitud.Where<OPE_SOLICITUD>(predicate).ToList<OPE_SOLICITUD>().Count > 0;
+            return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
+        }
 
-            var solicitud = (from s in db.OPE_SOLICITUD where s.IdSolicitud == id select s).ToList();
-
-            if (solicitud.Count > 0)
-                resultado.Result = true;
-            else
-                resultado.Result = false;
-
-            return Json(resultado, JsonRequestBehavior.AllowGet);
+        public JsonResult ExisteFolio(string id)
+        {
+            Resultados resultados = new Resultados();
+            DbSet<OPE_SOLICITUD> opeSolicitud = this.db.OPE_SOLICITUD;
+            Expression<Func<OPE_SOLICITUD, bool>> predicate = (Expression<Func<OPE_SOLICITUD, bool>>)(s => s.Folio == id);
+            resultados.Result = opeSolicitud.Where<OPE_SOLICITUD>(predicate).ToList<OPE_SOLICITUD>().Count > 0;
+            return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Iniciar(string uxu, string C0m)
         {
-            Resultados resultado = new Resultados();
-
+            Resultados resultados = new Resultados();
             try
             {
-                var inputs = db.GEN_USUARIO.Where(x => x.Usuario == uxu && x.Contrasena == C0m).ToList();
-
-                if (inputs.Count > 0)
+                List<GEN_USUARIO> list = this.db.GEN_USUARIO.Where<GEN_USUARIO>((Expression<Func<GEN_USUARIO, bool>>)(x => x.Usuario == uxu && x.Contrasena == C0m)).ToList<GEN_USUARIO>();
+                if (list.Count > 0)
                 {
-                    if (inputs[0].EstatusUsuario == true)
+                    if (list[0].EstatusUsuario)
                     {
-                        Session["IdUsuario"] = inputs[0].IdUsuario;
-                        resultado.Result = true;
+                        this.Session["IdUsuario"] = (object)list[0].IdUsuario;
+                        resultados.Result = true;
                     }
                     else
                     {
-                        resultado.Result = false;
-                        resultado.Mensaje = "Usuario Inactivo";
+                        resultados.Result = false;
+                        resultados.Mensaje = "Usuario Inactivo";
                     }
                 }
                 else
                 {
-                    resultado.Result = false;
-                    resultado.Mensaje = "Usuario o Contraseña Incorrectos";
+                    resultados.Result = false;
+                    resultados.Mensaje = "Usuario o Contraseña Incorrectos";
                 }
             }
             catch (Exception ex)
             {
-                resultado.Result = false;
-                resultado.Mensaje = "Error al iniciar sesión" + ex.Message;
+                resultados.Result = false;
+                resultados.Mensaje = "Error al iniciar sesión" + ex.Message;
             }
-
-            return Json(resultado, JsonRequestBehavior.AllowGet);
+            return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Cerrar()
         {
             try
             {
-                Session.Abandon();
-                return RedirectToAction("Index", "Home");
+                this.Session.Abandon();
+                return (ActionResult)this.RedirectToAction("Index", "Home");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return RedirectToAction("Index", "Home");
+                return (ActionResult)this.RedirectToAction("Index", "Home");
             }
         }
 
@@ -129,12 +133,18 @@ namespace AdminMensajeria.Controllers
             ViewBag.idusuario = IdUsuario;
             ViewBag.tipousuario = (from u in db.GEN_USUARIO where u.IdUsuario == IdUsuario select u.TipoUsuario).FirstOrDefault();
             bool cambiar = (from u in db.GEN_USUARIO where u.IdUsuario == IdUsuario select u.CambiarContrasena).FirstOrDefault();
+            bool flag2 = this.db.SIS_CONFIG.Where<SIS_CONFIG>((Expression<Func<SIS_CONFIG, bool>>)(u => u.IdConfig == 1)).Select<SIS_CONFIG, bool>((Expression<Func<SIS_CONFIG, bool>>)(u => u.AplicaConfig)).FirstOrDefault<bool>();
+
 
             if (cambiar == true)
                 ViewBag.cambiar = 1;
             else
                 ViewBag.cambiar = 0;
 
+            if (flag2)
+                ViewBag.ctrlFolio = 1;
+            else
+                ViewBag.ctrlFolio = 0;
 
             return View();
         }

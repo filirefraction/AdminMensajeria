@@ -4,48 +4,139 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Unidades</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.DescripcionUnidad)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Codigo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Simbolo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EstatusUnidad)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.DescripcionUnidad)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Codigo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Simbolo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EstatusUnidad)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.IdUnidad }) |
-            @Html.ActionLink("Details", "Details", new { id=item.IdUnidad }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.IdUnidad })
-        </td>
-    </tr>
-}
+<div class="form-horizontal">
+    <div class="form-group row">
+        <div class="col-md-1">
+            <button onclick="NuevaUnidad()" data-toggle="tooltip" title="Nueva Unidad" type="button" class="btn btn-default btn-sm ">
+                <span class="glyphicon glyphicon-plus"></span> Nuevo
+            </button>
+        </div>
+        <div class="col-md-8">&nbsp;</div>
+        <div class="col-md-offset-2 col-md-1">
+            <a href="@Url.Action("Configuracion", "Home")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Menu">
+                <span class="glyphicon glyphicon-home"></span> Volver
+            </a>
+        </div>
+    </div>
 
-</table>
+    <table id="UnidadTable" class="ui celled table compact">
+        <thead>
+            <tr>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                    Código
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Simbolo)
+                </th>
+                <th>
+                    Activo
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DescripcionUnidad)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Codigo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Simbolo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EstatusUnidad)
+                    </td>
+                    <td>
+                        <button onclick="EditarUnidad(@item.IdUnidad)" data-toggle="tooltip" title="Editar Unidad" class="btn btn-default btn-sm">
+                            <span class='glyphicon glyphicon-edit'></span>
+                        </button>
+                        <button onclick="EliminarUnidad(@item.IdUnidad)" data-toggle="tooltip" title="Eliminar Unidad" class="btn btn-default btn-sm">
+                            <span class='glyphicon glyphicon-trash'></span>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('#UnidadTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            }
+        });
+    });
+
+    function NuevaUnidad() {
+        $("#OperTitle").html('');
+        $("#OperTitle").append('Nueva Unidad')
+        $("#OperBody").html('');
+        $("#OperBody").load('@Url.Action("Create", "Unidad")');
+        $('#OperModal').modal('show');
+    }
+
+    function EditarUnidad(id) {
+        $("#OperTitle").html('');
+        $("#OperTitle").append('Editar Unidad')
+        $("#OperBody").html('');
+        $("#OperBody").load('@Url.Action("Edit", "Unidad")' + '/' + id);
+        $('#OperModal').modal('show');
+    }
+
+    function EliminarUnidad(id) {
+        $('#ConfirmTitle').html('');
+        var title = "Confirme para eliminar Unidad"
+        $('#ConfirmTitle').append(title);
+        $('#ConfirmBody').html('');
+        var body = '<button onclick="ConfirmaEliminarUnidad(' + id + ')" type="button" class="btn btn-danger" id="modal-btn-si">Si</button>' +
+                   '<button onclick="CancelaEliminar()" type="button" class="btn btn-primary" id="modal-btn-no">No</button>';
+        $('#ConfirmBody').append(body);
+        $('#ConfirmModal').modal('show');
+
+    }
+
+    function ConfirmaEliminarUnidad(id) {
+        $.ajax({
+            url: '@Url.Action("DeleteUnidad", "Unidad")' + '/' + id,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                if (Data.Result == true) {
+                    window.location = '@Url.Action("Index", "Unidad")';
+                }
+                else {
+                    $("#ErrorMSG").html('');
+                    $("#ErrorMSG").append(Data.Mensaje);
+                    $('#ConfirmModal').modal('hide');
+                    $('#ModalErrorMSG').modal('show')
+                }
+            },
+            error: function (data) {
+                console.log("ocurrio un error al Eliminar");
+            }
+        });
+    }
+
+    function CancelaEliminar() {
+        $('#ConfirmTitle').html('');
+        $('#ConfirmBody').html('');
+        $('#ConfirmModal').modal('hide');
+    }
+
+</script>

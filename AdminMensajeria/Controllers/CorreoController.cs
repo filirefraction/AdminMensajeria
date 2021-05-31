@@ -35,85 +35,72 @@ namespace AdminMensajeria.Controllers
             return View(gEN_EMAILCONGIF);
         }
 
-        // GET: Correo/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+        public ActionResult Create() => (ActionResult)this.View();
 
-        // POST: Correo/Create
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "IdEmailConfig,Remitente,Asunto,Cuerpo,ContrasenaEmail,SMTPHost,SMTPPort,SSL,EstatusEMail")] GEN_EMAILCONGIF gEN_EMAILCONGIF)
         {
-            if (ModelState.IsValid)
-            {
-                db.GEN_EMAILCONGIF.Add(gEN_EMAILCONGIF);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(gEN_EMAILCONGIF);
+            if (!this.ModelState.IsValid)
+                return (ActionResult)this.View((object)gEN_EMAILCONGIF);
+            this.db.GEN_EMAILCONGIF.Add(gEN_EMAILCONGIF);
+            this.db.SaveChanges();
+            return (ActionResult)this.RedirectToAction("Index");
         }
 
-        // GET: Correo/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            if (!id.HasValue)
+                return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            GEN_EMAILCONGIF genEmailcongif = this.db.GEN_EMAILCONGIF.Find(new object[1]
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            GEN_EMAILCONGIF gEN_EMAILCONGIF = db.GEN_EMAILCONGIF.Find(id);
-            if (gEN_EMAILCONGIF == null)
-            {
-                return HttpNotFound();
-            }
-            return View(gEN_EMAILCONGIF);
+        (object) id
+            });
+            return genEmailcongif == null ? (ActionResult)this.HttpNotFound() : (ActionResult)this.View((object)genEmailcongif);
         }
 
-        // POST: Correo/Edit/5
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IdEmailConfig,Remitente,Asunto,Cuerpo,ContrasenaEmail,SMTPHost,SMTPPort,SSL,EstatusEMail")] GEN_EMAILCONGIF gEN_EMAILCONGIF)
+        public JsonResult EditEmail(GEN_EMAILCONGIF Email)
         {
-            if (ModelState.IsValid)
+            Resultados resultados = new Resultados();
+            try
             {
-                db.Entry(gEN_EMAILCONGIF).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                this.db.Entry<GEN_EMAILCONGIF>(Email).State = EntityState.Modified;
+                this.db.SaveChanges();
+                resultados.Result = true;
             }
-            return View(gEN_EMAILCONGIF);
+            catch (Exception ex)
+            {
+                resultados.Result = false;
+                resultados.Mensaje = ex.Message;
+                resultados.Valor = 0;
+            }
+            return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: Correo/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
+            if (!id.HasValue)
+                return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            GEN_EMAILCONGIF genEmailcongif = this.db.GEN_EMAILCONGIF.Find(new object[1]
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            GEN_EMAILCONGIF gEN_EMAILCONGIF = db.GEN_EMAILCONGIF.Find(id);
-            if (gEN_EMAILCONGIF == null)
-            {
-                return HttpNotFound();
-            }
-            return View(gEN_EMAILCONGIF);
+        (object) id
+            });
+            return genEmailcongif == null ? (ActionResult)this.HttpNotFound() : (ActionResult)this.View((object)genEmailcongif);
         }
 
-        // POST: Correo/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            GEN_EMAILCONGIF gEN_EMAILCONGIF = db.GEN_EMAILCONGIF.Find(id);
-            db.GEN_EMAILCONGIF.Remove(gEN_EMAILCONGIF);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            this.db.GEN_EMAILCONGIF.Remove(this.db.GEN_EMAILCONGIF.Find(new object[1]
+            {
+        (object) id
+            }));
+            this.db.SaveChanges();
+            return (ActionResult)this.RedirectToAction("Index");
         }
+
 
         protected override void Dispose(bool disposing)
         {

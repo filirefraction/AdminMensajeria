@@ -10,132 +10,112 @@
 
         <div class="form-group row">
         <div class="col-md-2">
-            <button onclick="NuevaAsignacion()" data-toggle="tooltip" title="Nuevo Estado" class="btn btn-default btn-sm ">
+            <button onclick="NuevaAsignacion()" data-toggle="tooltip" title="Nuevo Estado" class="btn btn-default btn-sm " style="margin-top: 25px;">
                 <span class="glyphicon glyphicon-plus"></span> Nuevo
             </button>
         </div>
-        <div class="col-md-9">&nbsp;</div>
+            <div class="col-md-1"></div>
+            <div class="col-md-2">
+                <div class="field">
+                    <input id="FechaDesde" class="form-control input-sm" PlaceHolder="Fecha Desde" autocomplete="off" />
+                    <label for="FechaDesde">Desde</label>
+                </div>
+                <span class="AlertaDanger" id="FechaDesdeVal"></span>
+            </div>
+            <div class="col-md-2">
+                <div class="field">
+                    <input id="FechaHasta" class="form-control input-sm" PlaceHolder="Fecha Hasta" autocomplete="off" />
+                    <label for="FechaHasta">Hasta</label>
+                </div>
+                <span class="AlertaDanger" id="FechaHastaVal"></span>
+            </div>
+            <div class="col-md-1">
+                <a id="VerAsignaciones" class="btn btn-default btn-sm" data-toggle="tooltip" title="Ver Asignaciones" style="margin-top: 25px;">
+                    <span class="glyphicon glyphicon-th-list"></span> Ver
+                </a>
+            </div>
+            <div class="col-md-3">
+                <span class="AlertaDanger" id="MensajeError"></span>
+            </div>
         <div class="col-md-1">
-            <a href="@Url.Action("Estandar", "Home")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Menu">
+            <a href="@Url.Action("Estandar", "Home")" class="btn btn-default btn-sm" data-toggle="tooltip" title="Menu" style="margin-top: 25px;">
                 <span class="glyphicon glyphicon-home"></span> Volver
             </a>
         </div>
     </div>
 
-    <table id="AsignacionTable" class="ui celled table compact">
-        <thead>
-            <tr>
-                <th class="col-md-1">
-                    # de Asignación
-                </th>
-                <th>
-                    Fecha de Ejecución
-                </th>
-                <th>
-                    Entregas Completas
-                </th>
-                <th>
-                    Estatus
-                </th>
-                <th>
-                    Mensajero
-                </th>
-                <th class="col-md-2"></th>
-            </tr>
-        </thead>
-        <tbody>
-
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IdGuia)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FechaProgramadaGuia)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CompletaGuia)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EstatusGuia)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.GEN_USUARIO.NombreUsuario)
-                    </td>
-                    <td>
-                        <a href="@Url.Action("Edit", "Asignacion", new { id = item.IdGuia })" data-toggle="tooltip" title="Editar Asignación" class="btn btn-default btn-sm">
-                            <span class='glyphicon glyphicon-edit'></span>
-                        </a>
-                        <a href="@Url.Action("Details", "Asignacion", new { id = item.IdGuia })" data-toggle="tooltip" title="Imprimir Formato" class="btn btn-default btn-sm">
-                            <span class='glyphicon glyphicon-list-alt'></span>
-                        </a>
-                        <button onclick="Entregas(@item.IdGuia)" data-toggle="tooltip" title="Reportar Entrega" class="btn btn-success btn-sm">
-                            <span class='glyphicon glyphicon-ok-sign'></span>
-                        </button>
-                        <button onclick="EliminarAsignacion(@item.IdGuia)" data-toggle="tooltip" title="Eliminar Asignación" class="btn btn-default btn-sm">
-                            <span class='glyphicon glyphicon-trash'></span>
-                        </button>
-                   
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div id="VistaAsignaciones"></div>
 
 </div>
 
 <script>
     $(document).ready(function () {
-        $('#AsignacionTable').DataTable({
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            "order": [[0, "desc"]]
+        $("#FechaDesde, #FechaHasta").datetimepicker({ format: "Y-m-d", timepicker: false });
+        var d = new Date();
+        var month = d.getMonth() + 1;
+        var day1 = d.getDate() - 1;
+        var day = d.getDate();
+
+        var fdesde = d.getFullYear() + '-' +
+            (month < 10 ? '0' : '') + month + '-' +
+            (day1 < 10 ? '0' : '') + day1;
+
+        var fhasta = d.getFullYear() + '-' +
+        (month < 10 ? '0' : '') + month + '-' +
+        (day < 10 ? '0' : '') + day;
+
+        $("#VistaAsignaciones").html('');
+        $("#VistaAsignaciones").load('@Url.Action("Asignaciones", "Asignacion")' + '?Desde=' + fdesde + '&Hasta=' + fhasta);
+
+        $("#FechaDesde").val(fdesde);
+        $("#FechaHasta").val(fhasta);
+
+        $("#FechaDesde").change(function () {
+            $("#FechaDesdeVal").html('');
+            $("#FechaHastaVal").html('');
+        });
+        $("#FechaHasta").change(function () {
+            $("#FechaDesdeVal").html('');
+            $("#FechaHastaVal").html('');
+        });
+
+        $("#VerAsignaciones").click(function () {
+            CargarVista();
         });
     });
 
+    function CargarVista() {
+        var FechaDesde = $("#FechaDesde").val();
+        var FechaHasta = $("#FechaHasta").val();
 
-    function EliminarAsignacion(id) {
-        $('#ConfirmTitle').html('');
-        var title = "Confirme para eliminar Asignacion"
-        $('#ConfirmTitle').append(title);
-        $('#ConfirmBody').html('');
-        var body = '<button onclick="ConfirmaEliminarAsignacion(' + id + ')" type="button" class="btn btn-danger" id="modal-btn-si">Si</button>' +
-                   '<button onclick="CancelaEliminar()" type="button" class="btn btn-primary" id="modal-btn-no">No</button>';
-        $('#ConfirmBody').append(body);
-        $('#ConfirmModal').modal('show');
+        if ($("#FechaDesde").val().length == 0) {
+            $("#FechaDesdeVal").html('');
+            $("#FechaDesdeVal").append('Este Campo es Obligatorio');
+        }
 
+        if ($("#FechaHasta").val().length == 0) {
+            $("#FechaHastaVal").html('');
+            $("#FechaHastaVal").append('Este Campo es Obligatorio');
+        }
+
+        if ($("#FechaDesde").val() > $("#FechaHasta").val()) {
+            $("#FechaDesdeVal").html('');
+            $("#FechaDesdeVal").append('Fecha Desde no puede ser menor que Fecha Hasta');
+        }
+
+
+        if ($("#FechaDesde").val().length != 0 &&
+            $("#FechaHasta").val().length != 0 &&
+            $("#FechaDesde").val() <= $("#FechaHasta").val()) {
+
+            $("#VistaAsignaciones").html('');
+            $("#VistaAsignaciones").load('@Url.Action("Asignaciones", "Asignacion")' + '?Desde=' + FechaDesde + '&Hasta=' + FechaHasta);
+        }
+        else {
+            console.log("Validación Incorrecta");
+        }
     }
 
-    function ConfirmaEliminarAsignacion(id) {
-        $.ajax({
-            url: '@Url.Action("DeleteAsignacion", "Asignacion")' + '/' + id,
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (Data) {
-                if (Data.Result == true) {
-                 window.location = '@Url.Action("Index", "Asignacion")';
-                }
-                else {
-                    $("#ErrorMSG").html('');
-                    $("#ErrorMSG").append(Data.Mensaje);
-                    $('#ConfirmModal').modal('hide');
-                    $('#ModalErrorMSG').modal('show')
-                }
-            },
-            error: function (data) {
-                console.log("ocurrio un error al Eliminar");
-            }
-        });
-    }
-
-    function CancelaEliminar() {
-        $('#ConfirmTitle').html('');
-        $('#ConfirmBody').html('');
-        $('#ConfirmModal').modal('hide');
-    }
 
     function NuevaAsignacion() {
         $("#OperTitle").html('');
@@ -144,15 +124,6 @@
         $("#OperBody").load('@Url.Action("Create", "Asignacion")');
         $('#OperModal').modal('show');
     }
-
-    function Entregas(id) {
-        $("#OperTitle").html('');
-        $("#OperTitle").append('Reportar Entrega de Envíos')
-        $("#OperBody").html('');
-        $("#OperBody").load('@Url.Action("ReportaEntregas", "Asignacion")' + '/' + id);
-        $('#OperModal').modal('show');
-    }
-
 </script>
 
 

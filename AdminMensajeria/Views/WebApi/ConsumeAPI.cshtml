@@ -1,0 +1,265 @@
+﻿@model IEnumerable<AdminMensajeria.Models.WebAPI.EnvioModel>
+
+
+
+    <div class="form-group">
+
+        <div class="col-md-3">
+            @if (Model != null)
+            {
+                <a id="ValidacionMasiva" data-toggle="tooltip" title="Validar Datos" class="btn btn-default">
+                    <span class="glyphicon glyphicon-ok-circle"></span> Validar
+                </a>
+            }
+        </div>
+        <div class="col-md-3">
+            <button id="RegistroMasivo" onclick="ConfirmarRegistro()" data-toggle="tooltip" title="Procesar Datos" class="btn btn-primary hidden">
+                <span class="glyphicon glyphicon-floppy-disk"></span> Guardar Envíos
+            </button>
+
+        </div>
+        <div class="col-md-5">
+        </div>
+
+    </div>
+
+    <table id="CargaTableAPI" class="ui celled table compact">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Referencia</th>
+                <th>Cantidad</th>
+                <th>Destinatario (*,100)</th>
+                <th>Dirección (*,2000)</th>
+                <th>Tipo Envio</th>
+                <th>Valido</th>
+                <th># Guia</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.FechaProceso)</td>
+            <td>@Html.DisplayFor(modelItem => item.CodigoCliente)@Html.DisplayFor(modelItem => item.Referencia)</td>
+            <td>@Html.DisplayFor(modelItem => item.NumEtiquetas)</td>
+            <td>@Html.DisplayFor(modelItem => item.RazonSocial)</td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DireccionCliente)
+                @Html.DisplayFor(modelItem => item.CiudadCliente)
+            </td>
+            <td>@Html.DisplayFor(modelItem => item.TipoEnvio)</td>
+            <td></td>
+            <td></td>
+        </tr>
+        }
+        </tbody>
+    </table>
+    
+
+<script>
+    $(document).ready(function () {
+        $('#CargaTableAPI').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "paging": false
+        });
+    });
+
+    $('#ValidacionMasiva').click(function () {
+
+        //var cells = [];
+        var Fecha;
+        var Referencia;
+        var NumEtiquetas;
+        var Destinatario;
+        var Direccion;
+        var TipoEnvio;
+
+        var rows = $("#CargaTableAPI").dataTable().fnGetNodes();
+        for (var i = 0; i < rows.length; i++) {
+
+            Fecha = $(rows[i]).find("td:eq(0)").html();
+            Referencia = $(rows[i]).find("td:eq(1)").html();
+            NumEtiquetas = $(rows[i]).find("td:eq(2)").html();
+            Destinatario = $(rows[i]).find("td:eq(3)").html();
+            Direccion = $(rows[i]).find("td:eq(4)").html();
+            TipoEnvio = $(rows[i]).find("td:eq(5)").html();
+
+            //limpiar Validación
+            $(rows[i]).find("td:eq(6)").html('');
+            $(rows[i]).find("td:eq(0)").removeClass();
+            $(rows[i]).find("td:eq(1)").removeClass();
+            $(rows[i]).find("td:eq(2)").removeClass();
+            $(rows[i]).find("td:eq(3)").removeClass();
+            $(rows[i]).find("td:eq(4)").removeClass();
+            $(rows[i]).find("td:eq(5)").removeClass();
+
+
+
+
+            if ($(rows[i]).find("td:eq(1)").html().length == 0) {
+                $(rows[i]).find("td:eq(6)").append('<span class="AlertaDanger">Indique Una Referencia</span> <br>');
+                $(rows[i]).find("td:eq(1)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(1)").html().length > 100) {
+                $(rows[i]).find("td:eq(6)").append('<span class="AlertaDanger">Referencia maximo 100 Caracteres</span> <br>');
+                $(rows[i]).find("td:eq(1)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(2)").html().length == 0) {
+                $(rows[i]).find("td:eq(6)").append('<span class="AlertaDanger">Indique Cantidad</span> <br>');
+                $(rows[i]).find("td:eq(2)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(3)").html().length == 0) {
+                $(rows[i]).find("td:eq(6)").append('<span class="AlertaDanger">Indique Destinatario</span> <br>');
+                $(rows[i]).find("td:eq(3)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(3)").html().length > 100) {
+                $(rows[i]).find("td:eq(6)").append('<span class="AlertaDanger">Destinatario maximo 100 Caracteres</span> <br>');
+                $(rows[i]).find("td:eq(3)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(4)").html().length == 0) {
+                $(rows[i]).find("td:eq(6)").append('<span class="AlertaDanger">Indique Una Dirección</span> <br>');
+                $(rows[i]).find("td:eq(4)").addClass('alert alert-danger');
+            }
+
+            if ($(rows[i]).find("td:eq(4)").html().length > 2000) {
+                $(rows[i]).find("td:eq(6)").append('<span class="AlertaDanger">Calle maximo 2000 Caracteres</span> <br>');
+                $(rows[i]).find("td:eq(4)").addClass('alert alert-danger');
+            }
+
+
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            if ($(rows[i]).find("td:eq(2)").html().length != 0 &&
+                $(rows[i]).find("td:eq(1)").html().length != 0 && $(rows[i]).find("td:eq(1)").html().length <= 100 &&
+                $(rows[i]).find("td:eq(3)").html().length != 0 && $(rows[i]).find("td:eq(3)").html().length <= 100 &&
+                $(rows[i]).find("td:eq(4)").html().length != 0 && $(rows[i]).find("td:eq(4)").html().length <= 2000) {
+                $(rows[i]).find("td:eq(6)").html('');
+                $(rows[i]).find("td:eq(6)").append('<span class="AlertaSuccess">Correcto</span>');
+                $(rows[i]).find("td:eq(6)").removeClass();
+                $(rows[i]).find("td:eq(6)").addClass('alert alert-success');
+            }
+
+        }
+        //console.log(cells);
+        $("#RegistroMasivo").removeClass('hidden');
+
+    });
+
+    function GuardarEnvios() {
+        $('#ConfirmModal').modal('hide');
+
+        var Fecha;
+        var Referencia;
+        var NumEtiquetas;
+        var Destinatario;
+        var Direccion;
+        var TipoEnvio;
+
+        var rows = $("#CargaTableAPI").dataTable().fnGetNodes();
+        for (var i = 0; i < rows.length; i++) {
+
+            Referencia = $(rows[i]).find("td:eq(1)").html();
+            NumEtiquetas = $(rows[i]).find("td:eq(2)").html();
+            Destinatario = $(rows[i]).find("td:eq(3)").html();
+            Direccion = $(rows[i]).find("td:eq(4)").html();
+            TipoEnvio = $(rows[i]).find("td:eq(5)").html();
+
+            //limpiar Validación
+            $(rows[i]).find("td:eq(6)").html('');
+            $(rows[i]).find("td:eq(6)").removeClass();
+            $(rows[i]).find("td:eq(6)").append('<span class="AlertaDanger">No Registrado</span>');
+            $(rows[i]).find("td:eq(6)").addClass('alert alert-danger');
+
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            if ($(rows[i]).find("td:eq(2)").html().length != 0 &&
+            $(rows[i]).find("td:eq(1)").html().length != 0 && $(rows[i]).find("td:eq(1)").html().length <= 100 &&
+            $(rows[i]).find("td:eq(3)").html().length != 0 && $(rows[i]).find("td:eq(3)").html().length <= 100 &&
+            $(rows[i]).find("td:eq(4)").html().length != 0 && $(rows[i]).find("td:eq(4)").html().length <= 2000) {
+
+                //COmienza la inserción
+                $.ajax({
+                    url: '@Url.Action("CrateMasivo", "WebApi")',
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "Referencia": Referencia,
+                        "NumEtiquetas": NumEtiquetas,
+                        "Destinatario": Destinatario,
+                        "Direccion": Direccion,
+                        "TipoEnvio": TipoEnvio,
+                        "Fila": i,
+                    }),
+                    success: function (Data) {
+                        if (Data.Result == true) {
+                            if (Data.Preregistrada == true) {
+                                $(rows[Data.Fila]).find("td:eq(6)").html('');
+                                $(rows[Data.Fila]).find("td:eq(6)").removeClass();
+                                $(rows[Data.Fila]).find("td:eq(6)").append('<span class="AlertaWarning">Registrado Anteriormente</span>');
+                                $(rows[Data.Fila]).find("td:eq(6)").addClass('alert alert-warning');
+                                $(rows[Data.Fila]).find("td:eq(7)").html('');
+                                $(rows[Data.Fila]).find("td:eq(7)").append(Data.Valor);
+                            }
+                            else {
+                                $(rows[Data.Fila]).find("td:eq(6)").html('');
+                                $(rows[Data.Fila]).find("td:eq(6)").removeClass();
+                                $(rows[Data.Fila]).find("td:eq(6)").append('<span class="AlertaSuccess">Registro Correcto</span>');
+                                $(rows[Data.Fila]).find("td:eq(6)").addClass('alert alert-success');
+                                $(rows[Data.Fila]).find("td:eq(7)").append(Data.Valor);
+                            }
+                        }
+                        else {
+                            if (Data.Redirecciona == true) {
+                                window.location = '@Url.Action("Index", "Home")';
+                            }
+                            else {
+                                $(rows[Data.Fila]).find("td:eq(6)").html('');
+                                $(rows[Data.Fila]).find("td:eq(6)").removeClass();
+                                $(rows[Data.Fila]).find("td:eq(6)").append('<span class="AlertaDanger">Error Al registrar: ' + Data.Mensaje + '</span>');
+                                $(rows[Data.Fila]).find("td:eq(6)").addClass('alert alert-danger');
+                            }
+                        }
+                    },
+                    error: function () {
+                        console.log("No pudo acceder al Metodo");
+                    }
+                });
+
+            }
+        }
+
+        $('#RegistroMasivo').addClass('hidden');
+    }
+
+    function ConfirmarRegistro() {
+        $('#ConfirmTitle').html('');
+        var title = "Confirme para Registrar"
+        $('#ConfirmTitle').append(title);
+        $('#ConfirmBody').html('');
+        var warning = '<span class="AlertaDanger">¡Importante! Los registros que no son validos no se guardaran.</span><br>';
+        var body = '<button onclick="GuardarEnvios()" type="button" class="btn btn-primary" id="modal-btn-si">Si</button>' +
+                   '<button onclick="Cancela()" type="button" class="btn btn-danger" id="modal-btn-no">No</button>';
+        $('#ConfirmBody').append(warning);
+        $('#ConfirmBody').append(body);
+        $('#ConfirmModal').modal('show');
+    }
+
+    function Cancela() {
+        $('#ConfirmTitle').html('');
+        $('#ConfirmBody').html('');
+        $('#ConfirmModal').modal('hide');
+    }
+
+
+    </script>

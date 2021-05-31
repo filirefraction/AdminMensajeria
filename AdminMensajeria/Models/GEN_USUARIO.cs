@@ -17,9 +17,9 @@ namespace AdminMensajeria.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public GEN_USUARIO()
         {
+            this.GEN_COMENSUGER = new HashSet<GEN_COMENSUGER>();
             this.OPE_GUIA = new HashSet<OPE_GUIA>();
             this.OPE_SOLICITUD = new HashSet<OPE_SOLICITUD>();
-            this.GEN_COMENSUGER = new HashSet<GEN_COMENSUGER>();
         }
     
         public int IdUsuario { get; set; }
@@ -32,12 +32,12 @@ namespace AdminMensajeria.Models
         public bool CambiarContrasena { get; set; }
         public bool EstatusUsuario { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GEN_COMENSUGER> GEN_COMENSUGER { get; set; }
         public virtual OPE_PUNTOENTREC OPE_PUNTOENTREC { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OPE_GUIA> OPE_GUIA { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OPE_SOLICITUD> OPE_SOLICITUD { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GEN_COMENSUGER> GEN_COMENSUGER { get; set; }
     }
 }

@@ -1,63 +1,142 @@
 ﻿@model AdminMensajeria.Models.GEN_UNIDAD
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Unidad";
 }
 
-<h2>Edit</h2>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>GEN_UNIDAD</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.IdUnidad)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.DescripcionUnidad, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DescripcionUnidad, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.DescripcionUnidad, "", new { @class = "text-danger" })
+<div class="form-horizontal">
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.DescripcionUnidad, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Pieza", @Maxlength = 50 } })
+                <label for="DescripcionUnidad">Descripción (*)</label>
             </div>
+            <span class="AlertaDanger" id="DescripcionUnidadVal"></span>
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Codigo, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Codigo, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Codigo, "", new { @class = "text-danger" })
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.Codigo, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "H7", @Maxlength = 50 } })
+                <label for="Codigo">Código</label>
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Simbolo, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Simbolo, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Simbolo, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.EstatusUnidad, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.EstatusUnidad)
-                    @Html.ValidationMessageFor(model => model.EstatusUnidad, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
+            <span class="AlertaDanger" id="CodigoVal"></span>
         </div>
     </div>
-}
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
+    <div class="form-group">
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.Simbolo, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Pieza", @Maxlength = 50 } })
+                <label for="Simbolo">Símbolo</label>
+            </div>
+            <span class="AlertaDanger" id="SimboloVal"></span>
+        </div>
+        <div class="col-md-6">
+            <div class="field">
+                @Html.EditorFor(model => model.EstatusUnidad)
+                <label for="EstatusUnidad">Activo</label>
+            </div>
+            <span class="AlertaDanger" id="EstatusUnidadVal"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-2">
+            <button id="ValidaUnidad" type="button" class="btn btn-primary btn-sm ">
+                <span class="glyphicon glyphicon-floppy-disk"></span> Guardar
+            </button>
+        </div>
+        <div class="col-md-7">
+            <span class="AlertaDanger" id="MensajeError"></span>
+        </div>
+        <div id="VolverCliente" class="col-md-2">
+            <a href="@Url.Action("Index","Unidad")" class="btn btn-danger btn-sm">
+                <span class="glyphicon glyphicon-floppy-remove"></span> Cancelar
+            </a>
+        </div>
+    </div>
+
 </div>
+
+<script>
+    $(document).ready(function () {
+        $("#DescripcionUnidad").keyup(function () {
+            $("#DescripcionUnidadVal").html('');
+        });
+
+        $("#Codigo").keyup(function () {
+            $("#CodigoVal").html('');
+        });
+
+        $("#Simbolo").keyup(function () {
+            $("#SimboloVal").html('');
+        });
+
+        ///////////////////////////////////////////////////////////////
+        $("#ValidaUnidad").click(function () {
+            var IdUnidad = @Model.IdUnidad;
+            var DescripcionUnidad = $("#DescripcionUnidad").val();
+            var Codigo = $("#Codigo").val();
+            var Simbolo = $("#Simbolo").val();
+            var EstatusUnidad = $("#EstatusUnidad").prop("checked");
+
+
+            ///////////////////////////////////////////////////////////
+            if ($("#DescripcionUnidad").val().length === 0) {
+                $("#DescripcionUnidadVal").html('');
+                $("#DescripcionUnidadVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#DescripcionUnidad").val().length > 50) {
+                $("#DescripcionUnidadVal").html('');
+                $("#DescripcionUnidadVal").append('Este Campo es puede contener maximo 50 caracteres');
+            }
+
+            if ($("#Codigo").val().length > 50) {
+                $("#CodigoVal").html('');
+                $("#CodigoVal").append('Este Campo es puede contener maximo 50 caracteres');
+            }
+
+            if ($("#Simbolo").val().length > 50) {
+                $("#SimboloVal").html('');
+                $("#SimboloVal").append('Este Campo es puede contener maximo 50 caracteres');
+            }
+
+            //Primero Valida que los campos que siempre van a ser obligatorios//
+            if ($("#DescripcionUnidad").val().length != 0 && $("#DescripcionUnidad").val().length <= 50 &&
+                $("#Codigo").val().length <= 50 && $("#Simbolo").val().length <= 50) {
+
+                //inserta sin validar la fecha de egreso//
+                $.ajax({
+                    url: '@Url.Action("EditUnidad", "Unidad")',
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        "IdUnidad": IdUnidad,
+                        "DescripcionUnidad": DescripcionUnidad,
+                        "Codigo": Codigo,
+                        "Simbolo": Simbolo,
+                        "EstatusUnidad": EstatusUnidad
+                    }),
+                    success: function (data) {
+                        if (data.Result == true) {
+                            window.location = '@Url.Action("Index", "Unidad")';
+                        }
+                        else {
+                            $("#MensajeError").html('');
+                            $("#MensajeError").append(data.Mensaje);
+                        }
+                    },
+                    error: function () {
+                        console.log("No pudo acceder al Metodo");
+                    }
+                });
+            }
+            else {
+                console.log("No se cumplio la validación de datos");
+            }
+        });
+    });
+
+</script>

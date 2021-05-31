@@ -15,6 +15,7 @@ namespace AdminMensajeria.Models
     public partial class VIEW_REPORTE
     {
         public int NoEnvio { get; set; }
+        public string Folio { get; set; }
         public int IdUsuario { get; set; }
         public System.DateTime FechaCreacion { get; set; }
         public int Estatus { get; set; }
@@ -39,11 +40,13 @@ namespace AdminMensajeria.Models
         public string EstadoRemitente { get; set; }
         public string PaisRemitente { get; set; }
         public Nullable<System.DateTime> FechaEntregaEstimada { get; set; }
+        public string ObsRemitente { get; set; }
         public string DestinatarioEntrega { get; set; }
         public string CategoriaEntrega { get; set; }
         public string RazonSocialEntrega { get; set; }
         public string DescripcionEntrega { get; set; }
         public string ContactoEntrega { get; set; }
+        public string DirecionCompletaEntrega { get; set; }
         public string CalleEntrega { get; set; }
         public string NoExtEntrega { get; set; }
         public string NointEntrega { get; set; }
@@ -57,5 +60,8 @@ namespace AdminMensajeria.Models
         public string MensajeroAsignado { get; set; }
         public string ReferenciaExterna { get; set; }
         public Nullable<System.DateTime> FechaEntrega { get; set; }
+        public string ObsEntrega { get; set; }
+        public string MotivoDevolucion { get; set; }
+        public int EstatusCumplimiento { get; set; }
     }
 }

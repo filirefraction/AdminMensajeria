@@ -1,0 +1,33 @@
+﻿@model AdminMensajeria.Models.OPE_SOLICITUD
+
+@{
+    Layout = null;
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/130527/qrcode.js"></script>
+
+
+<div class="qr-code-generator">
+
+
+
+    <div id="qrcode"></div>
+    <br />
+    <div id="qrcode2"></div>
+
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        var value = '@Model.IdSolicitud';
+        var size = 175;
+        var name = 'qrcode';
+        var name2 = 'qrcode2';
+
+        generateQrCode(size, value, name);
+        generateQrCode(size, value, name2);
+
+    });
+</script>

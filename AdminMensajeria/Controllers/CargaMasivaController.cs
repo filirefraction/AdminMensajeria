@@ -1,4 +1,5 @@
-﻿using AdminMensajeria.Models;
+﻿using AdminMensajeria.Clases;
+using AdminMensajeria.Models;
 using ExcelDataReader;
 using System;
 using System.Collections;
@@ -8,10 +9,9 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web;
 using System.Web.Mvc;
-using ZXing;
-using ZXing.Common;
 
 namespace AdminMensajeria.Controllers
 {
@@ -54,10 +54,10 @@ namespace AdminMensajeria.Controllers
             return PartialView(oPE_SOLICITUD);
         }
 
-
-
         public JsonResult Impresion(int[] data)
         {
+            data = ((IEnumerable<int>)data).OrderBy<int, int>((Func<int, int>)(c => c)).ToArray<int>();
+
             ArrayList idList = new ArrayList();
             foreach (var item in data)
             {
@@ -70,254 +70,191 @@ namespace AdminMensajeria.Controllers
             return Json(JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Test()
-        {
-            return View();
-        }
-
-
         public JsonResult CargarTabla(HttpPostedFileWrapper upload)
         {
-
-            Resultados Resultado = new Resultados();
-
-
-
+            Resultados resultados = new Resultados();
             if (upload != null && upload.ContentLength > 0)
             {
-                // ExcelDataReader works with the binary Excel file, so it needs a FileStream
-                // to get started. This is how we avoid dependencies on ACE or Interop:
-                Stream stream = upload.InputStream;
-
-                IExcelDataReader reader = null;
-
-
+                Stream inputStream = upload.InputStream;
+                IExcelDataReader self;
                 if (upload.FileName.EndsWith(".xls"))
-                {
-                    reader = ExcelReaderFactory.CreateBinaryReader(stream);
-                }
+                    self = ExcelReaderFactory.CreateBinaryReader(inputStream);
                 else if (upload.FileName.EndsWith(".xlsx"))
                 {
-                    reader = ExcelReaderFactory.CreateOpenXmlReader(stream);
+                    self = ExcelReaderFactory.CreateOpenXmlReader(inputStream);
                 }
                 else
                 {
-                    Resultado.Result = false;
-                    Resultado.Mensaje = "Este formato de archivo no es compatible";
-                    return Json(Resultado, JsonRequestBehavior.AllowGet);
+                    resultados.Result = false;
+                    resultados.Mensaje = "Este formato de archivo no es compatible";
+                    return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
                 }
-                int fieldcount = reader.FieldCount;
-                int rowcount = reader.RowCount;
-                DataTable dt = new DataTable();
-                DataRow row;
-                DataTable dt_ = new DataTable();
+                int fieldCount = self.FieldCount;
+                int rowCount = self.RowCount;
+                DataTable table1 = new DataTable();
+                DataTable dataTable = new DataTable();
                 try
                 {
-                    dt_ = reader.AsDataSet().Tables[0];
-                    //for (int i = 0; i < dt_.Columns.Count; i++)
-                    //{
-                    //    dt.Columns.Add(dt_.Rows[0][i].ToString());
-                    //}
-                    dt.Columns.Add("Destinatario (*,200)");
-                    dt.Columns.Add("Referencia 1 (*,200)");
-                    dt.Columns.Add("Cant (*)");
-                    dt.Columns.Add("Destino (*,100)");
-                    dt.Columns.Add("Calle (*,100)");
-                    dt.Columns.Add("#Ext (*,20)");
-                    dt.Columns.Add("#Int (100)");
-                    dt.Columns.Add("Referencia 2 (200)");
-                    dt.Columns.Add("Colonia (*,100)");
-                    dt.Columns.Add("C.P. (*,20)");
-                    dt.Columns.Add("Municipio (*,100)");
-                    dt.Columns.Add("Estado (*,100)");
-                    dt.Columns.Add("País (*,100)");
-                    dt.Columns.Add("Valido");
-                    dt.Columns.Add("#");
-
-                    int rowcounter = 0;
-                    for (int row_ = 1; row_ < dt_.Rows.Count; row_++)
+                    DataTable table2 = self.AsDataSet().Tables[0];
+                    table1.Columns.Add("Destinatario (*,200)");
+                    table1.Columns.Add("Referencia 1 (*,200)");
+                    table1.Columns.Add("Cant (*)");
+                    table1.Columns.Add("Destino (*,100)");
+                    table1.Columns.Add("Calle (*,100)");
+                    table1.Columns.Add("#Ext (*,20)");
+                    table1.Columns.Add("#Int (100)");
+                    table1.Columns.Add("Referencia 2 (200)");
+                    table1.Columns.Add("Colonia (*,100)");
+                    table1.Columns.Add("C.P. (*,20)");
+                    table1.Columns.Add("Municipio (*,100)");
+                    table1.Columns.Add("Estado (*,100)");
+                    table1.Columns.Add("País (*,100)");
+                    table1.Columns.Add("Valido");
+                    table1.Columns.Add("#");
+                    int num = 0;
+                    for (int index = 1; index < table2.Rows.Count; ++index)
                     {
-                        row = dt.NewRow();
-
-                        for (int col = 0; col < dt_.Columns.Count; col++)
+                        DataRow row = table1.NewRow();
+                        for (int columnIndex = 0; columnIndex < table2.Columns.Count; ++columnIndex)
                         {
-                            row[col] = dt_.Rows[row_][col].ToString();
-                            rowcounter++;
+                            row[columnIndex] = (object)table2.Rows[index][columnIndex].ToString();
+                            ++num;
                         }
-                        dt.Rows.Add(row);
+                        table1.Rows.Add(row);
                     }
-
                 }
                 catch (Exception ex)
                 {
-
-                    Resultado.Result = false;
-                    Resultado.Mensaje = "Imposible Subir Archivo!";
-                    return Json(Resultado, JsonRequestBehavior.AllowGet);
+                    resultados.Result = false;
+                    resultados.Mensaje = "Imposible Subir Archivo!";
+                    return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
                 }
-
-                DataSet result = new DataSet();
-                result.Tables.Add(dt);
-                reader.Close();
-                reader.Dispose();
-                DataTable tmp = result.Tables[0];
-                Session["tmpdata"] = tmp;  //store datatable into session
-
-                Resultado.Result = true;
-                return Json(Resultado, JsonRequestBehavior.AllowGet);
-
+                DataSet dataSet = new DataSet();
+                dataSet.Tables.Add(table1);
+                self.Close();
+                self.Dispose();
+                this.Session["tmpdata"] = (object)dataSet.Tables[0];
+                resultados.Result = true;
+                return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
             }
-            else
-            {
-                Resultado.Result = false;
-                Resultado.Mensaje = "No Eligio Ningun Archivo";
-                return Json(Resultado, JsonRequestBehavior.AllowGet);
-
-            }
-
+            resultados.Result = false;
+            resultados.Mensaje = "No Eligio Ningun Archivo";
+            return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult CrateMasivo(string Nombre, string Producto, decimal Cantidad, string Destinatario, string Calle, string NoExt, string NoInt, string Referencia, string Colonia, string CodigoPostal, string Municipio, string Estado, string Pais, int Fila)
+        public JsonResult CrateMasivo(
+       string Nombre,
+       string Producto,
+       Decimal Cantidad,
+       string Destinatario,
+       string Calle,
+       string NoExt,
+       string NoInt,
+       string Referencia,
+       string Colonia,
+       string CodigoPostal,
+       string Municipio,
+       string Estado,
+       string Pais,
+       int Fila)
         {
-            Resultados resultado = new Resultados();
-            resultado.Fila = Fila;
-
-            int IdUsuario = 0;
-            if (Session["IdUsuario"] == null)
+            Resultados resultados = new Resultados();
+            resultados.Fila = Fila;
+            if (this.Session["IdUsuario"] == null)
             {
-                resultado.Redirecciona = true;
-                return Json(resultado, JsonRequestBehavior.AllowGet);
+                resultados.Redirecciona = true;
+                return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
             }
-            else
-                IdUsuario = (int)Session["IdUsuario"];
-
-
+            int num = (int)this.Session["IdUsuario"];
             OPE_SOLICITUD Solicitud = new OPE_SOLICITUD();
-            OPE_SOLICITUDPRODUCTO Productos = new OPE_SOLICITUDPRODUCTO();
-            OPE_SOLICITUDPUNTOSENTREC Punto = new OPE_SOLICITUDPUNTOSENTREC();
-
-
-            //Primero Reguistra Solicitud
-            Solicitud.IdUsuario = IdUsuario; // Aqui va Variable de sesión
-            //Solicitud.FechaCreacion = DateTime.Now; //Local
-            Solicitud.FechaCreacion = DateTime.Now.AddHours(1); //Producción
+            OPE_SOLICITUDPRODUCTO entity1 = new OPE_SOLICITUDPRODUCTO();
+            OPE_SOLICITUDPUNTOSENTREC entity2 = new OPE_SOLICITUDPUNTOSENTREC();
+            Solicitud.IdUsuario = num;
+            Solicitud.FechaCreacion = helper.dateTimeZone(DateTime.Now);
             Solicitud.RequiereAcuse = false;
             Solicitud.Emergencia = false;
             Solicitud.EstatusSolicitud = 1;
             try
             {
-                db.OPE_SOLICITUD.Add(Solicitud);
-                db.SaveChanges();
-                resultado.Result = true;
-                resultado.Valor = (from a in db.OPE_SOLICITUD orderby a.IdSolicitud descending select a.IdSolicitud).First();
-
-                //Crea Imagen QR
-                var writer = new BarcodeWriter() // Si un barcodeWriter para generar un codigo QR (O.O)
-                {
-                    Format = BarcodeFormat.QR_CODE, //setearle el tipo de codigo que generara.
-                    Options = new EncodingOptions()
-                    {
-                        Height = 100,
-                        Width = 100,
-                        Margin = 1, // el margen que tendra el codigo con el restro de la imagen
-                    },
-                };
-
-                // Generar el codigo, este metodo retorna una bitmap
-                Bitmap bitmap = writer.Write(resultado.Valor.ToString());
-
-                // guardar el bitmap con el formato deseado y la locacion deseada
-                bitmap.Save(String.Format(Server.MapPath("~/Image/qr/") + "{0}.png", resultado.Valor.ToString()), ImageFormat.Png);
-
-
+                this.db.OPE_SOLICITUD.Add(Solicitud);
+                this.db.SaveChanges();
+                resultados.Result = true;
+                resultados.Valor = this.db.OPE_SOLICITUD.OrderByDescending<OPE_SOLICITUD, int>((Expression<Func<OPE_SOLICITUD, int>>)(a => a.IdSolicitud)).Select<OPE_SOLICITUD, int>((Expression<Func<OPE_SOLICITUD, int>>)(a => a.IdSolicitud)).First<int>();
             }
             catch (Exception ex)
             {
-                resultado.Result = false;
-                resultado.Mensaje = "No se pudo Regsitrar Solicitud: " + ex.Message;
-                resultado.Valor = 0;
+                resultados.Result = false;
+                resultados.Mensaje = "No se pudo Regsitrar Solicitud: " + ex.Message;
+                resultados.Valor = 0;
             }
-
-            if (resultado.Result == true)
+            if (resultados.Result)
             {
-                //Registra Producto
-                Productos.IdSolicitud = resultado.Valor;
-                Productos.Descripcion = Producto;
-                Productos.Cantidad = Cantidad;
-                Productos.Recibido = false;
+                entity1.IdSolicitud = resultados.Valor;
+                entity1.Descripcion = Producto;
+                entity1.Cantidad = new Decimal?(Cantidad);
+                entity1.Recibido = false;
                 try
                 {
-                    db.OPE_SOLICITUDPRODUCTO.Add(Productos);
-                    db.SaveChanges();
-                    resultado.Result = true;
+                    this.db.OPE_SOLICITUDPRODUCTO.Add(entity1);
+                    this.db.SaveChanges();
+                    resultados.Result = true;
                 }
                 catch (Exception ex)
                 {
-                    resultado.Result = false;
-                    resultado.Mensaje = "No se pudo Registrar Producto: " + ex.Message;
+                    resultados.Result = false;
+                    resultados.Mensaje = "No se pudo Registrar Producto: " + ex.Message;
                 }
-
-                if (resultado.Result == true)
+                if (resultados.Result)
                 {
-                    //RegistraPunto de Remitente
-                    Punto.IdSolicitud = resultado.Valor;
-                    Punto.IdPuntoEntRec = (from p in db.GEN_USUARIO where p.IdUsuario == Solicitud.IdUsuario select p.IdPuntoEntRec).FirstOrDefault();
-                    Punto.TipoPunto = 1;
-                    Punto.Problema = false;
-                    Punto.EstatusPuntosEntRec = false;
-
+                    entity2.IdSolicitud = resultados.Valor;
+                    entity2.IdPuntoEntRec = new int?(this.db.GEN_USUARIO.Where<GEN_USUARIO>((Expression<Func<GEN_USUARIO, bool>>)(p => p.IdUsuario == Solicitud.IdUsuario)).Select<GEN_USUARIO, int>((Expression<Func<GEN_USUARIO, int>>)(p => p.IdPuntoEntRec)).FirstOrDefault<int>());
+                    entity2.TipoPunto = 1;
+                    entity2.Problema = false;
+                    entity2.EstatusPuntosEntRec = false;
                     try
                     {
-                        db.OPE_SOLICITUDPUNTOSENTREC.Add(Punto);
-                        db.SaveChanges();
-                        resultado.Result = true;
+                        this.db.OPE_SOLICITUDPUNTOSENTREC.Add(entity2);
+                        this.db.SaveChanges();
+                        resultados.Result = true;
                     }
                     catch (Exception ex)
                     {
-                        resultado.Result = false;
-                        resultado.Mensaje = "No se pudo Registrar Punto Remitente: " + ex.Message;
+                        resultados.Result = false;
+                        resultados.Mensaje = "No se pudo Registrar Punto Remitente: " + ex.Message;
                     }
-
-                    if (resultado.Result == true)
+                    if (resultados.Result)
                     {
-                        //RegistraPunto de Entrega
-                        Punto.IdSolicitud = resultado.Valor;
-                        Punto.IdPuntoEntRec = null;
-                        Punto.TipoPunto = 2;
-                        Punto.DestinatarioPuntoEntRec = Nombre;
-                        Punto.DescripcionPuntoEntRec = Destinatario;
-                        Punto.CallePuntosEntRec = Calle;
-                        Punto.NoExtPuntosEntRec = NoExt;
-                        Punto.NoIntPuntosEntRec = NoInt;
-                        Punto.ReferenciaPuntosEntRec = Referencia;
-                        Punto.ColoniaPuntosEntRec = Colonia;
-                        Punto.CodigoPostalPuntosEntRec = CodigoPostal;
-                        Punto.MunicipioPuntosEntRec = Municipio;
-                        Punto.EstadoPuntosEntRec = Estado;
-                        Punto.PaisPuntosEntRec = Pais;
-                        Punto.Problema = false;
-                        Punto.EstatusPuntosEntRec = false;
+                        entity2.IdSolicitud = resultados.Valor;
+                        entity2.IdPuntoEntRec = new int?();
+                        entity2.TipoPunto = 2;
+                        entity2.DestinatarioPuntoEntRec = Nombre;
+                        entity2.DescripcionPuntoEntRec = Destinatario;
+                        entity2.CallePuntosEntRec = Calle;
+                        entity2.NoExtPuntosEntRec = NoExt;
+                        entity2.NoIntPuntosEntRec = NoInt;
+                        entity2.ReferenciaPuntosEntRec = Referencia;
+                        entity2.ColoniaPuntosEntRec = Colonia;
+                        entity2.CodigoPostalPuntosEntRec = CodigoPostal;
+                        entity2.MunicipioPuntosEntRec = Municipio;
+                        entity2.EstadoPuntosEntRec = Estado;
+                        entity2.PaisPuntosEntRec = Pais;
+                        entity2.Problema = false;
+                        entity2.EstatusPuntosEntRec = false;
                         try
                         {
-                            db.OPE_SOLICITUDPUNTOSENTREC.Add(Punto);
-                            db.SaveChanges();
-                            resultado.Result = true;
+                            this.db.OPE_SOLICITUDPUNTOSENTREC.Add(entity2);
+                            this.db.SaveChanges();
+                            resultados.Result = true;
                         }
                         catch (Exception ex)
                         {
-                            resultado.Result = false;
-                            resultado.Mensaje = "No se pudo Registrar Punto Entrega: " + ex.Message;
+                            resultados.Result = false;
+                            resultados.Mensaje = "No se pudo Registrar Punto Entrega: " + ex.Message;
                         }
-
                     }
-
-
                 }
-
-
             }
-
-            return Json(resultado, JsonRequestBehavior.AllowGet);
+            return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult LimpiarTabla()

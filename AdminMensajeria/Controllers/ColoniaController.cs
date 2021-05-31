@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -31,10 +32,9 @@ namespace AdminMensajeria.Controllers
         // GET: Colonia/Create
         public ActionResult Create(int id)//recibe ID Municipio
         {
-            int IdMunicipio = id;
-            int IdEstado = (from m in db.GEN_MUNICIPIO where m.IdMunicipio == IdMunicipio select m.IdEstado).FirstOrDefault();
+            int IdEstado = (from m in db.GEN_MUNICIPIO where m.IdMunicipio == id select m.IdEstado).FirstOrDefault();
             int IdPais = (from p in db.GEN_ESTADO where p.IdEstado == IdEstado select p.IdPais).FirstOrDefault();
-            ViewBag.municipio = IdMunicipio;
+            ViewBag.municipio = id;
             ViewBag.estado = IdEstado;
             ViewBag.pais = IdPais;
 
@@ -133,23 +133,20 @@ namespace AdminMensajeria.Controllers
 
         public JsonResult ValidarCodigoPostal(string id)
         {
-            Resultados result = new Resultados();
-
-            var IdCodigo = (from c in db.GEN_CODIGOPOSTAL where c.CodigoPostal == id select c.IdCodigoP).FirstOrDefault();
-
-            if (IdCodigo != 0)
+            Resultados resultados = new Resultados();
+            int num = this.db.GEN_CODIGOPOSTAL.Where<GEN_CODIGOPOSTAL>((Expression<Func<GEN_CODIGOPOSTAL, bool>>)(c => c.CodigoPostal == id)).Select<GEN_CODIGOPOSTAL, int>((Expression<Func<GEN_CODIGOPOSTAL, int>>)(c => c.IdCodigoP)).FirstOrDefault<int>();
+            if (num != 0)
             {
-                result.Result = true;
-                result.Valor = IdCodigo;
-                result.Mensaje = "Código Postal Verificado";
+                resultados.Result = true;
+                resultados.Valor = num;
+                resultados.Mensaje = "Código Postal Verificado";
             }
             else
             {
-                result.Result = false;
-                result.Mensaje = "¡Importante!, Este Código Postal No Esta Registrado, ¿Desea Registrarlo?";
+                resultados.Result = false;
+                resultados.Mensaje = "¡Importante!, Este Código Postal No Esta Registrado, ¿Desea Registrarlo?";
             }
-
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult RegistrarCodigoPostal(string id)

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using AdminMensajeria.Clases;
 using AdminMensajeria.Models;
 
 namespace AdminMensajeria.Controllers
@@ -63,35 +64,28 @@ namespace AdminMensajeria.Controllers
 
         public JsonResult CreateComentario(GEN_COMENSUGER Comentario)
         {
-            Resultados resultado = new Resultados();
-
-            int IdUsuario = 0;
-            if (Session["IdUsuario"] == null)
+            Resultados resultados = new Resultados();
+            if (this.Session["IdUsuario"] == null)
             {
-                resultado.Redirecciona = true;
-                return Json(resultado, JsonRequestBehavior.AllowGet);
+                resultados.Redirecciona = true;
+                return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
             }
-            else
-                IdUsuario = (int)Session["IdUsuario"];
-
-
-            Comentario.IdUsuario = IdUsuario; //Aqui va variable de sesión
-            //Comentario.FechaCreacionComenSuger = DateTime.Now; //Local
-            Comentario.FechaCreacionComenSuger = DateTime.Now.AddHours(1); //Producción
-
+            int num = (int)this.Session["IdUsuario"];
+            Comentario.IdUsuario = num;
+            Comentario.FechaCreacionComenSuger = helper.dateTimeZone(DateTime.Now);
             try
             {
-                db.GEN_COMENSUGER.Add(Comentario);
-                db.SaveChanges();
-                resultado.Result = true;
+                this.db.GEN_COMENSUGER.Add(Comentario);
+                this.db.SaveChanges();
+                resultados.Result = true;
             }
             catch (Exception ex)
             {
-                resultado.Result = false;
-                resultado.Mensaje = ex.Message;
-                resultado.Valor = 0;
+                resultados.Result = false;
+                resultados.Mensaje = ex.Message;
+                resultados.Valor = 0;
             }
-            return Json(resultado, JsonRequestBehavior.AllowGet);
+            return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Comentarios/Edit/5

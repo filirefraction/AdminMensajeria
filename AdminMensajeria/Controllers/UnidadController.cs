@@ -14,105 +14,77 @@ namespace AdminMensajeria.Controllers
     {
         private MensajeriaEntities db = new MensajeriaEntities();
 
-        // GET: Unidad
-        public ActionResult Index()
-        {
-            return View(db.GEN_UNIDAD.ToList());
-        }
+        public ActionResult Index() => (ActionResult)this.View((object)this.db.GEN_UNIDAD.ToList<GEN_UNIDAD>());
 
-        // GET: Unidad/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Create() => (ActionResult)this.PartialView("~/Views/Unidad/Create.cshtml");
+
+        public JsonResult CreateUnidad(GEN_UNIDAD Unidad)
         {
-            if (id == null)
+            Resultados resultados = new Resultados();
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                this.db.GEN_UNIDAD.Add(Unidad);
+                this.db.SaveChanges();
+                resultados.Result = true;
             }
-            GEN_UNIDAD gEN_UNIDAD = db.GEN_UNIDAD.Find(id);
-            if (gEN_UNIDAD == null)
+            catch (Exception ex)
             {
-                return HttpNotFound();
+                resultados.Result = false;
+                resultados.Mensaje = ex.Message;
+                resultados.Valor = 0;
             }
-            return View(gEN_UNIDAD);
+            return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: Unidad/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Unidad/Create
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "IdUnidad,DescripcionUnidad,Codigo,Simbolo,EstatusUnidad")] GEN_UNIDAD gEN_UNIDAD)
-        {
-            if (ModelState.IsValid)
-            {
-                db.GEN_UNIDAD.Add(gEN_UNIDAD);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(gEN_UNIDAD);
-        }
-
-        // GET: Unidad/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            if (!id.HasValue)
+                return (ActionResult)new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            GEN_UNIDAD genUnidad = this.db.GEN_UNIDAD.Find(new object[1]
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            GEN_UNIDAD gEN_UNIDAD = db.GEN_UNIDAD.Find(id);
-            if (gEN_UNIDAD == null)
-            {
-                return HttpNotFound();
-            }
-            return View(gEN_UNIDAD);
+        (object) id
+            });
+            return genUnidad == null ? (ActionResult)this.HttpNotFound() : (ActionResult)this.PartialView("~/Views/Unidad/Edit.cshtml", (object)genUnidad);
         }
 
-        // POST: Unidad/Edit/5
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
-        // más información vea http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "IdUnidad,DescripcionUnidad,Codigo,Simbolo,EstatusUnidad")] GEN_UNIDAD gEN_UNIDAD)
+        public JsonResult EditUnidad(GEN_UNIDAD Unidad)
         {
-            if (ModelState.IsValid)
+            Resultados resultados = new Resultados();
+            try
             {
-                db.Entry(gEN_UNIDAD).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                this.db.Entry<GEN_UNIDAD>(Unidad).State = EntityState.Modified;
+                this.db.SaveChanges();
+                resultados.Result = true;
             }
-            return View(gEN_UNIDAD);
+            catch (Exception ex)
+            {
+                resultados.Result = false;
+                resultados.Mensaje = ex.Message;
+                resultados.Valor = 0;
+            }
+            return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: Unidad/Delete/5
-        public ActionResult Delete(int? id)
+        public JsonResult DeleteUnidad(int id)
         {
-            if (id == null)
+            Resultados resultados = new Resultados();
+            GEN_UNIDAD entity = this.db.GEN_UNIDAD.Find(new object[1]
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            GEN_UNIDAD gEN_UNIDAD = db.GEN_UNIDAD.Find(id);
-            if (gEN_UNIDAD == null)
+        (object) id
+            });
+            try
             {
-                return HttpNotFound();
+                this.db.GEN_UNIDAD.Remove(entity);
+                this.db.SaveChanges();
+                resultados.Result = true;
+                resultados.Mensaje = "País Eliminado Correctamente";
             }
-            return View(gEN_UNIDAD);
-        }
-
-        // POST: Unidad/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            GEN_UNIDAD gEN_UNIDAD = db.GEN_UNIDAD.Find(id);
-            db.GEN_UNIDAD.Remove(gEN_UNIDAD);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            catch (Exception ex)
+            {
+                resultados.Result = false;
+                resultados.Mensaje = ex.Message;
+            }
+            return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)

@@ -56,6 +56,14 @@
           <Property Name="IdPais" Type="int" Nullable="false" />
           <Property Name="CiudadEstado" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'softinnovacion_mensajeriamet.dbo.GEN_IMAGEN' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+        <EntityType Name="GEN_IMAGEN">
+          <Key>
+            <PropertyRef Name="Imagen" />
+          </Key>
+          <Property Name="Imagen" Type="varchar" MaxLength="1000" Nullable="false" />
+        </EntityType>
         <EntityType Name="GEN_MUNICIPIO">
           <Key>
             <PropertyRef Name="IdMunicipio" />
@@ -203,6 +211,7 @@
           <Property Name="DestinatarioPuntoEntRec" Type="varchar" MaxLength="200" />
           <Property Name="DescripcionPuntoEntRec" Type="varchar" MaxLength="100" />
           <Property Name="ContactoPuntoEntRec" Type="varchar" MaxLength="100" />
+          <Property Name="DirCompletaPuntoEntRec" Type="varchar" MaxLength="2000" />
           <Property Name="CallePuntosEntRec" Type="varchar" MaxLength="100" />
           <Property Name="NoExtPuntosEntRec" Type="varchar" MaxLength="20" />
           <Property Name="NoIntPuntosEntRec" Type="varchar" MaxLength="100" />
@@ -224,13 +233,22 @@
           <Property Name="RefExtPuntosEntRec" Type="varchar" MaxLength="50" />
           <Property Name="EstatusPuntosEntRec" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="SIS_CONFIG">
+          <Key>
+            <PropertyRef Name="IdConfig" />
+          </Key>
+          <Property Name="IdConfig" Type="int" Nullable="false" />
+          <Property Name="DescripcionConfig" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="AplicaConfig" Type="bit" Nullable="false" />
+        </EntityType>
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'softinnovacion_mensajeriamet.dbo.VIEW_REPORTE' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="VIEW_REPORTE">
           <Key>
             <PropertyRef Name="NoEnvio" />
           </Key>
           <Property Name="NoEnvio" Type="int" Nullable="false" />
+          <Property Name="Folio" Type="varchar" MaxLength="100" />
           <Property Name="IdUsuario" Type="int" Nullable="false" />
           <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
           <Property Name="Estatus" Type="int" Nullable="false" />
@@ -255,11 +273,13 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
           <Property Name="EstadoRemitente" Type="varchar" MaxLength="100" />
           <Property Name="PaisRemitente" Type="varchar" MaxLength="100" />
           <Property Name="FechaEntregaEstimada" Type="datetime" />
+          <Property Name="ObsRemitente" Type="varchar" MaxLength="500" />
           <Property Name="DestinatarioEntrega" Type="varchar" MaxLength="200" />
           <Property Name="CategoriaEntrega" Type="varchar" MaxLength="100" />
           <Property Name="RazonSocialEntrega" Type="varchar" MaxLength="200" />
           <Property Name="DescripcionEntrega" Type="varchar" MaxLength="100" />
           <Property Name="ContactoEntrega" Type="varchar" MaxLength="100" />
+          <Property Name="DirecionCompletaEntrega" Type="varchar" MaxLength="2000" />
           <Property Name="CalleEntrega" Type="varchar" MaxLength="100" />
           <Property Name="NoExtEntrega" Type="varchar" MaxLength="20" />
           <Property Name="NointEntrega" Type="varchar" MaxLength="100" />
@@ -273,6 +293,9 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
           <Property Name="MensajeroAsignado" Type="varchar" MaxLength="100" />
           <Property Name="ReferenciaExterna" Type="varchar" MaxLength="50" />
           <Property Name="FechaEntrega" Type="datetime" />
+          <Property Name="ObsEntrega" Type="varchar" MaxLength="500" />
+          <Property Name="MotivoDevolucion" Type="varchar" MaxLength="500" />
+          <Property Name="EstatusCumplimiento" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="FK_GEN_COLONIA_GEN_CODIGOPOSTAL">
           <End Role="GEN_CODIGOPOSTAL" Type="Self.GEN_CODIGOPOSTAL" Multiplicity="1" />
@@ -508,9 +531,16 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
           <EntitySet Name="OPE_SOLICITUD" EntityType="Self.OPE_SOLICITUD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OPE_SOLICITUDPRODUCTO" EntityType="Self.OPE_SOLICITUDPRODUCTO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OPE_SOLICITUDPUNTOSENTREC" EntityType="Self.OPE_SOLICITUDPUNTOSENTREC" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SIS_CONFIG" EntityType="Self.SIS_CONFIG" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GEN_IMAGEN" EntityType="Self.GEN_IMAGEN" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [GEN_IMAGEN].[Imagen] AS [Imagen]
+    FROM [dbo].[GEN_IMAGEN] AS [GEN_IMAGEN]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="VIEW_REPORTE" EntityType="Self.VIEW_REPORTE" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [VIEW_REPORTE].[NoEnvio] AS [NoEnvio], 
+    [VIEW_REPORTE].[Folio] AS [Folio], 
     [VIEW_REPORTE].[IdUsuario] AS [IdUsuario], 
     [VIEW_REPORTE].[FechaCreacion] AS [FechaCreacion], 
     [VIEW_REPORTE].[Estatus] AS [Estatus], 
@@ -535,11 +565,13 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
     [VIEW_REPORTE].[EstadoRemitente] AS [EstadoRemitente], 
     [VIEW_REPORTE].[PaisRemitente] AS [PaisRemitente], 
     [VIEW_REPORTE].[FechaEntregaEstimada] AS [FechaEntregaEstimada], 
+    [VIEW_REPORTE].[ObsRemitente] AS [ObsRemitente], 
     [VIEW_REPORTE].[DestinatarioEntrega] AS [DestinatarioEntrega], 
     [VIEW_REPORTE].[CategoriaEntrega] AS [CategoriaEntrega], 
     [VIEW_REPORTE].[RazonSocialEntrega] AS [RazonSocialEntrega], 
     [VIEW_REPORTE].[DescripcionEntrega] AS [DescripcionEntrega], 
     [VIEW_REPORTE].[ContactoEntrega] AS [ContactoEntrega], 
+    [VIEW_REPORTE].[DirecionCompletaEntrega] AS [DirecionCompletaEntrega], 
     [VIEW_REPORTE].[CalleEntrega] AS [CalleEntrega], 
     [VIEW_REPORTE].[NoExtEntrega] AS [NoExtEntrega], 
     [VIEW_REPORTE].[NointEntrega] AS [NointEntrega], 
@@ -552,7 +584,10 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
     [VIEW_REPORTE].[FechaAsignada] AS [FechaAsignada], 
     [VIEW_REPORTE].[MensajeroAsignado] AS [MensajeroAsignado], 
     [VIEW_REPORTE].[ReferenciaExterna] AS [ReferenciaExterna], 
-    [VIEW_REPORTE].[FechaEntrega] AS [FechaEntrega]
+    [VIEW_REPORTE].[FechaEntrega] AS [FechaEntrega], 
+    [VIEW_REPORTE].[ObsEntrega] AS [ObsEntrega], 
+    [VIEW_REPORTE].[MotivoDevolucion] AS [MotivoDevolucion], 
+    [VIEW_REPORTE].[EstatusCumplimiento] AS [EstatusCumplimiento]
     FROM [dbo].[VIEW_REPORTE] AS [VIEW_REPORTE]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_GEN_COLONIA_GEN_CODIGOPOSTAL" Association="Self.FK_GEN_COLONIA_GEN_CODIGOPOSTAL">
@@ -635,14 +670,24 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
         <EntityContainer Name="MensajeriaEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="GEN_CODIGOPOSTAL" EntityType="MensajeriaModel.GEN_CODIGOPOSTAL" />
           <EntitySet Name="GEN_COLONIA" EntityType="MensajeriaModel.GEN_COLONIA" />
+          <EntitySet Name="GEN_COMENSUGER" EntityType="MensajeriaModel.GEN_COMENSUGER" />
           <EntitySet Name="GEN_EMAILCONGIF" EntityType="MensajeriaModel.GEN_EMAILCONGIF" />
           <EntitySet Name="GEN_ESTADO" EntityType="MensajeriaModel.GEN_ESTADO" />
           <EntitySet Name="GEN_MUNICIPIO" EntityType="MensajeriaModel.GEN_MUNICIPIO" />
           <EntitySet Name="GEN_PAIS" EntityType="MensajeriaModel.GEN_PAIS" />
+          <EntitySet Name="GEN_UNIDAD" EntityType="MensajeriaModel.GEN_UNIDAD" />
+          <EntitySet Name="GEN_USUARIO" EntityType="MensajeriaModel.GEN_USUARIO" />
+          <EntitySet Name="OPE_CATEGORIA" EntityType="MensajeriaModel.OPE_CATEGORIA" />
+          <EntitySet Name="OPE_CLIENTPROVEE" EntityType="MensajeriaModel.OPE_CLIENTPROVEE" />
           <EntitySet Name="OPE_CONTACTO" EntityType="MensajeriaModel.OPE_CONTACTO" />
           <EntitySet Name="OPE_GUIA" EntityType="MensajeriaModel.OPE_GUIA" />
           <EntitySet Name="OPE_PUNTOENTREC" EntityType="MensajeriaModel.OPE_PUNTOENTREC" />
           <EntitySet Name="OPE_SOLICITUD" EntityType="MensajeriaModel.OPE_SOLICITUD" />
+          <EntitySet Name="OPE_SOLICITUDPRODUCTO" EntityType="MensajeriaModel.OPE_SOLICITUDPRODUCTO" />
+          <EntitySet Name="OPE_SOLICITUDPUNTOSENTREC" EntityType="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC" />
+          <EntitySet Name="SIS_CONFIG" EntityType="MensajeriaModel.SIS_CONFIG" />
+          <EntitySet Name="GEN_IMAGEN" EntityType="MensajeriaModel.GEN_IMAGEN" />
+          <EntitySet Name="VIEW_REPORTE" EntityType="MensajeriaModel.VIEW_REPORTE" />
           <AssociationSet Name="FK_GEN_COLONIA_GEN_CODIGOPOSTAL" Association="MensajeriaModel.FK_GEN_COLONIA_GEN_CODIGOPOSTAL">
             <End Role="GEN_CODIGOPOSTAL" EntitySet="GEN_CODIGOPOSTAL" />
             <End Role="GEN_COLONIA" EntitySet="GEN_COLONIA" />
@@ -655,6 +700,14 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
             <End Role="GEN_COLONIA" EntitySet="GEN_COLONIA" />
             <End Role="OPE_PUNTOENTREC" EntitySet="OPE_PUNTOENTREC" />
           </AssociationSet>
+          <AssociationSet Name="FK_OPE_SOLICITUDPUNTOSENTREC_GEN_COLONIA" Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_GEN_COLONIA">
+            <End Role="GEN_COLONIA" EntitySet="GEN_COLONIA" />
+            <End Role="OPE_SOLICITUDPUNTOSENTREC" EntitySet="OPE_SOLICITUDPUNTOSENTREC" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GEN_COMENSUGER_GEN_USUARIO" Association="MensajeriaModel.FK_GEN_COMENSUGER_GEN_USUARIO">
+            <End Role="GEN_USUARIO" EntitySet="GEN_USUARIO" />
+            <End Role="GEN_COMENSUGER" EntitySet="GEN_COMENSUGER" />
+          </AssociationSet>
           <AssociationSet Name="FK_GEN_ESTADO_GEN_PAIS" Association="MensajeriaModel.FK_GEN_ESTADO_GEN_PAIS">
             <End Role="GEN_PAIS" EntitySet="GEN_PAIS" />
             <End Role="GEN_ESTADO" EntitySet="GEN_ESTADO" />
@@ -663,11 +716,10 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
             <End Role="GEN_ESTADO" EntitySet="GEN_ESTADO" />
             <End Role="GEN_MUNICIPIO" EntitySet="GEN_MUNICIPIO" />
           </AssociationSet>
-          <AssociationSet Name="FK_OPE_CONTACTO_OPE_PUNTOENTREC" Association="MensajeriaModel.FK_OPE_CONTACTO_OPE_PUNTOENTREC">
-            <End Role="OPE_PUNTOENTREC" EntitySet="OPE_PUNTOENTREC" />
-            <End Role="OPE_CONTACTO" EntitySet="OPE_CONTACTO" />
+          <AssociationSet Name="FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD" Association="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD">
+            <End Role="GEN_UNIDAD" EntitySet="GEN_UNIDAD" />
+            <End Role="OPE_SOLICITUDPRODUCTO" EntitySet="OPE_SOLICITUDPRODUCTO" />
           </AssociationSet>
-          <EntitySet Name="GEN_USUARIO" EntityType="MensajeriaModel.GEN_USUARIO" />
           <AssociationSet Name="FK_GEN_USUARIO_OPE_PUNTOENTREC" Association="MensajeriaModel.FK_GEN_USUARIO_OPE_PUNTOENTREC">
             <End Role="OPE_PUNTOENTREC" EntitySet="OPE_PUNTOENTREC" />
             <End Role="GEN_USUARIO" EntitySet="GEN_USUARIO" />
@@ -680,14 +732,6 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
             <End Role="GEN_USUARIO" EntitySet="GEN_USUARIO" />
             <End Role="OPE_SOLICITUD" EntitySet="OPE_SOLICITUD" />
           </AssociationSet>
-          <EntitySet Name="GEN_UNIDAD" EntityType="MensajeriaModel.GEN_UNIDAD" />
-          <EntitySet Name="GEN_COMENSUGER" EntityType="MensajeriaModel.GEN_COMENSUGER" />
-          <AssociationSet Name="FK_GEN_COMENSUGER_GEN_USUARIO" Association="MensajeriaModel.FK_GEN_COMENSUGER_GEN_USUARIO">
-            <End Role="GEN_USUARIO" EntitySet="GEN_USUARIO" />
-            <End Role="GEN_COMENSUGER" EntitySet="GEN_COMENSUGER" />
-          </AssociationSet>
-          <EntitySet Name="OPE_CATEGORIA" EntityType="MensajeriaModel.OPE_CATEGORIA" />
-          <EntitySet Name="OPE_CLIENTPROVEE" EntityType="MensajeriaModel.OPE_CLIENTPROVEE" />
           <AssociationSet Name="FK_OPE_CLIENTPROVEE_OPE_CATEGORIA" Association="MensajeriaModel.FK_OPE_CLIENTPROVEE_OPE_CATEGORIA">
             <End Role="OPE_CATEGORIA" EntitySet="OPE_CATEGORIA" />
             <End Role="OPE_CLIENTPROVEE" EntitySet="OPE_CLIENTPROVEE" />
@@ -696,15 +740,9 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
             <End Role="OPE_CLIENTPROVEE" EntitySet="OPE_CLIENTPROVEE" />
             <End Role="OPE_PUNTOENTREC" EntitySet="OPE_PUNTOENTREC" />
           </AssociationSet>
-          <EntitySet Name="OPE_SOLICITUDPRODUCTO" EntityType="MensajeriaModel.OPE_SOLICITUDPRODUCTO" />
-          <EntitySet Name="OPE_SOLICITUDPUNTOSENTREC" EntityType="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC" />
-          <AssociationSet Name="FK_OPE_SOLICITUDPUNTOSENTREC_GEN_COLONIA" Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_GEN_COLONIA">
-            <End Role="GEN_COLONIA" EntitySet="GEN_COLONIA" />
-            <End Role="OPE_SOLICITUDPUNTOSENTREC" EntitySet="OPE_SOLICITUDPUNTOSENTREC" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD" Association="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD">
-            <End Role="GEN_UNIDAD" EntitySet="GEN_UNIDAD" />
-            <End Role="OPE_SOLICITUDPRODUCTO" EntitySet="OPE_SOLICITUDPRODUCTO" />
+          <AssociationSet Name="FK_OPE_CONTACTO_OPE_PUNTOENTREC" Association="MensajeriaModel.FK_OPE_CONTACTO_OPE_PUNTOENTREC">
+            <End Role="OPE_PUNTOENTREC" EntitySet="OPE_PUNTOENTREC" />
+            <End Role="OPE_CONTACTO" EntitySet="OPE_CONTACTO" />
           </AssociationSet>
           <AssociationSet Name="FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA" Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA">
             <End Role="OPE_GUIA" EntitySet="OPE_GUIA" />
@@ -722,8 +760,7 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
             <End Role="OPE_SOLICITUD" EntitySet="OPE_SOLICITUD" />
             <End Role="OPE_SOLICITUDPUNTOSENTREC" EntitySet="OPE_SOLICITUDPUNTOSENTREC" />
           </AssociationSet>
-          <EntitySet Name="VIEW_REPORTE" EntityType="MensajeriaModel.VIEW_REPORTE" />
-          </EntityContainer>
+        </EntityContainer>
         <EntityType Name="GEN_CODIGOPOSTAL">
           <Key>
             <PropertyRef Name="IdCodigoP" />
@@ -744,6 +781,20 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
           <NavigationProperty Name="GEN_MUNICIPIO" Relationship="MensajeriaModel.FK_GEN_COLONIA_GEN_MUNICIPIO" FromRole="GEN_COLONIA" ToRole="GEN_MUNICIPIO" />
           <NavigationProperty Name="OPE_PUNTOENTREC" Relationship="MensajeriaModel.FK_OPE_PUNTOENTREC_GEN_COLONIA" FromRole="GEN_COLONIA" ToRole="OPE_PUNTOENTREC" />
           <NavigationProperty Name="OPE_SOLICITUDPUNTOSENTREC" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_GEN_COLONIA" FromRole="GEN_COLONIA" ToRole="OPE_SOLICITUDPUNTOSENTREC" />
+        </EntityType>
+        <EntityType Name="GEN_COMENSUGER">
+          <Key>
+            <PropertyRef Name="IdComenSuger" />
+          </Key>
+          <Property Name="IdComenSuger" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="Asunto" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Cuerpo" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="FechaCreacionComenSuger" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Respuesta" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="FechaAtencionComenSuger" Type="DateTime" Precision="3" />
+          <Property Name="EstatusComenSuger" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="GEN_USUARIO" Relationship="MensajeriaModel.FK_GEN_COMENSUGER_GEN_USUARIO" FromRole="GEN_COMENSUGER" ToRole="GEN_USUARIO" />
         </EntityType>
         <EntityType Name="GEN_EMAILCONGIF">
           <Key>
@@ -786,6 +837,57 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
           <Property Name="IdPais" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Pais" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="GEN_ESTADO" Relationship="MensajeriaModel.FK_GEN_ESTADO_GEN_PAIS" FromRole="GEN_PAIS" ToRole="GEN_ESTADO" />
+        </EntityType>
+        <EntityType Name="GEN_UNIDAD">
+          <Key>
+            <PropertyRef Name="IdUnidad" />
+          </Key>
+          <Property Name="IdUnidad" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DescripcionUnidad" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Codigo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Simbolo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EstatusUnidad" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="OPE_SOLICITUDPRODUCTO" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD" FromRole="GEN_UNIDAD" ToRole="OPE_SOLICITUDPRODUCTO" />
+        </EntityType>
+        <EntityType Name="GEN_USUARIO">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdPuntoEntRec" Type="Int32" Nullable="false" />
+          <Property Name="TipoUsuario" Type="Int32" Nullable="false" />
+          <Property Name="NombreUsuario" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Usuario" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Contrasena" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CorreoUsuario" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CambiarContrasena" Type="Boolean" Nullable="false" />
+          <Property Name="EstatusUsuario" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="GEN_COMENSUGER" Relationship="MensajeriaModel.FK_GEN_COMENSUGER_GEN_USUARIO" FromRole="GEN_USUARIO" ToRole="GEN_COMENSUGER" />
+          <NavigationProperty Name="OPE_PUNTOENTREC" Relationship="MensajeriaModel.FK_GEN_USUARIO_OPE_PUNTOENTREC" FromRole="GEN_USUARIO" ToRole="OPE_PUNTOENTREC" />
+          <NavigationProperty Name="OPE_GUIA" Relationship="MensajeriaModel.FK_OPE_GUIA_GEN_USUARIO" FromRole="GEN_USUARIO" ToRole="OPE_GUIA" />
+          <NavigationProperty Name="OPE_SOLICITUD" Relationship="MensajeriaModel.FK_OPE_SOLICITUD_GEN_USUARIO" FromRole="GEN_USUARIO" ToRole="OPE_SOLICITUD" />
+        </EntityType>
+        <EntityType Name="OPE_CATEGORIA">
+          <Key>
+            <PropertyRef Name="IdCategoria" />
+          </Key>
+          <Property Name="IdCategoria" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Categoria" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="OPE_CLIENTPROVEE" Relationship="MensajeriaModel.FK_OPE_CLIENTPROVEE_OPE_CATEGORIA" FromRole="OPE_CATEGORIA" ToRole="OPE_CLIENTPROVEE" />
+        </EntityType>
+        <EntityType Name="OPE_CLIENTPROVEE">
+          <Key>
+            <PropertyRef Name="IdClientProvee" />
+          </Key>
+          <Property Name="IdClientProvee" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdCategoria" Type="Int32" Nullable="false" />
+          <Property Name="TipoClientProvee" Type="Int32" />
+          <Property Name="RazonSocial" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="RFC" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ObsClientProvee" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="EstatusClientProvee" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="OPE_CATEGORIA" Relationship="MensajeriaModel.FK_OPE_CLIENTPROVEE_OPE_CATEGORIA" FromRole="OPE_CLIENTPROVEE" ToRole="OPE_CATEGORIA" />
+          <NavigationProperty Name="OPE_PUNTOENTREC" Relationship="MensajeriaModel.FK_OPE_PUNTOENTREC_OPE_CLIENTPROVEE" FromRole="OPE_CLIENTPROVEE" ToRole="OPE_PUNTOENTREC" />
         </EntityType>
         <EntityType Name="OPE_CONTACTO">
           <Key>
@@ -836,9 +938,9 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
           <Property Name="ObsPunto" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="EstatusPunto" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="GEN_COLONIA" Relationship="MensajeriaModel.FK_OPE_PUNTOENTREC_GEN_COLONIA" FromRole="OPE_PUNTOENTREC" ToRole="GEN_COLONIA" />
-          <NavigationProperty Name="OPE_CONTACTO" Relationship="MensajeriaModel.FK_OPE_CONTACTO_OPE_PUNTOENTREC" FromRole="OPE_PUNTOENTREC" ToRole="OPE_CONTACTO" />
           <NavigationProperty Name="GEN_USUARIO" Relationship="MensajeriaModel.FK_GEN_USUARIO_OPE_PUNTOENTREC" FromRole="OPE_PUNTOENTREC" ToRole="GEN_USUARIO" />
           <NavigationProperty Name="OPE_CLIENTPROVEE" Relationship="MensajeriaModel.FK_OPE_PUNTOENTREC_OPE_CLIENTPROVEE" FromRole="OPE_PUNTOENTREC" ToRole="OPE_CLIENTPROVEE" />
+          <NavigationProperty Name="OPE_CONTACTO" Relationship="MensajeriaModel.FK_OPE_CONTACTO_OPE_PUNTOENTREC" FromRole="OPE_PUNTOENTREC" ToRole="OPE_CONTACTO" />
           <NavigationProperty Name="OPE_SOLICITUDPUNTOSENTREC" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_PUNTOENTREC" FromRole="OPE_PUNTOENTREC" ToRole="OPE_SOLICITUDPUNTOSENTREC" />
         </EntityType>
         <EntityType Name="OPE_SOLICITUD">
@@ -857,7 +959,132 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
           <NavigationProperty Name="GEN_USUARIO" Relationship="MensajeriaModel.FK_OPE_SOLICITUD_GEN_USUARIO" FromRole="OPE_SOLICITUD" ToRole="GEN_USUARIO" />
           <NavigationProperty Name="OPE_SOLICITUDPRODUCTO" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_OPE_SOLICITUD" FromRole="OPE_SOLICITUD" ToRole="OPE_SOLICITUDPRODUCTO" />
           <NavigationProperty Name="OPE_SOLICITUDPUNTOSENTREC" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD" FromRole="OPE_SOLICITUD" ToRole="OPE_SOLICITUDPUNTOSENTREC" />
-          </EntityType>
+        </EntityType>
+        <EntityType Name="OPE_SOLICITUDPRODUCTO">
+          <Key>
+            <PropertyRef Name="IdSolicitudProducto" />
+          </Key>
+          <Property Name="IdSolicitudProducto" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdSolicitud" Type="Int32" Nullable="false" />
+          <Property Name="IdUnidad" Type="Int32" />
+          <Property Name="Descripcion" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Cantidad" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Peso" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Recibido" Type="Boolean" Nullable="false" />
+          <Property Name="Receptor" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FechaRecepcion" Type="DateTime" Precision="3" />
+          <Property Name="ObsProducto" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="GEN_UNIDAD" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD" FromRole="OPE_SOLICITUDPRODUCTO" ToRole="GEN_UNIDAD" />
+          <NavigationProperty Name="OPE_SOLICITUD" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_OPE_SOLICITUD" FromRole="OPE_SOLICITUDPRODUCTO" ToRole="OPE_SOLICITUD" />
+        </EntityType>
+        <EntityType Name="OPE_SOLICITUDPUNTOSENTREC">
+          <Key>
+            <PropertyRef Name="IdSolicitudPuntosEntRec" />
+          </Key>
+          <Property Name="IdSolicitudPuntosEntRec" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdSolicitud" Type="Int32" Nullable="false" />
+          <Property Name="IdPuntoEntRec" Type="Int32" />
+          <Property Name="IdGuia" Type="Int32" />
+          <Property Name="IdColonia" Type="Int32" />
+          <Property Name="TipoPunto" Type="Int32" Nullable="false" />
+          <Property Name="FechaProgramada" Type="DateTime" Precision="3" />
+          <Property Name="DestinatarioPuntoEntRec" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DescripcionPuntoEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ContactoPuntoEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DirCompletaPuntoEntRec" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="CallePuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="NoExtPuntosEntRec" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="NoIntPuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ReferenciaPuntosEntRec" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ColoniaPuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoPostalPuntosEntRec" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="MunicipioPuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="EstadoPuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PaisPuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ObsPuntosEntRec" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="FechaReal" Type="DateTime" Precision="3" />
+          <Property Name="NombrePuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FirmaPuntosEntRec" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="FotoPuntosEntRec" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Latitud" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Longitud" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Problema" Type="Boolean" Nullable="false" />
+          <Property Name="ObsProblema" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="RefExtPuntosEntRec" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EstatusPuntosEntRec" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="GEN_COLONIA" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_GEN_COLONIA" FromRole="OPE_SOLICITUDPUNTOSENTREC" ToRole="GEN_COLONIA" />
+          <NavigationProperty Name="OPE_GUIA" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA" FromRole="OPE_SOLICITUDPUNTOSENTREC" ToRole="OPE_GUIA" />
+          <NavigationProperty Name="OPE_PUNTOENTREC" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_PUNTOENTREC" FromRole="OPE_SOLICITUDPUNTOSENTREC" ToRole="OPE_PUNTOENTREC" />
+          <NavigationProperty Name="OPE_SOLICITUD" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD" FromRole="OPE_SOLICITUDPUNTOSENTREC" ToRole="OPE_SOLICITUD" />
+        </EntityType>
+        <EntityType Name="SIS_CONFIG">
+          <Key>
+            <PropertyRef Name="IdConfig" />
+          </Key>
+          <Property Name="IdConfig" Type="Int32" Nullable="false" />
+          <Property Name="DescripcionConfig" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AplicaConfig" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GEN_IMAGEN">
+          <Key>
+            <PropertyRef Name="Imagen" />
+          </Key>
+          <Property Name="Imagen" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="VIEW_REPORTE">
+          <Key>
+            <PropertyRef Name="NoEnvio" />
+          </Key>
+          <Property Name="NoEnvio" Type="Int32" Nullable="false" />
+          <Property Name="Folio" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Estatus" Type="Int32" Nullable="false" />
+          <Property Name="Solicitante" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Producto" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Cantidad" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Unidad" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Peso" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Receptor" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FechaRecepcion" Type="DateTime" Precision="3" />
+          <Property Name="CategoriaRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RazonSocialRemitente" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DescripcionRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ContactoRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CalleRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="NoExtRemitente" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="NointRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ReferenciaRemitente" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ColoniaRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoPostalRemitente" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="MunicipioRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="EstadoRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PaisRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FechaEntregaEstimada" Type="DateTime" Precision="3" />
+          <Property Name="ObsRemitente" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="DestinatarioEntrega" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="CategoriaEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RazonSocialEntrega" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DescripcionEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ContactoEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DirecionCompletaEntrega" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="CalleEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="NoExtEntrega" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="NointEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ReferenciaEntrega" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ColoniaEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoPostalEntrega" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="MunicipioEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="EstadoEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PaisEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FechaAsignada" Type="DateTime" Precision="3" />
+          <Property Name="MensajeroAsignado" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ReferenciaExterna" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FechaEntrega" Type="DateTime" Precision="3" />
+          <Property Name="ObsEntrega" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="MotivoDevolucion" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="EstatusCumplimiento" Type="Int32" Nullable="false" />
+        </EntityType>
         <Association Name="FK_GEN_COLONIA_GEN_CODIGOPOSTAL">
           <End Type="MensajeriaModel.GEN_CODIGOPOSTAL" Role="GEN_CODIGOPOSTAL" Multiplicity="1" />
           <End Type="MensajeriaModel.GEN_COLONIA" Role="GEN_COLONIA" Multiplicity="*" />
@@ -894,6 +1121,30 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_OPE_SOLICITUDPUNTOSENTREC_GEN_COLONIA">
+          <End Type="MensajeriaModel.GEN_COLONIA" Role="GEN_COLONIA" Multiplicity="0..1" />
+          <End Type="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC" Role="OPE_SOLICITUDPUNTOSENTREC" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_COLONIA">
+              <PropertyRef Name="IdColonia" />
+            </Principal>
+            <Dependent Role="OPE_SOLICITUDPUNTOSENTREC">
+              <PropertyRef Name="IdColonia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GEN_COMENSUGER_GEN_USUARIO">
+          <End Type="MensajeriaModel.GEN_USUARIO" Role="GEN_USUARIO" Multiplicity="1" />
+          <End Type="MensajeriaModel.GEN_COMENSUGER" Role="GEN_COMENSUGER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GEN_USUARIO">
+              <PropertyRef Name="IdUsuario" />
+            </Principal>
+            <Dependent Role="GEN_COMENSUGER">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_GEN_ESTADO_GEN_PAIS">
           <End Type="MensajeriaModel.GEN_PAIS" Role="GEN_PAIS" Multiplicity="1" />
           <End Type="MensajeriaModel.GEN_ESTADO" Role="GEN_ESTADO" Multiplicity="*" />
@@ -918,36 +1169,18 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_OPE_CONTACTO_OPE_PUNTOENTREC">
-          <End Type="MensajeriaModel.OPE_PUNTOENTREC" Role="OPE_PUNTOENTREC" Multiplicity="1" />
-          <End Type="MensajeriaModel.OPE_CONTACTO" Role="OPE_CONTACTO" Multiplicity="*" />
+        <Association Name="FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD">
+          <End Type="MensajeriaModel.GEN_UNIDAD" Role="GEN_UNIDAD" Multiplicity="0..1" />
+          <End Type="MensajeriaModel.OPE_SOLICITUDPRODUCTO" Role="OPE_SOLICITUDPRODUCTO" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="OPE_PUNTOENTREC">
-              <PropertyRef Name="IdPuntoEntRec" />
+            <Principal Role="GEN_UNIDAD">
+              <PropertyRef Name="IdUnidad" />
             </Principal>
-            <Dependent Role="OPE_CONTACTO">
-              <PropertyRef Name="IdPuntoEntRec" />
+            <Dependent Role="OPE_SOLICITUDPRODUCTO">
+              <PropertyRef Name="IdUnidad" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="GEN_USUARIO">
-          <Key>
-            <PropertyRef Name="IdUsuario" />
-          </Key>
-          <Property Name="IdUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdPuntoEntRec" Type="Int32" Nullable="false" />
-          <Property Name="TipoUsuario" Type="Int32" Nullable="false" />
-          <Property Name="NombreUsuario" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Usuario" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Contrasena" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CorreoUsuario" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CambiarContrasena" Type="Boolean" Nullable="false" />
-          <Property Name="EstatusUsuario" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="OPE_PUNTOENTREC" Relationship="MensajeriaModel.FK_GEN_USUARIO_OPE_PUNTOENTREC" FromRole="GEN_USUARIO" ToRole="OPE_PUNTOENTREC" />
-          <NavigationProperty Name="OPE_GUIA" Relationship="MensajeriaModel.FK_OPE_GUIA_GEN_USUARIO" FromRole="GEN_USUARIO" ToRole="OPE_GUIA" />
-          <NavigationProperty Name="OPE_SOLICITUD" Relationship="MensajeriaModel.FK_OPE_SOLICITUD_GEN_USUARIO" FromRole="GEN_USUARIO" ToRole="OPE_SOLICITUD" />
-          <NavigationProperty Name="GEN_COMENSUGER" Relationship="MensajeriaModel.FK_GEN_COMENSUGER_GEN_USUARIO" FromRole="GEN_USUARIO" ToRole="GEN_COMENSUGER" />
-        </EntityType>
         <Association Name="FK_GEN_USUARIO_OPE_PUNTOENTREC">
           <End Type="MensajeriaModel.OPE_PUNTOENTREC" Role="OPE_PUNTOENTREC" Multiplicity="1" />
           <End Type="MensajeriaModel.GEN_USUARIO" Role="GEN_USUARIO" Multiplicity="*" />
@@ -984,65 +1217,6 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="GEN_UNIDAD">
-          <Key>
-            <PropertyRef Name="IdUnidad" />
-          </Key>
-          <Property Name="IdUnidad" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DescripcionUnidad" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Codigo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Simbolo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="EstatusUnidad" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="OPE_SOLICITUDPRODUCTO" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD" FromRole="GEN_UNIDAD" ToRole="OPE_SOLICITUDPRODUCTO" />
-        </EntityType>
-        <EntityType Name="GEN_COMENSUGER">
-          <Key>
-            <PropertyRef Name="IdComenSuger" />
-          </Key>
-          <Property Name="IdComenSuger" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
-          <Property Name="Asunto" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Cuerpo" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="FechaCreacionComenSuger" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Respuesta" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="FechaAtencionComenSuger" Type="DateTime" Precision="3" />
-          <Property Name="EstatusComenSuger" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="GEN_USUARIO" Relationship="MensajeriaModel.FK_GEN_COMENSUGER_GEN_USUARIO" FromRole="GEN_COMENSUGER" ToRole="GEN_USUARIO" />
-        </EntityType>
-        <Association Name="FK_GEN_COMENSUGER_GEN_USUARIO">
-          <End Type="MensajeriaModel.GEN_USUARIO" Role="GEN_USUARIO" Multiplicity="1" />
-          <End Type="MensajeriaModel.GEN_COMENSUGER" Role="GEN_COMENSUGER" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GEN_USUARIO">
-              <PropertyRef Name="IdUsuario" />
-            </Principal>
-            <Dependent Role="GEN_COMENSUGER">
-              <PropertyRef Name="IdUsuario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="OPE_CATEGORIA">
-          <Key>
-            <PropertyRef Name="IdCategoria" />
-          </Key>
-          <Property Name="IdCategoria" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Categoria" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="OPE_CLIENTPROVEE" Relationship="MensajeriaModel.FK_OPE_CLIENTPROVEE_OPE_CATEGORIA" FromRole="OPE_CATEGORIA" ToRole="OPE_CLIENTPROVEE" />
-        </EntityType>
-        <EntityType Name="OPE_CLIENTPROVEE">
-          <Key>
-            <PropertyRef Name="IdClientProvee" />
-          </Key>
-          <Property Name="IdClientProvee" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdCategoria" Type="Int32" Nullable="false" />
-          <Property Name="TipoClientProvee" Type="Int32" />
-          <Property Name="RazonSocial" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="RFC" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="ObsClientProvee" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="EstatusClientProvee" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="OPE_CATEGORIA" Relationship="MensajeriaModel.FK_OPE_CLIENTPROVEE_OPE_CATEGORIA" FromRole="OPE_CLIENTPROVEE" ToRole="OPE_CATEGORIA" />
-          <NavigationProperty Name="OPE_PUNTOENTREC" Relationship="MensajeriaModel.FK_OPE_PUNTOENTREC_OPE_CLIENTPROVEE" FromRole="OPE_CLIENTPROVEE" ToRole="OPE_PUNTOENTREC" />
-        </EntityType>
         <Association Name="FK_OPE_CLIENTPROVEE_OPE_CATEGORIA">
           <End Type="MensajeriaModel.OPE_CATEGORIA" Role="OPE_CATEGORIA" Multiplicity="1" />
           <End Type="MensajeriaModel.OPE_CLIENTPROVEE" Role="OPE_CLIENTPROVEE" Multiplicity="*" />
@@ -1067,83 +1241,15 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="OPE_SOLICITUDPRODUCTO">
-          <Key>
-            <PropertyRef Name="IdSolicitudProducto" />
-          </Key>
-          <Property Name="IdSolicitudProducto" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdSolicitud" Type="Int32" Nullable="false" />
-          <Property Name="IdUnidad" Type="Int32" />
-          <Property Name="Descripcion" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Cantidad" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="Peso" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="Recibido" Type="Boolean" Nullable="false" />
-          <Property Name="Receptor" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FechaRecepcion" Type="DateTime" Precision="3" />
-          <Property Name="ObsProducto" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="GEN_UNIDAD" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD" FromRole="OPE_SOLICITUDPRODUCTO" ToRole="GEN_UNIDAD" />
-          <NavigationProperty Name="OPE_SOLICITUD" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_OPE_SOLICITUD" FromRole="OPE_SOLICITUDPRODUCTO" ToRole="OPE_SOLICITUD" />
-        </EntityType>
-        <EntityType Name="OPE_SOLICITUDPUNTOSENTREC">
-          <Key>
-            <PropertyRef Name="IdSolicitudPuntosEntRec" />
-          </Key>
-          <Property Name="IdSolicitudPuntosEntRec" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdSolicitud" Type="Int32" Nullable="false" />
-          <Property Name="IdPuntoEntRec" Type="Int32" />
-          <Property Name="IdGuia" Type="Int32" />
-          <Property Name="IdColonia" Type="Int32" />
-          <Property Name="TipoPunto" Type="Int32" Nullable="false" />
-          <Property Name="FechaProgramada" Type="DateTime" Precision="3" />
-          <Property Name="DestinatarioPuntoEntRec" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="DescripcionPuntoEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ContactoPuntoEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CallePuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="NoExtPuntosEntRec" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="NoIntPuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ReferenciaPuntosEntRec" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ColoniaPuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CodigoPostalPuntosEntRec" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="MunicipioPuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="EstadoPuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="PaisPuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ObsPuntosEntRec" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="FechaReal" Type="DateTime" Precision="3" />
-          <Property Name="NombrePuntosEntRec" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FirmaPuntosEntRec" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="FotoPuntosEntRec" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="Latitud" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="Longitud" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="Problema" Type="Boolean" Nullable="false" />
-          <Property Name="ObsProblema" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="RefExtPuntosEntRec" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="EstatusPuntosEntRec" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="GEN_COLONIA" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_GEN_COLONIA" FromRole="OPE_SOLICITUDPUNTOSENTREC" ToRole="GEN_COLONIA" />
-          <NavigationProperty Name="OPE_GUIA" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA" FromRole="OPE_SOLICITUDPUNTOSENTREC" ToRole="OPE_GUIA" />
-          <NavigationProperty Name="OPE_PUNTOENTREC" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_PUNTOENTREC" FromRole="OPE_SOLICITUDPUNTOSENTREC" ToRole="OPE_PUNTOENTREC" />
-          <NavigationProperty Name="OPE_SOLICITUD" Relationship="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD" FromRole="OPE_SOLICITUDPUNTOSENTREC" ToRole="OPE_SOLICITUD" />
-        </EntityType>
-        <Association Name="FK_OPE_SOLICITUDPUNTOSENTREC_GEN_COLONIA">
-          <End Type="MensajeriaModel.GEN_COLONIA" Role="GEN_COLONIA" Multiplicity="0..1" />
-          <End Type="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC" Role="OPE_SOLICITUDPUNTOSENTREC" Multiplicity="*" />
+        <Association Name="FK_OPE_CONTACTO_OPE_PUNTOENTREC">
+          <End Type="MensajeriaModel.OPE_PUNTOENTREC" Role="OPE_PUNTOENTREC" Multiplicity="1" />
+          <End Type="MensajeriaModel.OPE_CONTACTO" Role="OPE_CONTACTO" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="GEN_COLONIA">
-              <PropertyRef Name="IdColonia" />
+            <Principal Role="OPE_PUNTOENTREC">
+              <PropertyRef Name="IdPuntoEntRec" />
             </Principal>
-            <Dependent Role="OPE_SOLICITUDPUNTOSENTREC">
-              <PropertyRef Name="IdColonia" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD">
-          <End Type="MensajeriaModel.GEN_UNIDAD" Role="GEN_UNIDAD" Multiplicity="0..1" />
-          <End Type="MensajeriaModel.OPE_SOLICITUDPRODUCTO" Role="OPE_SOLICITUDPRODUCTO" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GEN_UNIDAD">
-              <PropertyRef Name="IdUnidad" />
-            </Principal>
-            <Dependent Role="OPE_SOLICITUDPRODUCTO">
-              <PropertyRef Name="IdUnidad" />
+            <Dependent Role="OPE_CONTACTO">
+              <PropertyRef Name="IdPuntoEntRec" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1195,54 +1301,6 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="VIEW_REPORTE">
-          <Key>
-            <PropertyRef Name="NoEnvio" />
-          </Key>
-          <Property Name="NoEnvio" Type="Int32" Nullable="false" />
-          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
-          <Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Estatus" Type="Int32" Nullable="false" />
-          <Property Name="Solicitante" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Producto" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Cantidad" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="Unidad" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Peso" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="Receptor" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FechaRecepcion" Type="DateTime" Precision="3" />
-          <Property Name="CategoriaRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="RazonSocialRemitente" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="DescripcionRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ContactoRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CalleRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="NoExtRemitente" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="NointRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ReferenciaRemitente" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ColoniaRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CodigoPostalRemitente" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="MunicipioRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="EstadoRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="PaisRemitente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FechaEntregaEstimada" Type="DateTime" Precision="3" />
-          <Property Name="DestinatarioEntrega" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="CategoriaEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="RazonSocialEntrega" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="DescripcionEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ContactoEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CalleEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="NoExtEntrega" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="NointEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ReferenciaEntrega" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ColoniaEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CodigoPostalEntrega" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="MunicipioEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="EstadoEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="PaisEntrega" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FechaAsignada" Type="DateTime" Precision="3" />
-          <Property Name="MensajeroAsignado" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ReferenciaExterna" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="FechaEntrega" Type="DateTime" Precision="3" />
-        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1264,6 +1322,20 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
                 <ScalarProperty Name="IdMunicipio" ColumnName="IdMunicipio" />
                 <ScalarProperty Name="IdCodigoP" ColumnName="IdCodigoP" />
                 <ScalarProperty Name="IdColonia" ColumnName="IdColonia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_COMENSUGER">
+            <EntityTypeMapping TypeName="MensajeriaModel.GEN_COMENSUGER">
+              <MappingFragment StoreEntitySet="GEN_COMENSUGER">
+                <ScalarProperty Name="EstatusComenSuger" ColumnName="EstatusComenSuger" />
+                <ScalarProperty Name="FechaAtencionComenSuger" ColumnName="FechaAtencionComenSuger" />
+                <ScalarProperty Name="Respuesta" ColumnName="Respuesta" />
+                <ScalarProperty Name="FechaCreacionComenSuger" ColumnName="FechaCreacionComenSuger" />
+                <ScalarProperty Name="Cuerpo" ColumnName="Cuerpo" />
+                <ScalarProperty Name="Asunto" ColumnName="Asunto" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="IdComenSuger" ColumnName="IdComenSuger" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1305,6 +1377,53 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
               <MappingFragment StoreEntitySet="GEN_PAIS">
                 <ScalarProperty Name="Pais" ColumnName="Pais" />
                 <ScalarProperty Name="IdPais" ColumnName="IdPais" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_UNIDAD">
+            <EntityTypeMapping TypeName="MensajeriaModel.GEN_UNIDAD">
+              <MappingFragment StoreEntitySet="GEN_UNIDAD">
+                <ScalarProperty Name="EstatusUnidad" ColumnName="EstatusUnidad" />
+                <ScalarProperty Name="Simbolo" ColumnName="Simbolo" />
+                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
+                <ScalarProperty Name="DescripcionUnidad" ColumnName="DescripcionUnidad" />
+                <ScalarProperty Name="IdUnidad" ColumnName="IdUnidad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_USUARIO">
+            <EntityTypeMapping TypeName="MensajeriaModel.GEN_USUARIO">
+              <MappingFragment StoreEntitySet="GEN_USUARIO">
+                <ScalarProperty Name="EstatusUsuario" ColumnName="EstatusUsuario" />
+                <ScalarProperty Name="CambiarContrasena" ColumnName="CambiarContrasena" />
+                <ScalarProperty Name="CorreoUsuario" ColumnName="CorreoUsuario" />
+                <ScalarProperty Name="Contrasena" ColumnName="Contrasena" />
+                <ScalarProperty Name="Usuario" ColumnName="Usuario" />
+                <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
+                <ScalarProperty Name="TipoUsuario" ColumnName="TipoUsuario" />
+                <ScalarProperty Name="IdPuntoEntRec" ColumnName="IdPuntoEntRec" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OPE_CATEGORIA">
+            <EntityTypeMapping TypeName="MensajeriaModel.OPE_CATEGORIA">
+              <MappingFragment StoreEntitySet="OPE_CATEGORIA">
+                <ScalarProperty Name="Categoria" ColumnName="Categoria" />
+                <ScalarProperty Name="IdCategoria" ColumnName="IdCategoria" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OPE_CLIENTPROVEE">
+            <EntityTypeMapping TypeName="MensajeriaModel.OPE_CLIENTPROVEE">
+              <MappingFragment StoreEntitySet="OPE_CLIENTPROVEE">
+                <ScalarProperty Name="EstatusClientProvee" ColumnName="EstatusClientProvee" />
+                <ScalarProperty Name="ObsClientProvee" ColumnName="ObsClientProvee" />
+                <ScalarProperty Name="RFC" ColumnName="RFC" />
+                <ScalarProperty Name="RazonSocial" ColumnName="RazonSocial" />
+                <ScalarProperty Name="TipoClientProvee" ColumnName="TipoClientProvee" />
+                <ScalarProperty Name="IdCategoria" ColumnName="IdCategoria" />
+                <ScalarProperty Name="IdClientProvee" ColumnName="IdClientProvee" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1372,67 +1491,6 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="GEN_USUARIO">
-            <EntityTypeMapping TypeName="MensajeriaModel.GEN_USUARIO">
-              <MappingFragment StoreEntitySet="GEN_USUARIO">
-                <ScalarProperty Name="EstatusUsuario" ColumnName="EstatusUsuario" />
-                <ScalarProperty Name="CambiarContrasena" ColumnName="CambiarContrasena" />
-                <ScalarProperty Name="CorreoUsuario" ColumnName="CorreoUsuario" />
-                <ScalarProperty Name="Contrasena" ColumnName="Contrasena" />
-                <ScalarProperty Name="Usuario" ColumnName="Usuario" />
-                <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
-                <ScalarProperty Name="TipoUsuario" ColumnName="TipoUsuario" />
-                <ScalarProperty Name="IdPuntoEntRec" ColumnName="IdPuntoEntRec" />
-                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="GEN_UNIDAD">
-            <EntityTypeMapping TypeName="MensajeriaModel.GEN_UNIDAD">
-              <MappingFragment StoreEntitySet="GEN_UNIDAD">
-                <ScalarProperty Name="EstatusUnidad" ColumnName="EstatusUnidad" />
-                <ScalarProperty Name="Simbolo" ColumnName="Simbolo" />
-                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
-                <ScalarProperty Name="DescripcionUnidad" ColumnName="DescripcionUnidad" />
-                <ScalarProperty Name="IdUnidad" ColumnName="IdUnidad" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="GEN_COMENSUGER">
-            <EntityTypeMapping TypeName="MensajeriaModel.GEN_COMENSUGER">
-              <MappingFragment StoreEntitySet="GEN_COMENSUGER">
-                <ScalarProperty Name="EstatusComenSuger" ColumnName="EstatusComenSuger" />
-                <ScalarProperty Name="FechaAtencionComenSuger" ColumnName="FechaAtencionComenSuger" />
-                <ScalarProperty Name="Respuesta" ColumnName="Respuesta" />
-                <ScalarProperty Name="FechaCreacionComenSuger" ColumnName="FechaCreacionComenSuger" />
-                <ScalarProperty Name="Cuerpo" ColumnName="Cuerpo" />
-                <ScalarProperty Name="Asunto" ColumnName="Asunto" />
-                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
-                <ScalarProperty Name="IdComenSuger" ColumnName="IdComenSuger" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OPE_CATEGORIA">
-            <EntityTypeMapping TypeName="MensajeriaModel.OPE_CATEGORIA">
-              <MappingFragment StoreEntitySet="OPE_CATEGORIA">
-                <ScalarProperty Name="Categoria" ColumnName="Categoria" />
-                <ScalarProperty Name="IdCategoria" ColumnName="IdCategoria" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OPE_CLIENTPROVEE">
-            <EntityTypeMapping TypeName="MensajeriaModel.OPE_CLIENTPROVEE">
-              <MappingFragment StoreEntitySet="OPE_CLIENTPROVEE">
-                <ScalarProperty Name="EstatusClientProvee" ColumnName="EstatusClientProvee" />
-                <ScalarProperty Name="ObsClientProvee" ColumnName="ObsClientProvee" />
-                <ScalarProperty Name="RFC" ColumnName="RFC" />
-                <ScalarProperty Name="RazonSocial" ColumnName="RazonSocial" />
-                <ScalarProperty Name="TipoClientProvee" ColumnName="TipoClientProvee" />
-                <ScalarProperty Name="IdCategoria" ColumnName="IdCategoria" />
-                <ScalarProperty Name="IdClientProvee" ColumnName="IdClientProvee" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="OPE_SOLICITUDPRODUCTO">
             <EntityTypeMapping TypeName="MensajeriaModel.OPE_SOLICITUDPRODUCTO">
               <MappingFragment StoreEntitySet="OPE_SOLICITUDPRODUCTO">
@@ -1472,6 +1530,7 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
                 <ScalarProperty Name="NoIntPuntosEntRec" ColumnName="NoIntPuntosEntRec" />
                 <ScalarProperty Name="NoExtPuntosEntRec" ColumnName="NoExtPuntosEntRec" />
                 <ScalarProperty Name="CallePuntosEntRec" ColumnName="CallePuntosEntRec" />
+                <ScalarProperty Name="DirCompletaPuntoEntRec" ColumnName="DirCompletaPuntoEntRec" />
                 <ScalarProperty Name="ContactoPuntoEntRec" ColumnName="ContactoPuntoEntRec" />
                 <ScalarProperty Name="DescripcionPuntoEntRec" ColumnName="DescripcionPuntoEntRec" />
                 <ScalarProperty Name="DestinatarioPuntoEntRec" ColumnName="DestinatarioPuntoEntRec" />
@@ -1485,9 +1544,28 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="SIS_CONFIG">
+            <EntityTypeMapping TypeName="MensajeriaModel.SIS_CONFIG">
+              <MappingFragment StoreEntitySet="SIS_CONFIG">
+                <ScalarProperty Name="AplicaConfig" ColumnName="AplicaConfig" />
+                <ScalarProperty Name="DescripcionConfig" ColumnName="DescripcionConfig" />
+                <ScalarProperty Name="IdConfig" ColumnName="IdConfig" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GEN_IMAGEN">
+            <EntityTypeMapping TypeName="MensajeriaModel.GEN_IMAGEN">
+              <MappingFragment StoreEntitySet="GEN_IMAGEN">
+                <ScalarProperty Name="Imagen" ColumnName="Imagen" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="VIEW_REPORTE">
             <EntityTypeMapping TypeName="MensajeriaModel.VIEW_REPORTE">
               <MappingFragment StoreEntitySet="VIEW_REPORTE">
+                <ScalarProperty Name="EstatusCumplimiento" ColumnName="EstatusCumplimiento" />
+                <ScalarProperty Name="MotivoDevolucion" ColumnName="MotivoDevolucion" />
+                <ScalarProperty Name="ObsEntrega" ColumnName="ObsEntrega" />
                 <ScalarProperty Name="FechaEntrega" ColumnName="FechaEntrega" />
                 <ScalarProperty Name="ReferenciaExterna" ColumnName="ReferenciaExterna" />
                 <ScalarProperty Name="MensajeroAsignado" ColumnName="MensajeroAsignado" />
@@ -1501,11 +1579,13 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
                 <ScalarProperty Name="NointEntrega" ColumnName="NointEntrega" />
                 <ScalarProperty Name="NoExtEntrega" ColumnName="NoExtEntrega" />
                 <ScalarProperty Name="CalleEntrega" ColumnName="CalleEntrega" />
+                <ScalarProperty Name="DirecionCompletaEntrega" ColumnName="DirecionCompletaEntrega" />
                 <ScalarProperty Name="ContactoEntrega" ColumnName="ContactoEntrega" />
                 <ScalarProperty Name="DescripcionEntrega" ColumnName="DescripcionEntrega" />
                 <ScalarProperty Name="RazonSocialEntrega" ColumnName="RazonSocialEntrega" />
                 <ScalarProperty Name="CategoriaEntrega" ColumnName="CategoriaEntrega" />
                 <ScalarProperty Name="DestinatarioEntrega" ColumnName="DestinatarioEntrega" />
+                <ScalarProperty Name="ObsRemitente" ColumnName="ObsRemitente" />
                 <ScalarProperty Name="FechaEntregaEstimada" ColumnName="FechaEntregaEstimada" />
                 <ScalarProperty Name="PaisRemitente" ColumnName="PaisRemitente" />
                 <ScalarProperty Name="EstadoRemitente" ColumnName="EstadoRemitente" />
@@ -1530,6 +1610,7 @@ advertencia 6002: La tabla o vista 'SolicitudMensajeria.dbo.VIEW_REPORTE' no tie
                 <ScalarProperty Name="Estatus" ColumnName="Estatus" />
                 <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
                 <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="Folio" ColumnName="Folio" />
                 <ScalarProperty Name="NoEnvio" ColumnName="NoEnvio" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -7,10 +7,12 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using AdminMensajeria.Models;
-using ZXing;
-using ZXing.Common;
+//using ZXing;
+//using ZXing.Common;
 using System.Drawing;
 using System.Drawing.Imaging;
+using AdminMensajeria.Clases;
+using System.Linq.Expressions;
 
 namespace AdminMensajeria.Controllers
 {
@@ -82,91 +84,64 @@ namespace AdminMensajeria.Controllers
 
         public JsonResult CreateSolicitud(OPE_SOLICITUD Solicitud)
         {
-            Resultados resultado = new Resultados();
-
-            int IdUsuario = 0;
-            if (Session["IdUsuario"] == null)
+            Resultados resultados = new Resultados();
+            if (this.Session["IdUsuario"] == null)
             {
-                resultado.Redirecciona = true;
-                return Json(resultado, JsonRequestBehavior.AllowGet);
+                resultados.Redirecciona = true;
+                return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
             }
-            else
-                IdUsuario = (int)Session["IdUsuario"];
-
-
-            Solicitud.IdUsuario = IdUsuario; // Aqui va Variable de sesión
-            //Solicitud.FechaCreacion = DateTime.Now; // Local
-            Solicitud.FechaCreacion = DateTime.Now.AddHours(1); //Producción
+            int num = (int)this.Session["IdUsuario"];
+            Solicitud.IdUsuario = num;
+            Solicitud.FechaCreacion = helper.dateTimeZone(DateTime.Now);
             Solicitud.Emergencia = false;
-
-
             try
             {
-                db.OPE_SOLICITUD.Add(Solicitud);
-                db.SaveChanges();
-                resultado.Result = true;
-                resultado.Valor = (from a in db.OPE_SOLICITUD orderby a.IdSolicitud descending select a.IdSolicitud).First();
-
-                //Crea Imagen QR
-                var writer = new BarcodeWriter() // Si un barcodeWriter para generar un codigo QR (O.O)
-                {
-                    Format = BarcodeFormat.QR_CODE, //setearle el tipo de codigo que generara.
-                    Options = new EncodingOptions()
-                    {
-                        Height = 100,
-                        Width = 100,
-                        Margin = 1, // el margen que tendra el codigo con el restro de la imagen
-                    },
-                };
-
-                // Generar el codigo, este metodo retorna una bitmap
-                Bitmap bitmap = writer.Write(resultado.Valor.ToString());
-
-                // guardar el bitmap con el formato deseado y la locacion deseada
-                bitmap.Save(String.Format(Server.MapPath("~/Image/qr/") + "{0}.png", resultado.Valor.ToString()), ImageFormat.Png);
-
+                this.db.OPE_SOLICITUD.Add(Solicitud);
+                this.db.SaveChanges();
+                resultados.Result = true;
+                resultados.Valor = this.db.OPE_SOLICITUD.OrderByDescending<OPE_SOLICITUD, int>((Expression<Func<OPE_SOLICITUD, int>>)(a => a.IdSolicitud)).Select<OPE_SOLICITUD, int>((Expression<Func<OPE_SOLICITUD, int>>)(a => a.IdSolicitud)).First<int>();
             }
             catch (Exception ex)
             {
-                resultado.Result = false;
-                resultado.Mensaje = ex.Message;
+                resultados.Result = false;
+                resultados.Mensaje = ex.Message;
             }
-            return Json(resultado, JsonRequestBehavior.AllowGet);
+            return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult CreateProducto(OPE_SOLICITUDPRODUCTO Producto)
         {
-            Resultados resultado = new Resultados();
+            Resultados resultados = new Resultados();
             try
             {
-                db.OPE_SOLICITUDPRODUCTO.Add(Producto);
-                db.SaveChanges();
-                resultado.Result = true;
+                this.db.OPE_SOLICITUDPRODUCTO.Add(Producto);
+                this.db.SaveChanges();
+                resultados.Result = true;
             }
             catch (Exception ex)
             {
-                resultado.Result = false;
-                resultado.Mensaje = ex.Message;
-                resultado.Valor = 0;
+                resultados.Result = false;
+                resultados.Mensaje = ex.Message;
+                resultados.Valor = 0;
             }
-            return Json(resultado, JsonRequestBehavior.AllowGet);
+            return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult CreateSolicitudPunto(OPE_SOLICITUDPUNTOSENTREC Punto)
         {
-            Resultados resultado = new Resultados();
+            Resultados resultados = new Resultados();
             try
             {
-                db.OPE_SOLICITUDPUNTOSENTREC.Add(Punto);
-                db.SaveChanges();
-                resultado.Result = true;
+                this.db.OPE_SOLICITUDPUNTOSENTREC.Add(Punto);
+                this.db.SaveChanges();
+                resultados.Result = true;
             }
             catch (Exception ex)
             {
-                resultado.Result = false;
-                resultado.Mensaje = ex.Message;
+                resultados.Result = false;
+                resultados.Mensaje = ex.Message;
             }
-            return Json(resultado, JsonRequestBehavior.AllowGet);
+            return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Puntos(int id)
@@ -175,98 +150,102 @@ namespace AdminMensajeria.Controllers
             return PartialView("~/Views/Solicitud/Puntos.cshtml");
         }
 
-        public ActionResult Rastreo(int? id)
+        public ActionResult Rastreo(string id, int ctlFolio)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            OPE_SOLICITUD oPE_SOLICITUD = db.OPE_SOLICITUD.Find(id);
-            if (oPE_SOLICITUD == null)
-            {
-                return HttpNotFound();
-            }
-            return PartialView("~/Views/Solicitud/Rastreo.cshtml", oPE_SOLICITUD);
+            if (ctlFolio == 0)
+                return (ActionResult)this.PartialView("~/Views/Solicitud/Rastreo.cshtml", (object)this.db.OPE_SOLICITUD.Find(new object[1]
+                {
+          (object) Convert.ToInt32(id)
+                }));
+            return (ActionResult)this.PartialView("~/Views/Solicitud/Rastreo.cshtml", (object)this.db.OPE_SOLICITUD.Where<OPE_SOLICITUD>((Expression<Func<OPE_SOLICITUD, bool>>)(c => c.Folio == id)).FirstOrDefault<OPE_SOLICITUD>());
         }
 
         public ActionResult Recepcion()
         {
+            if (this.db.SIS_CONFIG.Where<SIS_CONFIG>((Expression<Func<SIS_CONFIG, bool>>)(u => u.IdConfig == 1)).Select<SIS_CONFIG, bool>((Expression<Func<SIS_CONFIG, bool>>)(u => u.AplicaConfig)).FirstOrDefault<bool>())
+                ViewBag.ctrlFolio = 1;
+            else
+                ViewBag.ctrlFolio = 0;
+
             return PartialView("~/Views/Solicitud/Recepcion.cshtml");
         }
-        public JsonResult RecibirPaquete(int id)
+        public JsonResult RecibirPaquete(string id, int ctlFolio)
         {
-            Resultados resultado = new Resultados();
-
-            int IdUsuario;
-            string NombreUsuario;
-            if (Session["IdUsuario"] == null)
+            Resultados resultados = new Resultados();
+            if (this.Session["IdUsuario"] == null)
             {
-                resultado.Redirecciona = true;
-                return Json(resultado, JsonRequestBehavior.AllowGet);
+                resultados.Redirecciona = true;
+                return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
+            }
+            int IdUsuario = (int)this.Session["IdUsuario"];
+            string str = this.db.GEN_USUARIO.Where<GEN_USUARIO>((Expression<Func<GEN_USUARIO, bool>>)(n => n.IdUsuario == IdUsuario)).Select<GEN_USUARIO, string>((Expression<Func<GEN_USUARIO, string>>)(n => n.NombreUsuario)).FirstOrDefault<string>();
+            OPE_SOLICITUD Solicitud = this.db.OPE_SOLICITUD.FirstOrDefault<OPE_SOLICITUD>();
+            this.db.OPE_SOLICITUDPRODUCTO.FirstOrDefault<OPE_SOLICITUDPRODUCTO>();
+            this.db.OPE_SOLICITUDPUNTOSENTREC.FirstOrDefault<OPE_SOLICITUDPUNTOSENTREC>();
+            OPE_SOLICITUDPRODUCTO entity1;
+            OPE_SOLICITUDPUNTOSENTREC entity2;
+            if (ctlFolio == 0)
+            {
+                int idi = Convert.ToInt32(id);
+                Solicitud = this.db.OPE_SOLICITUD.Where<OPE_SOLICITUD>((Expression<Func<OPE_SOLICITUD, bool>>)(x => x.IdSolicitud == idi)).FirstOrDefault<OPE_SOLICITUD>();
+                entity1 = this.db.OPE_SOLICITUDPRODUCTO.Where<OPE_SOLICITUDPRODUCTO>((Expression<Func<OPE_SOLICITUDPRODUCTO, bool>>)(x => x.IdSolicitud == idi)).FirstOrDefault<OPE_SOLICITUDPRODUCTO>();
+                entity2 = this.db.OPE_SOLICITUDPUNTOSENTREC.Where<OPE_SOLICITUDPUNTOSENTREC>((Expression<Func<OPE_SOLICITUDPUNTOSENTREC, bool>>)(x => x.IdSolicitud == idi && x.TipoPunto == 2)).FirstOrDefault<OPE_SOLICITUDPUNTOSENTREC>();
             }
             else
             {
-                IdUsuario = (int)Session["IdUsuario"];
-                NombreUsuario = (from n in db.GEN_USUARIO where n.IdUsuario == IdUsuario select n.NombreUsuario).FirstOrDefault();
-            }
-
-
-            OPE_SOLICITUDPRODUCTO Producto = db.OPE_SOLICITUDPRODUCTO.Where(x => x.IdSolicitud == id).FirstOrDefault();
-            OPE_SOLICITUD Solicitud = db.OPE_SOLICITUD.Where(x => x.IdSolicitud == id).FirstOrDefault();
-            OPE_SOLICITUDPUNTOSENTREC Entrega = db.OPE_SOLICITUDPUNTOSENTREC.Where(x => x.IdSolicitud == id && x.TipoPunto == 2).FirstOrDefault();
-
-            if (Entrega != null)
-            {
-                DateTime FechaEstimanda = DateTime.Now.AddHours(1);
-                int Hora = FechaEstimanda.Hour;
-                if (Hora < 10)
-                Entrega.FechaProgramada = FechaEstimanda;
-                else
-                Entrega.FechaProgramada = FechaEstimanda.AddDays(1);
-
-                db.Entry(Entrega).State = EntityState.Modified;
-                db.SaveChanges();
-            }
-
-
-            if (Producto != null)
-            {
-                if (Producto.Recibido != true)
+                Solicitud = this.db.OPE_SOLICITUD.Where<OPE_SOLICITUD>((Expression<Func<OPE_SOLICITUD, bool>>)(x => x.Folio == id)).FirstOrDefault<OPE_SOLICITUD>();
+                if (Solicitud != null)
                 {
-                    Producto.Recibido = true;
-                    //Producto.FechaRecepcion = DateTime.Now; //Local
-                    Producto.FechaRecepcion = DateTime.Now.AddHours(1); //Producción
-                    Producto.Receptor = NombreUsuario;
+                    entity1 = this.db.OPE_SOLICITUDPRODUCTO.Where<OPE_SOLICITUDPRODUCTO>((Expression<Func<OPE_SOLICITUDPRODUCTO, bool>>)(x => x.IdSolicitud == Solicitud.IdSolicitud)).FirstOrDefault<OPE_SOLICITUDPRODUCTO>();
+                    entity2 = this.db.OPE_SOLICITUDPUNTOSENTREC.Where<OPE_SOLICITUDPUNTOSENTREC>((Expression<Func<OPE_SOLICITUDPUNTOSENTREC, bool>>)(x => x.IdSolicitud == Solicitud.IdSolicitud && x.TipoPunto == 2)).FirstOrDefault<OPE_SOLICITUDPUNTOSENTREC>();
+                }
+                else
+                {
+                    entity2 = (OPE_SOLICITUDPUNTOSENTREC)null;
+                    entity1 = (OPE_SOLICITUDPRODUCTO)null;
+                }
+            }
+            if (entity2 != null)
+            {
+                DateTime dateTime = helper.dateTimeZone(DateTime.Now);
+                entity2.FechaProgramada = dateTime.Hour >= 10 ? new DateTime?(dateTime.AddDays(1.0)) : new DateTime?(dateTime);
+                this.db.Entry<OPE_SOLICITUDPUNTOSENTREC>(entity2).State = EntityState.Modified;
+                this.db.SaveChanges();
+            }
+            if (entity1 != null)
+            {
+                if (!entity1.Recibido)
+                {
+                    entity1.Recibido = true;
+                    entity1.FechaRecepcion = new DateTime?(helper.dateTimeZone(DateTime.Now));
+                    entity1.Receptor = str;
                     Solicitud.EstatusSolicitud = 2;
                     try
                     {
-                        db.Entry(Producto).State = EntityState.Modified;
-                        db.Entry(Solicitud).State = EntityState.Modified;
-                        db.SaveChanges();
-                        resultado.Result = true;
-                        resultado.Mensaje = "El producto de la solicitud " + id.ToString() + " se recibio correctamente " + Producto.Descripcion;
-
+                        this.db.Entry<OPE_SOLICITUDPRODUCTO>(entity1).State = EntityState.Modified;
+                        this.db.Entry<OPE_SOLICITUD>(Solicitud).State = EntityState.Modified;
+                        this.db.SaveChanges();
+                        resultados.Result = true;
+                        resultados.Mensaje = "El producto de la solicitud " + id.ToString() + " se recibio correctamente " + entity1.Descripcion;
                     }
                     catch (Exception ex)
                     {
-                        resultado.Result = false;
-                        resultado.Mensaje = "Error al recibir producto: " + ex.Message;
+                        resultados.Result = false;
+                        resultados.Mensaje = "Error al recibir producto: " + ex.Message;
                     }
                 }
                 else
                 {
-                    resultado.Result = false;
-                    resultado.Mensaje = "Este Producto ya se Recibió";
+                    resultados.Result = false;
+                    resultados.Mensaje = "El producto de la solicitud " + id.ToString() + " se Recibió anteriormente";
                 }
             }
             else
             {
-                resultado.Result = false;
-                resultado.Mensaje = "No Existe Numero de Envío";
+                resultados.Result = false;
+                resultados.Mensaje = "No Existe Numero de Envío";
             }
-
-
-            return Json(resultado, JsonRequestBehavior.AllowGet);
+            return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult ReportaEntrega(int id)

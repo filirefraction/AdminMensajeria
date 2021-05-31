@@ -1,4 +1,7 @@
 ﻿
+@{
+    int ctrlFolio = ViewBag.ctrlFolio;
+}
 <div class="form-horizontal">
     <div class="form-group row">
         <div class="col-md-2">
@@ -39,6 +42,17 @@
 
 <script>
     $(document).ready(function () {
+        var ctlFolio = '@ctrlFolio';
+
+        if (ctlFolio == 1) {
+            $('#NoSeguimientoRec2').attr('type', 'text');
+            $('#NoSeguimientoRec2').attr('placeholder', 'Indique Folio');
+        }
+        else {
+            $('#NoSeguimientoRec2').attr('type', 'number');
+            $('#NoSeguimientoRec2').attr('placeholder', 'Indique # de Envío');
+        }
+
         $("#NoSeguimientoRec2").focus();
 
         $('#NoSeguimientoRec2').keyup(function () {
@@ -71,20 +85,21 @@
                     data: JSON.stringify({
                         "id" : NoSeguimientoRec2, 
                         "IdGuia" : IdGuia,
-                        "Referencia" : Referencia
+                        "Referencia" : Referencia,
+                        'ctlFolio' : ctlFolio
                     }),
                     success: function (data) {
                         if (data.Result == true) {
-                            var content = '<div class="form-control" style="background-color:#EAFAF1">' + data.Mensaje + '</div>'
-                            $("#Recibidos2").append(content)
+                            var content = '<div style="background-color:#EAFAF1;word-break:break-word; border-style: solid; border-width: 1px;">' + data.Mensaje + '</div>'
+                            $("#Recibidos2").prepend(content)
                         }
                         else {
                             if (data.Redirecciona == true) {
                                 window.location = '@Url.Action("Index", "Home")';
                             }
                             else {
-                                var content = '<div class="form-control" style="background-color:#F2D7D5">' + data.Mensaje + '</div>'
-                                $("#Recibidos2").append(content)
+                                var content = '<div style="background-color:#F2D7D5;word-break:break-word; border-style: solid; border-width: 1px;">' + data.Mensaje + '</div>'
+                                $("#Recibidos2").prepend(content)
                             }
                         }
                     },

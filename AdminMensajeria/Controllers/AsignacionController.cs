@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using AdminMensajeria.Clases;
 using AdminMensajeria.Models;
 
 namespace AdminMensajeria.Controllers
@@ -15,16 +17,32 @@ namespace AdminMensajeria.Controllers
         private MensajeriaEntities db = new MensajeriaEntities();
 
         // GET: Asignacion
-        public ActionResult Index()
+        public ActionResult Index() => (ActionResult)this.View();
+
+        public ActionResult Asignaciones(DateTime Desde, DateTime Hasta)
         {
-            var oPE_GUIA = db.OPE_GUIA.Include(o => o.GEN_USUARIO);
-            return View(oPE_GUIA.ToList());
+            Hasta = Hasta.AddDays(1.0);
+
+            ViewBag.desde = Desde;
+            ViewBag.hasta = Hasta;
+
+
+            return (ActionResult)this.PartialView("~/Views/Asignacion/Asignaciones.cshtml");
         }
 
         public ActionResult Entregas(int id)
         {
             ViewBag.idguia = id;
-            return PartialView();
+            if (this.db.SIS_CONFIG.Where<SIS_CONFIG>((Expression<Func<SIS_CONFIG, bool>>)(u => u.IdConfig == 1)).Select<SIS_CONFIG, bool>((Expression<Func<SIS_CONFIG, bool>>)(u => u.AplicaConfig)).FirstOrDefault<bool>())
+            {
+                ViewBag.ctrlFolio = 1;
+            }
+            else
+            {
+                ViewBag.ctrlFolio = 0;
+            }
+
+            return (ActionResult)this.PartialView();
         }
 
         // GET: Asignacion/Details/5
@@ -52,8 +70,7 @@ namespace AdminMensajeria.Controllers
         public JsonResult CreateAsignacion(OPE_GUIA Asignacion)
         {
             Resultados resultado = new Resultados();
-            //Asignacion.FechaCreacionGuia = DateTime.Now; //Local
-            Asignacion.FechaCreacionGuia = DateTime.Now.AddHours(1); //Producción
+            Asignacion.FechaCreacionGuia = helper.dateTimeZone(DateTime.Now);
 
 
             try
@@ -139,158 +156,194 @@ namespace AdminMensajeria.Controllers
         public ActionResult AsignaReferencia(int id)
         {
             ViewBag.idguia = id;
+
+            if (this.db.SIS_CONFIG.Where<SIS_CONFIG>((Expression<Func<SIS_CONFIG, bool>>)(u => u.IdConfig == 1)).Select<SIS_CONFIG, bool>((Expression<Func<SIS_CONFIG, bool>>)(u => u.AplicaConfig)).FirstOrDefault<bool>())
+            {
+                ViewBag.ctrlFolio = 1;
+            }
+            else
+            {
+                ViewBag.ctrlFolio = 0;
+            }
+
             return PartialView("~/Views/Asignacion/AsignaReferencia.cshtml");
         }
 
-        public JsonResult AsignarEntregaRef(int id, int IdGuia, string Referencia)
+        public JsonResult AsignarEntregaRef(string id, int IdGuia, string Referencia, int ctlFolio)
         {
-            OPE_SOLICITUD Solicitud = db.OPE_SOLICITUD.Where(x => x.IdSolicitud == id).FirstOrDefault();
-            OPE_SOLICITUDPUNTOSENTREC Entrega = db.OPE_SOLICITUDPUNTOSENTREC.Where(x => x.IdSolicitud == id && x.TipoPunto == 2).FirstOrDefault();
-            OPE_SOLICITUDPRODUCTO Producto = db.OPE_SOLICITUDPRODUCTO.Where(x => x.IdSolicitud == id).FirstOrDefault();
-
-
-            Resultados resultado = new Resultados();
-
-            if (Entrega != null)
+            OPE_SOLICITUD Solicitud = this.db.OPE_SOLICITUD.FirstOrDefault<OPE_SOLICITUD>();
+            this.db.OPE_SOLICITUDPUNTOSENTREC.FirstOrDefault<OPE_SOLICITUDPUNTOSENTREC>();
+            this.db.OPE_SOLICITUDPRODUCTO.FirstOrDefault<OPE_SOLICITUDPRODUCTO>();
+            OPE_SOLICITUDPUNTOSENTREC entity;
+            OPE_SOLICITUDPRODUCTO solicitudproducto;
+            if (ctlFolio == 0)
             {
-                if (Producto.Recibido == true)
+                int idi = Convert.ToInt32(id);
+                Solicitud = this.db.OPE_SOLICITUD.Where<OPE_SOLICITUD>((Expression<Func<OPE_SOLICITUD, bool>>)(x => x.IdSolicitud == idi)).FirstOrDefault<OPE_SOLICITUD>();
+                entity = this.db.OPE_SOLICITUDPUNTOSENTREC.Where<OPE_SOLICITUDPUNTOSENTREC>((Expression<Func<OPE_SOLICITUDPUNTOSENTREC, bool>>)(x => x.IdSolicitud == idi && x.TipoPunto == 2)).FirstOrDefault<OPE_SOLICITUDPUNTOSENTREC>();
+                solicitudproducto = this.db.OPE_SOLICITUDPRODUCTO.Where<OPE_SOLICITUDPRODUCTO>((Expression<Func<OPE_SOLICITUDPRODUCTO, bool>>)(x => x.IdSolicitud == idi)).FirstOrDefault<OPE_SOLICITUDPRODUCTO>();
+            }
+            else
+            {
+                Solicitud = this.db.OPE_SOLICITUD.Where<OPE_SOLICITUD>((Expression<Func<OPE_SOLICITUD, bool>>)(x => x.Folio == id)).FirstOrDefault<OPE_SOLICITUD>();
+                if (Solicitud != null)
                 {
-                    if (Entrega.IdGuia == null)
+                    solicitudproducto = this.db.OPE_SOLICITUDPRODUCTO.Where<OPE_SOLICITUDPRODUCTO>((Expression<Func<OPE_SOLICITUDPRODUCTO, bool>>)(x => x.IdSolicitud == Solicitud.IdSolicitud)).FirstOrDefault<OPE_SOLICITUDPRODUCTO>();
+                    entity = this.db.OPE_SOLICITUDPUNTOSENTREC.Where<OPE_SOLICITUDPUNTOSENTREC>((Expression<Func<OPE_SOLICITUDPUNTOSENTREC, bool>>)(x => x.IdSolicitud == Solicitud.IdSolicitud && x.TipoPunto == 2)).FirstOrDefault<OPE_SOLICITUDPUNTOSENTREC>();
+                }
+                else
+                {
+                    entity = (OPE_SOLICITUDPUNTOSENTREC)null;
+                    solicitudproducto = (OPE_SOLICITUDPRODUCTO)null;
+                }
+            }
+            Resultados resultados = new Resultados();
+            if (entity != null)
+            {
+                if (solicitudproducto.Recibido)
+                {
+                    if (!entity.IdGuia.HasValue)
                     {
                         Solicitud.EstatusSolicitud = 3;
-                        Entrega.IdGuia = IdGuia;
-                        Entrega.RefExtPuntosEntRec = Referencia;
-
+                        entity.IdGuia = new int?(IdGuia);
+                        entity.RefExtPuntosEntRec = Referencia;
                         try
                         {
-                            db.Entry(Solicitud).State = EntityState.Modified;
-                            db.Entry(Entrega).State = EntityState.Modified;
-                            db.SaveChanges();
-                            resultado.Result = true;
-                            resultado.Mensaje = "El envío " + id.ToString() + " se Asigno correctamente " + Producto.Descripcion;
-
+                            this.db.Entry<OPE_SOLICITUD>(Solicitud).State = EntityState.Modified;
+                            this.db.Entry<OPE_SOLICITUDPUNTOSENTREC>(entity).State = EntityState.Modified;
+                            this.db.SaveChanges();
+                            resultados.Result = true;
+                            resultados.Mensaje = "El envío " + id.ToString() + " se Asigno correctamente " + solicitudproducto.Descripcion;
                         }
                         catch (Exception ex)
                         {
-                            resultado.Result = false;
-                            resultado.Mensaje = "Error al Asignar Envío: " + ex.Message;
+                            resultados.Result = false;
+                            resultados.Mensaje = "Error al Asignar Envío: " + ex.Message;
                         }
                     }
                     else
                     {
-                        resultado.Result = false;
-                        resultado.Mensaje = "Este Envío ya se Asigno al Número: " + Entrega.IdGuia.ToString();
+                        resultados.Result = false;
+                        resultados.Mensaje = "El envío " + id.ToString() + " fue asignada anteriormente al Número: " + entity.IdGuia.ToString();
                     }
                 }
                 else
                 {
-                    resultado.Result = false;
-                    resultado.Mensaje = "Este Producto no se ha recibido en ventanilla, debe recibirlo primero";
+                    resultados.Result = false;
+                    resultados.Mensaje = "Este Producto no se ha recibido en ventanilla, debe recibirlo primero";
                 }
-
             }
             else
             {
-                resultado.Result = false;
-                resultado.Mensaje = "No Existe Numero de Envío";
+                resultados.Result = false;
+                resultados.Mensaje = "No Existe Numero de Envío";
             }
-
-
-            return Json(resultado, JsonRequestBehavior.AllowGet);
+            return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult AsignarEntrega(int id, int IdGuia)
+        public JsonResult AsignarEntrega(string id, int IdGuia, int ctlFolio)
         {
-            OPE_SOLICITUD Solicitud = db.OPE_SOLICITUD.Where(x => x.IdSolicitud == id).FirstOrDefault();
-            OPE_SOLICITUDPUNTOSENTREC Entrega = db.OPE_SOLICITUDPUNTOSENTREC.Where(x => x.IdSolicitud == id && x.TipoPunto == 2).FirstOrDefault();
-            OPE_SOLICITUDPRODUCTO Producto = db.OPE_SOLICITUDPRODUCTO.Where(x => x.IdSolicitud == id).FirstOrDefault();
-
-
-            Resultados resultado = new Resultados();
-
-            if (Entrega != null)
+            OPE_SOLICITUD Solicitud = this.db.OPE_SOLICITUD.FirstOrDefault<OPE_SOLICITUD>();
+            this.db.OPE_SOLICITUDPUNTOSENTREC.FirstOrDefault<OPE_SOLICITUDPUNTOSENTREC>();
+            this.db.OPE_SOLICITUDPRODUCTO.FirstOrDefault<OPE_SOLICITUDPRODUCTO>();
+            OPE_SOLICITUDPUNTOSENTREC entity;
+            OPE_SOLICITUDPRODUCTO solicitudproducto;
+            if (ctlFolio == 0)
             {
-                if (Producto.Recibido == true)
+                int idi = Convert.ToInt32(id);
+                Solicitud = this.db.OPE_SOLICITUD.Where<OPE_SOLICITUD>((Expression<Func<OPE_SOLICITUD, bool>>)(x => x.IdSolicitud == idi)).FirstOrDefault<OPE_SOLICITUD>();
+                entity = this.db.OPE_SOLICITUDPUNTOSENTREC.Where<OPE_SOLICITUDPUNTOSENTREC>((Expression<Func<OPE_SOLICITUDPUNTOSENTREC, bool>>)(x => x.IdSolicitud == idi && x.TipoPunto == 2)).FirstOrDefault<OPE_SOLICITUDPUNTOSENTREC>();
+                solicitudproducto = this.db.OPE_SOLICITUDPRODUCTO.Where<OPE_SOLICITUDPRODUCTO>((Expression<Func<OPE_SOLICITUDPRODUCTO, bool>>)(x => x.IdSolicitud == idi)).FirstOrDefault<OPE_SOLICITUDPRODUCTO>();
+            }
+            else
+            {
+                Solicitud = this.db.OPE_SOLICITUD.Where<OPE_SOLICITUD>((Expression<Func<OPE_SOLICITUD, bool>>)(x => x.Folio == id)).FirstOrDefault<OPE_SOLICITUD>();
+                if (Solicitud != null)
                 {
-                    if (Entrega.IdGuia == null)
+                    solicitudproducto = this.db.OPE_SOLICITUDPRODUCTO.Where<OPE_SOLICITUDPRODUCTO>((Expression<Func<OPE_SOLICITUDPRODUCTO, bool>>)(x => x.IdSolicitud == Solicitud.IdSolicitud)).FirstOrDefault<OPE_SOLICITUDPRODUCTO>();
+                    entity = this.db.OPE_SOLICITUDPUNTOSENTREC.Where<OPE_SOLICITUDPUNTOSENTREC>((Expression<Func<OPE_SOLICITUDPUNTOSENTREC, bool>>)(x => x.IdSolicitud == Solicitud.IdSolicitud && x.TipoPunto == 2)).FirstOrDefault<OPE_SOLICITUDPUNTOSENTREC>();
+                }
+                else
+                {
+                    entity = (OPE_SOLICITUDPUNTOSENTREC)null;
+                    solicitudproducto = (OPE_SOLICITUDPRODUCTO)null;
+                }
+            }
+            Resultados resultados = new Resultados();
+            if (entity != null)
+            {
+                if (solicitudproducto.Recibido)
+                {
+                    if (!entity.IdGuia.HasValue)
                     {
                         Solicitud.EstatusSolicitud = 3;
-                        Entrega.IdGuia = IdGuia;
-
+                        entity.IdGuia = new int?(IdGuia);
                         try
                         {
-                            db.Entry(Solicitud).State = EntityState.Modified;
-                            db.Entry(Entrega).State = EntityState.Modified;
-                            db.SaveChanges();
-                            resultado.Result = true;
-                            resultado.Mensaje = "El envío " + id.ToString() + " se Asigno correctamente " + Producto.Descripcion;
-
+                            this.db.Entry<OPE_SOLICITUD>(Solicitud).State = EntityState.Modified;
+                            this.db.Entry<OPE_SOLICITUDPUNTOSENTREC>(entity).State = EntityState.Modified;
+                            this.db.SaveChanges();
+                            resultados.Result = true;
+                            resultados.Mensaje = "El envío " + id.ToString() + " se Asigno correctamente " + solicitudproducto.Descripcion;
                         }
                         catch (Exception ex)
                         {
-                            resultado.Result = false;
-                            resultado.Mensaje = "Error al Asignar Envío: " + ex.Message;
+                            resultados.Result = false;
+                            resultados.Mensaje = "Error al Asignar Envío: " + ex.Message;
                         }
                     }
                     else
                     {
-                        resultado.Result = false;
-                        resultado.Mensaje = "Este Envío ya se Asigno al Número: " + Entrega.IdGuia.ToString();
+                        resultados.Result = false;
+                        resultados.Mensaje = "Este Envío ya se Asigno al Número: " + entity.IdGuia.ToString();
                     }
                 }
                 else
                 {
-                    resultado.Result = false;
-                    resultado.Mensaje = "Este Producto no se ha recibido en ventanilla, debe recibirlo primero";
+                    resultados.Result = false;
+                    resultados.Mensaje = "Este Producto no se ha recibido en ventanilla, debe recibirlo primero";
                 }
-
             }
             else
             {
-                resultado.Result = false;
-                resultado.Mensaje = "No Existe Numero de Envío";
+                resultados.Result = false;
+                resultados.Mensaje = "No Existe Numero de Envío";
             }
-
-
-            return Json(resultado, JsonRequestBehavior.AllowGet);
+            return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
         }
-
 
         public JsonResult QuitarEntrega(int id)
         {
-            OPE_SOLICITUDPUNTOSENTREC Entrega = db.OPE_SOLICITUDPUNTOSENTREC.Where(x => x.IdSolicitudPuntosEntRec == id).FirstOrDefault();
-            OPE_SOLICITUD Solicitud = db.OPE_SOLICITUD.Find(Entrega.IdSolicitud);
-
-            Resultados resultado = new Resultados();
-
-            Entrega.IdGuia = null;
-
-            if (Solicitud.EstatusSolicitud > 3)
+            OPE_SOLICITUDPUNTOSENTREC entity1 = this.db.OPE_SOLICITUDPUNTOSENTREC.Where<OPE_SOLICITUDPUNTOSENTREC>((Expression<Func<OPE_SOLICITUDPUNTOSENTREC, bool>>)(x => x.IdSolicitudPuntosEntRec == id)).FirstOrDefault<OPE_SOLICITUDPUNTOSENTREC>();
+            OPE_SOLICITUD entity2 = this.db.OPE_SOLICITUD.Find(new object[1]
             {
-                resultado.Result = false;
-                resultado.Mensaje = "No Puede Quitar Esta Asignación el Envio Tiene un Reporte de Entrega";
+        (object) entity1.IdSolicitud
+            });
+            Resultados resultados = new Resultados();
+            entity1.IdGuia = new int?();
+            if (entity2.EstatusSolicitud > 3)
+            {
+                resultados.Result = false;
+                resultados.Mensaje = "No Puede Quitar Esta Asignación el Envio Tiene un Reporte de Entrega";
             }
             else
             {
                 try
                 {
-                    Solicitud.EstatusSolicitud = 2;
-                    db.Entry(Entrega).State = EntityState.Modified;
-                    db.Entry(Solicitud).State = EntityState.Modified;
-                    db.SaveChanges();
-                    resultado.Result = true;
-                    resultado.Mensaje = "Se quito en envío";
-
+                    entity2.EstatusSolicitud = 2;
+                    this.db.Entry<OPE_SOLICITUDPUNTOSENTREC>(entity1).State = EntityState.Modified;
+                    this.db.Entry<OPE_SOLICITUD>(entity2).State = EntityState.Modified;
+                    this.db.SaveChanges();
+                    resultados.Result = true;
+                    resultados.Mensaje = "Se quito en envío";
                 }
                 catch (Exception ex)
                 {
-                    resultado.Result = false;
-                    resultado.Mensaje = "Error al Quitar Envío: " + ex.Message;
+                    resultados.Result = false;
+                    resultados.Mensaje = "Error al Quitar Envío: " + ex.Message;
                 }
             }
-
-
-            return Json(resultado, JsonRequestBehavior.AllowGet);
+            return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult ReportaEntregas(int id)
@@ -317,32 +370,57 @@ namespace AdminMensajeria.Controllers
             }
 
             resultado.Result = true;
-                       
-
             return Json(resultado, JsonRequestBehavior.AllowGet);
         }
 
 
         public JsonResult DeleteAsignacion(int id)
         {
-            Resultados results = new Resultados();
-            OPE_GUIA Asignacion = db.OPE_GUIA.Find(id);
-
+            Resultados resultados = new Resultados();
+            OPE_GUIA entity1 = this.db.OPE_GUIA.Find(id);
+            List<OPE_SOLICITUDPUNTOSENTREC> list = this.db.OPE_SOLICITUDPUNTOSENTREC.Where<OPE_SOLICITUDPUNTOSENTREC>((Expression<Func<OPE_SOLICITUDPUNTOSENTREC, bool>>)(x => x.IdGuia == (int?)id)).ToList<OPE_SOLICITUDPUNTOSENTREC>();
+            if (list != null)
+            {
+                foreach (OPE_SOLICITUDPUNTOSENTREC entity2 in list)
+                {
+                    OPE_SOLICITUD entity3 = this.db.OPE_SOLICITUD.Find(new object[1]
+                    {
+            (object) entity2.IdSolicitud
+                    });
+                    entity2.IdGuia = new int?();
+                    entity2.Problema = false;
+                    entity2.ObsProblema = (string)null;
+                    entity2.FotoPuntosEntRec = (string)null;
+                    entity2.FirmaPuntosEntRec = (string)null;
+                    entity2.Latitud = (string)null;
+                    entity2.Longitud = (string)null;
+                    entity3.EstatusSolicitud = 2;
+                    try
+                    {
+                        this.db.Entry<OPE_SOLICITUDPUNTOSENTREC>(entity2).State = EntityState.Modified;
+                        this.db.Entry<OPE_SOLICITUD>(entity3).State = EntityState.Modified;
+                        this.db.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                }
+            }
             try
             {
-                db.OPE_GUIA.Remove(Asignacion);
-                db.SaveChanges();
-                results.Result = true;
-                results.Mensaje = "Asignacion Eliminado Correctamente";
+                this.db.OPE_GUIA.Remove(entity1);
+                this.db.SaveChanges();
+                resultados.Result = true;
+                resultados.Mensaje = "Asignacion Eliminado Correctamente";
             }
             catch (Exception ex)
             {
-                results.Result = false;
-                results.Mensaje = ex.Message;
+                resultados.Result = false;
+                resultados.Mensaje = ex.Message;
             }
-
-            return Json(results, JsonRequestBehavior.AllowGet);
+            return this.Json((object)resultados, JsonRequestBehavior.AllowGet);
         }
+
 
         protected override void Dispose(bool disposing)
         {

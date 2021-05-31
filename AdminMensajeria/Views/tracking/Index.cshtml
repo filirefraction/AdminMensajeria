@@ -1,0 +1,217 @@
+﻿<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <title>Carvajal Tecnología y Servicios</title>
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <!-- Mobile Specific Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- Libs CSS -->
+    <link rel="stylesheet" href="~/Content/bootstrap.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <link href="~/css/simple-line-icons.css" rel="stylesheet">
+    <link href="~/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/css/prettyPhoto.css" rel="stylesheet" type="text/css" media="all" />
+
+    <!-- Template CSS -->
+    <link href="~/css/style.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,700,800&amp;subsetting=all' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,800,700,300' rel='stylesheet' type='text/css'>
+    <!--[if lt IE 9]>
+        <script src="./js/html5shiv.js"></script>
+        <script src="./js/respond.js"></script>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <![endif]-->
+
+</head>
+<body data-spy="scroll" data-target=".navigation">
+
+    <!-- Banner -->
+    <div id="banner" class="bg-blur">
+
+        <div class="banner-content">
+            <div class="container">
+                <div class="row">
+                    <!-- Start Header Text -->
+                    <div class="col-md-7 col-sm-7">
+                        <img src="~/img/logocarvajal-03.png" width="427" height="198">
+                    </div>
+                    <!-- End Header Text -->
+                    <!-- Start Banner Optin Form-->
+                    <div class="col-lg-4 col-md-4 col-md-offset-1 col-sm-5">
+                        <div class="banner-form">
+                            <div class="form-title">
+                                <h2>Iniciar Sesión /Rastreo de envíos</h2>
+                            </div>
+                            <div class="form-body">
+
+                                <form id="banner-form" class="form" method="post" action="form.php">
+                                    <div class="form-group">
+                                        <input name="banner-name" id="banner-name" type="text" class="form-control" required placeholder="Número de Cliente">
+                                        <span class="AlertaDanger" id="noseguimientoVal"></span>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="banner-email" id="banner-email" type="text" class="form-control" required placeholder="Clave de confirmación">
+                                        <span class="AlertaDanger" id="noseguimientoVal"></span>
+                                    </div>
+                                    <button type="submit" class="btn btn-default btn-submit">Rastrear</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Banner Optin Form -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Banner -->
+    <!-- Clients Logo --><!-- End Clients Logo -->
+    <!-- Intro --><!-- End Intro -->
+    <!-- How It Works --><!-- End How it Works -->
+    <!-- Portfolio --><!-- End Portfolio -->
+    <!-- Features --><!--End Features -->
+    <!-- Three Main Points --><!--End Three Main Points -->
+    <!--Testimonials --><!-- End Testimonials -->
+    <!-- Pricing --><!-- End Pricing -->
+    <!-- FAQ --><!-- End FAQ -->
+    <!-- Call To Action --><!-- End Call To Action -->
+    <!-- Footer Top --><!-- End Footer Top -->
+    <!-- Footer Bottom -->
+    <footer class="footer footer-sub">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <p>&copy; Carvajal Tecnología y Servicios</p>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End Footer Bottom -->
+    <!-- Start Js Files -->
+    <script src="~/js/modernizr.min.js" type="text/javascript"></script><!--Modernizr is an open-source JavaScript library that helps you build the next generation of HTML5 and CSS3-powered websites.-->
+    <script src="~/js/jquery.prettyPhoto.js" type="text/javascript"></script><!-- Script for Lightbox Image  -->
+    <script src="~/js/custom.js" type="text/javascript"></script><!-- Script File containing all customizations  -->
+    <!-- End Js Files  -->
+</body>
+</html>
+
+<script>
+    $(document).ready(function () {
+
+        $("#rastrear-form").submit(function (event) {
+            event.preventDefault();
+
+            if (@ctlFolio == 0)
+            {
+                var NoSeguimiento = $('#noseguimiento').val();
+
+                if (NoSeguimiento.length == 0) {
+                    $("#noseguimientoVal").html('');
+                    $("#noseguimientoVal").append('Campo es Obligatorio');
+                }
+            }
+            else
+            {
+                if (@spFolio  == 1) {
+                    var NoSeguimiento = $('#nocliente').val() + $('#noconfirmacion').val();
+
+                    if ($("#noconfirmacion").val().length == 0) {
+                        $("#noconfirmacionVal").html('');
+                        $("#noconfirmacionVal").append('Campo es Obligatorio');
+                    }
+
+                    if ($("#nocliente").val().length == 0) {
+                        $("#noclienteVal").html('');
+                        $("#noclienteVal").append('Campo es Obligatorio');
+                    }
+                }
+                else
+                {
+                    var NoSeguimiento = $('#noconfirmacion').val();
+
+                    if ($('#noconfirmacion').val().length == 0) {
+                        $("#noconfirmacionVal").html('');
+                        $("#noconfirmacionVal").append('Campo es Obligatorio');
+                    }
+                }
+            }
+
+
+            //////////////////////
+            if (NoSeguimiento.length == 0) {
+                $("#NoSeguimientoVal").html('');
+                $("#NoSeguimientoVal").append('Campo es Obligatorio');
+            }
+
+            if (NoSeguimiento != 0) {
+
+                if (@ctlFolio == 1) {
+                    $.ajax({
+                        url: '@Url.Action("ExisteFolio", "Home")' + '/' + NoSeguimiento,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.Result == true) {
+                                $("#OperTitle").html('');
+                                $("#OperTitle").append('Información de Envío')
+                                $("#OperBody").html('');
+                                $("#OperBody").load('@Url.Action("Rastreo", "Solicitud")' + '?id=' + NoSeguimiento + '&ctlFolio=' + @ctlFolio);
+                                $('#OperModal').modal('show');
+                            }
+                            else {
+                                $("#ErrorMSG").html('');
+                                $("#ErrorMSG").append('No existe el número de envío');
+                                $('#ModalErrorMSG').modal('show')
+                            }
+                        },
+                        error: function () {
+                            console.log("No pudo acceder al Metodo");
+                        }
+                    });
+                }
+                else {
+                    $.ajax({
+                        url: '@Url.Action("ExisteEnvio", "Home")' + '/' + NoSeguimiento,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.Result == true) {
+                                $("#OperTitle").html('');
+                                $("#OperTitle").append('Información de Envío')
+                                $("#OperBody").html('');
+                                $("#OperBody").load('@Url.Action("Rastreo", "Solicitud")' + '?id=' + NoSeguimiento + '&ctlFolio=' + @ctlFolio);
+                                $('#OperModal').modal('show');
+                            }
+                            else {
+                                $("#ErrorMSG").html('');
+                                $("#ErrorMSG").append('No existe el número de envío');
+                                $('#ModalErrorMSG').modal('show')
+                            }
+                        },
+                        error: function () {
+                            console.log("No pudo acceder al Metodo");
+                        }
+                    });
+                }
+            }
+
+        });
+    });
+</script>

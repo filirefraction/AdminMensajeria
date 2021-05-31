@@ -4,44 +4,46 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="01bcf22e7b114b99a32d4f9cc2d1d55d" Name="Diagram1" ZoomLevel="108">
-        <EntityTypeShape EntityType="MensajeriaModel.GEN_CODIGOPOSTAL" Width="1.5" PointX="5.25" PointY="6.625" />
-        <EntityTypeShape EntityType="MensajeriaModel.GEN_COLONIA" Width="1.5" PointX="7.5" PointY="9.125" />
+      <Diagram DiagramId="01bcf22e7b114b99a32d4f9cc2d1d55d" Name="Diagram1" ZoomLevel="82">
+        <EntityTypeShape EntityType="MensajeriaModel.GEN_CODIGOPOSTAL" Width="1.5" PointX="5.25" PointY="7.75" />
+        <EntityTypeShape EntityType="MensajeriaModel.GEN_COLONIA" Width="1.5" PointX="7.5" PointY="10.25" />
+        <EntityTypeShape EntityType="MensajeriaModel.GEN_COMENSUGER" Width="1.5" PointX="14.25" PointY="11.75" />
         <EntityTypeShape EntityType="MensajeriaModel.GEN_EMAILCONGIF" Width="1.5" PointX="0.75" PointY="0.75" />
-        <EntityTypeShape EntityType="MensajeriaModel.GEN_ESTADO" Width="1.5" PointX="3" PointY="9.5" />
-        <EntityTypeShape EntityType="MensajeriaModel.GEN_MUNICIPIO" Width="1.5" PointX="5.25" PointY="9.5" />
-        <EntityTypeShape EntityType="MensajeriaModel.GEN_PAIS" Width="1.5" PointX="0.75" PointY="9.625" />
-        <EntityTypeShape EntityType="MensajeriaModel.OPE_CONTACTO" Width="1.5" PointX="12" PointY="3.375" />
-        <EntityTypeShape EntityType="MensajeriaModel.OPE_GUIA" Width="1.5" PointX="14.25" PointY="14.875" />
-        <EntityTypeShape EntityType="MensajeriaModel.OPE_PUNTOENTREC" Width="1.5" PointX="9.75" PointY="8.125" />
-        <EntityTypeShape EntityType="MensajeriaModel.OPE_SOLICITUD" Width="1.5" PointX="14.25" PointY="10.875" />
+        <EntityTypeShape EntityType="MensajeriaModel.GEN_ESTADO" Width="1.5" PointX="3" PointY="10.5" />
+        <EntityTypeShape EntityType="MensajeriaModel.GEN_MUNICIPIO" Width="1.5" PointX="5.25" PointY="10.5" />
+        <EntityTypeShape EntityType="MensajeriaModel.GEN_PAIS" Width="1.5" PointX="0.75" PointY="10.75" />
+        <EntityTypeShape EntityType="MensajeriaModel.GEN_UNIDAD" Width="1.5" PointX="17.25" PointY="2.25" />
+        <EntityTypeShape EntityType="MensajeriaModel.GEN_USUARIO" Width="1.5" PointX="12" PointY="7.75" />
+        <EntityTypeShape EntityType="MensajeriaModel.OPE_CATEGORIA" Width="1.5" PointX="5.25" PointY="14.75" />
+        <EntityTypeShape EntityType="MensajeriaModel.OPE_CLIENTPROVEE" Width="1.5" PointX="7.5" PointY="14.125" />
+        <EntityTypeShape EntityType="MensajeriaModel.OPE_CONTACTO" Width="1.5" PointX="12" PointY="15.25" />
+        <EntityTypeShape EntityType="MensajeriaModel.OPE_GUIA" Width="1.5" PointX="14.25" PointY="4.375" />
+        <EntityTypeShape EntityType="MensajeriaModel.OPE_PUNTOENTREC" Width="1.5" PointX="9.75" PointY="9.125" />
+        <EntityTypeShape EntityType="MensajeriaModel.OPE_SOLICITUD" Width="1.5" PointX="14.25" PointY="7.75" />
+        <EntityTypeShape EntityType="MensajeriaModel.OPE_SOLICITUDPRODUCTO" Width="1.5" PointX="19.5" PointY="7.75" />
+        <EntityTypeShape EntityType="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC" Width="1.5" PointX="16.5" PointY="5.25" />
+        <EntityTypeShape EntityType="MensajeriaModel.SIS_CONFIG" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="MensajeriaModel.GEN_IMAGEN" Width="1.5" PointX="2.75" PointY="3.75" />
+        <EntityTypeShape EntityType="MensajeriaModel.VIEW_REPORTE" Width="1.5" PointX="0.75" PointY="13.75" />
         <AssociationConnector Association="MensajeriaModel.FK_GEN_COLONIA_GEN_CODIGOPOSTAL" />
         <AssociationConnector Association="MensajeriaModel.FK_GEN_COLONIA_GEN_MUNICIPIO" />
         <AssociationConnector Association="MensajeriaModel.FK_OPE_PUNTOENTREC_GEN_COLONIA" />
+        <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_GEN_COLONIA" />
+        <AssociationConnector Association="MensajeriaModel.FK_GEN_COMENSUGER_GEN_USUARIO" />
         <AssociationConnector Association="MensajeriaModel.FK_GEN_ESTADO_GEN_PAIS" />
         <AssociationConnector Association="MensajeriaModel.FK_GEN_MUNICIPIO_GEN_ESTADO" />
-        <AssociationConnector Association="MensajeriaModel.FK_OPE_CONTACTO_OPE_PUNTOENTREC" />
-        <EntityTypeShape EntityType="MensajeriaModel.GEN_USUARIO" Width="1.5" PointX="12" PointY="8.75" />
+        <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD" />
         <AssociationConnector Association="MensajeriaModel.FK_GEN_USUARIO_OPE_PUNTOENTREC" />
         <AssociationConnector Association="MensajeriaModel.FK_OPE_GUIA_GEN_USUARIO" />
         <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUD_GEN_USUARIO" />
-        <EntityTypeShape EntityType="MensajeriaModel.GEN_UNIDAD" Width="1.5" PointX="14.25" PointY="4.5" />
-        <EntityTypeShape EntityType="MensajeriaModel.GEN_COMENSUGER" Width="1.5" PointX="14.25" PointY="0.75" />
-        <AssociationConnector Association="MensajeriaModel.FK_GEN_COMENSUGER_GEN_USUARIO" />
-        <EntityTypeShape EntityType="MensajeriaModel.OPE_CATEGORIA" Width="1.5" PointX="5.25" PointY="13.625" />
-        <EntityTypeShape EntityType="MensajeriaModel.OPE_CLIENTPROVEE" Width="1.5" PointX="7.5" PointY="13.125" />
         <AssociationConnector Association="MensajeriaModel.FK_OPE_CLIENTPROVEE_OPE_CATEGORIA" />
         <AssociationConnector Association="MensajeriaModel.FK_OPE_PUNTOENTREC_OPE_CLIENTPROVEE" />
-        <EntityTypeShape EntityType="MensajeriaModel.OPE_SOLICITUDPRODUCTO" Width="1.5" PointX="16.5" PointY="7.75" />
-        <EntityTypeShape EntityType="MensajeriaModel.OPE_SOLICITUDPUNTOSENTREC" Width="1.5" PointX="16.5" PointY="12" />
-        <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_GEN_COLONIA" />
-        <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_GEN_UNIDAD" />
+        <AssociationConnector Association="MensajeriaModel.FK_OPE_CONTACTO_OPE_PUNTOENTREC" />
         <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_GUIA" />
         <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_PUNTOENTREC" />
         <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPRODUCTO_OPE_SOLICITUD" />
         <AssociationConnector Association="MensajeriaModel.FK_OPE_SOLICITUDPUNTOSENTREC_OPE_SOLICITUD" />
-        <EntityTypeShape EntityType="MensajeriaModel.VIEW_REPORTE" Width="1.5" PointX="0.75" PointY="12.75" />
-        </Diagram>
+      </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

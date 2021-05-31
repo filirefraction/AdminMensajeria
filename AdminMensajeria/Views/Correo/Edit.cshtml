@@ -4,75 +4,62 @@
     ViewBag.Title = "Editar Correo";
 }
 
-<h2>Editar Correo</h2>
+<h2>Configuración de Email</h2>
 
 <div class="form-horizontal">
 
     <div class="form-group">
-        <div class="col-md-6">
+        <div class="col-md-3">
             <div class="field">
                 @Html.EditorFor(model => model.Remitente, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "correo@algo.com", @Maxlength = 100 } })
                 <label for="Remitente">Remitente (*)</label>
             </div>
             <span class="AlertaDanger" id="RemitenteVal"></span>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-3">
             <div class="field">
-                @Html.EditorFor(model => model.Asunto, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Notificación de Solicitud: ", @Maxlength = 250 } })
-                <label for="Asunto">Asunto (*)</label>
-            </div>
-            <span class="AlertaDanger" id="AsuntoVal"></span>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-12">
-            <div class="field">
-                @Html.EditorFor(model => model.Cuerpo, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Estimado, le infomamos que se ha generado una notificación", @Maxlength = 250 } })
-                <label for="Remitente">Remitente (*)</label>
-            </div>
-            <span class="AlertaDanger" id="RemitenteVal"></span>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-4">
-            <div class="field">
-                @Html.EditorFor(model => model.ContrasenaEmail, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "******", @Maxlength = 50 } })
-                <label for="ContrasenaEmail">Contraseña (*)</label>
+                @Html.EditorFor(model => model.ContrasenaEmail, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "********", @Maxlength = 50, @type = "password" } })
+                <label for="Asunto">Contraseña (*)</label>
             </div>
             <span class="AlertaDanger" id="ContrasenaEmailVal"></span>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="field">
-                @Html.EditorFor(model => model.SMTPHost, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Notificación de Solicitud: ", @Maxlength = 250 } })
-                <label for="Asunto">Asunto (*)</label>
+                @Html.EditorFor(model => model.SMTPHost, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "mail.algo.com", @Maxlength = 100 } })
+                <label for="Remitente">Servidor SMTP (*)</label>
             </div>
-            <span class="AlertaDanger" id="AsuntoVal"></span>
+            <span class="AlertaDanger" id="SMTPHostVal"></span>
         </div>
         <div class="col-md-2">
             <div class="field">
-                @Html.EditorFor(model => model.SMTPPort, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "465: ", @type = "number" } })
-                <label for="SMTPPort">Puerto (*)</label>
+                @Html.EditorFor(model => model.SMTPPort, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "2525", @type = "number" } })
+                <label for="Asunto">Puerto (*)</label>
             </div>
             <span class="AlertaDanger" id="SMTPPortVal"></span>
+        </div>
+        <div class="col-md-1">
+            <div class="field">
+                @Html.EditorFor(model => model.SSL)
+                <label for="Asunto">SSL</label>
+            </div>
+            <span class="AlertaDanger" id="SSLVal"></span>
         </div>
     </div>
 
     <div class="form-group">
         <div class="col-md-6">
             <div class="field">
-                @Html.EditorFor(model => model.Cuerpo, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Estimado, le infomamos que se ha generado una notificación", @Maxlength = 250 } })
-                <label for="Remitente">Remitente (*)</label>
+                @Html.EditorFor(model => model.Asunto, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Notificación de Solicitud: ", @Maxlength = 250 } })
+                <label for="Asunto">Asunto</label>
             </div>
-            <span class="AlertaDanger" id="RemitenteVal"></span>
+            <span class="AlertaDanger" id="AsuntoVal"></span>
         </div>
         <div class="col-md-6">
             <div class="field">
-                @Html.EditorFor(model => model.Cuerpo, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Estimado, le infomamos que se ha generado una notificación", @Maxlength = 250 } })
-                <label for="Remitente">Remitente (*)</label>
+                @Html.EditorFor(model => model.Cuerpo, new { htmlAttributes = new { @class = "form-control input-sm", placeholder = "Cuerpo del Mensaje: ", @Maxlength = 500 } })
+                <label for="Asunto">Cuerpo</label>
             </div>
-            <span class="AlertaDanger" id="RemitenteVal"></span>
+            <span class="AlertaDanger" id="CuerpoVal"></span>
         </div>
     </div>
 
@@ -82,11 +69,11 @@
                 <span class="glyphicon glyphicon-floppy-disk"></span> Guardar
             </button>
         </div>
-        <div class="col-md-7">
+        <div class="col-md-8">
             <span class="AlertaDanger" id="MensajeError"></span>
         </div>
         <div id="VolverCliente" class="col-md-2">
-            <a href="@Url.Action("Index","Pais")" class="btn btn-danger btn-sm">
+            <a href="@Url.Action("Configuracion","Home")" class="btn btn-danger btn-sm">
                 <span class="glyphicon glyphicon-floppy-remove"></span> Cancelar
             </a>
         </div>
@@ -96,49 +83,121 @@
 
 <script>
     $(document).ready(function () {
-        $("#Pais").keyup(function () {
-            $("#PaisVal").html('');
+        $("#Remitente").keyup(function () {
+            $("#RemitenteVal").html('');
+        });
+
+        $("#ContrasenaEmail").keyup(function () {
+            $("#ContrasenaEmailVal").html('');
+        });
+
+        $("#SMTPHost").keyup(function () {
+            $("#SMTPHostVal").html('');
+        });
+
+        $("#SMTPPort").keyup(function () {
+            $("#SMTPPortVal").html('');
+        });
+
+        $("#Asunto").keyup(function () {
+            $("#AsuntoVal").html('');
+        });
+
+        $("#Cuerpo").keyup(function () {
+            $("#CuerpoVal").html('');
         });
 
         ///////////////////////////////////////////////////////////////
         $("#ValidaPais").click(function () {
-            var IdPais  =  @ViewBag.idpais;
-            var Pais    =  $("#Pais").val();
+            var IdEmailConfig  =  @Model.IdEmailConfig;
+            var Remitente    =  $("#Remitente").val();
+            var Asunto    =  $("#Asunto").val();
+            var Cuerpo    =  $("#Cuerpo").val();
+            var ContrasenaEmail    =  $("#ContrasenaEmail").val();
+            var SMTPHost    =  $("#SMTPHost").val();
+            var SMTPPort    =  $("#SMTPPort").val();
+            var SSL    =  $("#SSL").prop("checked");
+            var EstatusEMail    =  true;
+
 
             ///////////////////////////////////////////////////////////
-            if ($("#Pais").val().length === 0) {
-                $("#PaisVal").html('');
-                $("#PaisVal").append('Este Campo es Obligatorio');
+            if ($("#Remitente").val().length === 0) {
+                $("#RemitenteVal").html('');
+                $("#RemitenteVal").append('Este Campo es Obligatorio');
             }
 
-            if ($("#Pais").val().length > 50) {
-                $("#PaisVal").html('');
-                $("#PaisVal").append('Este Campo es puede contener maximo 50 caracteres');
+            if ($("#Remitente").val().length > 100) {
+                $("#RemitenteVal").html('');
+                $("#RemitenteVal").append('Este Campo es puede contener maximo 100 caracteres');
+            }
+
+            if ($("#Asunto").val().length > 250) {
+                $("#AsuntoVal").html('');
+                $("#AsuntoVal").append('Este Campo es puede contener maximo 250 caracteres');
+            }
+
+            if ($("#Cuerpo").val().length > 500) {
+                $("#CuerpoVal").html('');
+                $("#CuerpoVal").append('Este Campo es puede contener maximo 500 caracteres');
+            }
+
+            if ($("#ContrasenaEmail").val().length === 0) {
+                $("#ContrasenaEmailVal").html('');
+                $("#ContrasenaEmailVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#ContrasenaEmail").val().length > 50) {
+                $("#ContrasenaEmailVal").html('');
+                $("#ContrasenaEmailVal").append('Este Campo es puede contener maximo 50 caracteres');
+            }
+
+            if ($("#SMTPHost").val().length === 0) {
+                $("#SMTPHostVal").html('');
+                $("#SMTPHostVal").append('Este Campo es Obligatorio');
+            }
+
+            if ($("#SMTPHost").val().length > 100) {
+                $("#SMTPHostVal").html('');
+                $("#SMTPHostVal").append('Este Campo es puede contener maximo 100 caracteres');
+            }
+
+            if ($("#SMTPPort").val().length === 0) {
+                $("#SMTPPortVal").html('');
+                $("#SMTPPortVal").append('Este Campo es Obligatorio');
             }
 
             //Primero Valida que los campos que siempre van a ser obligatorios//
-            if ($("#Pais").val().length != 0 &&
-                $("#Pais").val().length <= 50) {
-
-                console.log("Pais: " + Pais);
-
+            if ($("#Remitente").val().length != 0 && $("#Remitente").val().length <= 100 &&
+                $("#Asunto").val().length <= 250 && $("#Cuerpo").val().length <= 500  &&
+                $("#ContrasenaEmail").val().length != 0 && $("#ContrasenaEmail").val().length <= 50 &&
+                $("#SMTPHost").val().length != 0 && $("#SMTPHost").val().length <= 100 &&
+                $("#SMTPPort").val().length != 0 )
+            {
                 //inserta sin validar la fecha de egreso//
                 $.ajax({
-                    url: '@Url.Action("EditPais", "Pais")',
+                    url: '@Url.Action("EditEmail", "Correo")',
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     data: JSON.stringify({
-                        "IdPais": IdPais,
-                        "Pais": Pais
+                        "IdEmailConfig": IdEmailConfig,
+                        "Remitente": Remitente,
+                        "Asunto": Asunto,
+                        "Cuerpo": Cuerpo,
+                        "ContrasenaEmail": ContrasenaEmail,
+                        "SMTPHost": SMTPHost,
+                        "SMTPPort": SMTPPort,
+                        "SSL": SSL,
+                        "EstatusEMail": EstatusEMail
                     }),
                     success: function (data) {
                         if (data.Result == true) {
-                            window.location = '@Url.Action("Index", "Pais")';
+                            window.location = '@Url.Action("Configuracion", "Home")';
                         }
                         else {
-                            $("#MensajeError").html('');
-                            $("#MensajeError").append(data.Mensaje);
+                            $("#ErrorMSG").html('');
+                            $("#ErrorMSG").append(data.Mensaje);
+                            $('#ModalErrorMSG').modal('show')
                         }
                     },
                     error: function () {
@@ -153,99 +212,3 @@
     });
 
 </script>
-
-
-
-
-
-
-<h2>Edit</h2>
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>GEN_EMAILCONGIF</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.IdEmailConfig)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Remitente, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.ValidationMessageFor(model => model.Remitente, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Asunto, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Asunto, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Asunto, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Cuerpo, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Cuerpo, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Cuerpo, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ContrasenaEmail, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ContrasenaEmail, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ContrasenaEmail, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.SMTPHost, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.SMTPHost, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.SMTPHost, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.SMTPPort, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.SMTPPort, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.SMTPPort, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.SSL, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.SSL)
-                    @Html.ValidationMessageFor(model => model.SSL, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.EstatusEMail, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.EstatusEMail)
-                    @Html.ValidationMessageFor(model => model.EstatusEMail, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

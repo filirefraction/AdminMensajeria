@@ -6,14 +6,14 @@
     var Producto = (from p in db.OPE_SOLICITUDPRODUCTO where p.IdSolicitud == Model.IdSolicitud select p).FirstOrDefault();
     var Remitente = (from r in db.OPE_SOLICITUDPUNTOSENTREC where r.IdSolicitud == Model.IdSolicitud && r.TipoPunto == 1 select r).FirstOrDefault();
     var Destinatario = (from d in db.OPE_SOLICITUDPUNTOSENTREC where d.IdSolicitud == Model.IdSolicitud && d.TipoPunto == 2 select d).FirstOrDefault();
-    var ImageName = Model.IdSolicitud + ".png";
+    var Advertencia = (from l in db.SIS_CONFIG where l.IdConfig == 4 select l).FirstOrDefault();
     var Acuse = "";
     var Estatus = "";
     var Unidad = "";
     if (Solicitud.RequiereAcuse) { Acuse = "Si"; } else { Acuse = "No"; };
     switch (Solicitud.EstatusSolicitud)
     {
-        case 1: Estatus = "Pendiente"; break;
+        case 1: Estatus = "Generada"; break;
         case 2: Estatus = "Recibido en Mensajería"; break;
         case 3: Estatus = "En ruta"; break;
         case 4: Estatus = "Entregado"; break;
@@ -134,6 +134,7 @@
             page-break-before: always;
         }
     </style>
+
 
     <div class="Page">
         <div class="form-horizontal" style="border: 2px solid;padding-left: 15px;padding-top: 15px;border-radius: 20px 20px 20px 20px;margin-bottom: 17px;">
@@ -263,13 +264,22 @@
                                 }
                                 else
                                 {
-                                    <p>
+                                    if (Destinatario.DirCompletaPuntoEntRec != null)
+                                    {
+                                        <p>
+                                            @Destinatario.DirCompletaPuntoEntRec
+                                        </p>
+                                    }
+                                    else
+                                    {
+                                        <p>
 
-                                        @Destinatario.CallePuntosEntRec, @Destinatario.NoExtPuntosEntRec, @Destinatario.NoIntPuntosEntRec,
-                                        @Destinatario.ColoniaPuntosEntRec, @Destinatario.CodigoPostalPuntosEntRec,
-                                        @Destinatario.MunicipioPuntosEntRec, @Destinatario.EstadoPuntosEntRec,
-                                        @Destinatario.PaisPuntosEntRec, @Destinatario.ReferenciaPuntosEntRec
-                                    </p>
+                                            @Destinatario.CallePuntosEntRec, @Destinatario.NoExtPuntosEntRec, @Destinatario.NoIntPuntosEntRec,
+                                            @Destinatario.ColoniaPuntosEntRec, @Destinatario.CodigoPostalPuntosEntRec,
+                                            @Destinatario.MunicipioPuntosEntRec, @Destinatario.EstadoPuntosEntRec,
+                                            @Destinatario.PaisPuntosEntRec, @Destinatario.ReferenciaPuntosEntRec
+                                        </p>
+                                    }
                                 }
                             }
                         </div>
@@ -314,6 +324,11 @@
                         </div>
                     </div>
                 </div>
+
+                @if (Advertencia.AplicaConfig)
+                {
+                    <div><p><b>A partir de la fecha y hora de recepción del presente sobre me hago responsable del manejo y resguardo del contenido del mismo y me comprometo a reportar a MetLife en un plazo no mayor a 12 horas cualquier irregularidad relativa al contenido del presente paquete.</b></p></div>
+                }
             </div>
             <div class="form-group" style="border-top: 1px solid; margin-bottom: 0px; margin-right: 0px;">
                 <div class="col-md-6">
@@ -329,13 +344,14 @@
                     <label for="DestinatarioObservacion">Sello:</label>
                 </div>
                 <div class="col-md-3">
-                    <div>
-                        <img src="~/Image/qr/@ImageName" style="width: 75px;height: 75px;margin-top: 10px;" />
+                    <div id="qr-@Solicitud.IdSolicitud" style="margin-top: 15px;">
                     </div>
                 </div>
             </div>
 
         </div>
+
+
         <div class="form-horizontal" style="border: 2px solid;padding-left: 15px;padding-top: 15px;border-radius: 20px 20px 20px 20px;margin-bottom: 17px;">
             <div class="form-group" style="border-bottom: 1px solid; margin-right: 0px; margin-bottom: 5px;">
                 <div class="col-md-3">
@@ -463,13 +479,22 @@
                                 }
                                 else
                                 {
-                                    <p>
+                                    if (Destinatario.DirCompletaPuntoEntRec != null)
+                                    {
+                                        <p>
+                                            @Destinatario.DirCompletaPuntoEntRec
+                                        </p>
+                                    }
+                                    else
+                                    {
+                                        <p>
 
-                                        @Destinatario.CallePuntosEntRec, @Destinatario.NoExtPuntosEntRec, @Destinatario.NoIntPuntosEntRec,
-                                        @Destinatario.ColoniaPuntosEntRec, @Destinatario.CodigoPostalPuntosEntRec,
-                                        @Destinatario.MunicipioPuntosEntRec, @Destinatario.EstadoPuntosEntRec,
-                                        @Destinatario.PaisPuntosEntRec, @Destinatario.ReferenciaPuntosEntRec
-                                    </p>
+                                            @Destinatario.CallePuntosEntRec, @Destinatario.NoExtPuntosEntRec, @Destinatario.NoIntPuntosEntRec,
+                                            @Destinatario.ColoniaPuntosEntRec, @Destinatario.CodigoPostalPuntosEntRec,
+                                            @Destinatario.MunicipioPuntosEntRec, @Destinatario.EstadoPuntosEntRec,
+                                            @Destinatario.PaisPuntosEntRec, @Destinatario.ReferenciaPuntosEntRec
+                                        </p>
+                                    }
                                 }
                             }
                         </div>
@@ -514,6 +539,11 @@
                         </div>
                     </div>
                 </div>
+
+                @if (Advertencia.AplicaConfig)
+                {
+                    <div><p><b>A partir de la fecha y hora de recepción del presente sobre me hago responsable del manejo y resguardo del contenido del mismo y me comprometo a reportar a MetLife en un plazo no mayor a 12 horas cualquier irregularidad relativa al contenido del presente paquete.</b></p></div>
+                }
             </div>
             <div class="form-group" style="border-top: 1px solid; margin-bottom: 0px; margin-right: 0px;">
                 <div class="col-md-6">
@@ -529,13 +559,26 @@
                     <label for="DestinatarioObservacion">Sello:</label>
                 </div>
                 <div class="col-md-3">
-                    <div>
-                        <img src="~/Image/qr/@ImageName" style="width: 75px;height: 75px;margin-top: 10px;" />
+                    <div id="qr2-@Solicitud.IdSolicitud" style="margin-top: 15px;">
+
                     </div>
                 </div>
             </div>
 
         </div>
     </div>
+
+    <script>
+        $(document).ready(function () {
+            var value = '@Solicitud.IdSolicitud';
+            var size = 75;
+            var name = 'qr-' + '@Solicitud.IdSolicitud';
+            var name2 = 'qr2-' + '@Solicitud.IdSolicitud';
+
+        generateQrCode(size, value, name);
+        generateQrCode(size, value, name2);
+
+        });
+    </script>
 
 }

@@ -17,6 +17,7 @@ namespace AdminMensajeria.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private const string XsrfKey = "XsrfId";
 
         public AccountController()
         {
@@ -425,7 +426,6 @@ namespace AdminMensajeria.Controllers
 
         #region Aplicaciones auxiliares
         // Se usa para la protección XSRF al agregar inicios de sesión externos
-        private const string XsrfKey = "XsrfId";
 
         private IAuthenticationManager AuthenticationManager
         {
