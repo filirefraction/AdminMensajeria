@@ -571,12 +571,19 @@
     <script>
         $(document).ready(function () {
             var value = '@Solicitud.IdSolicitud';
-            var size = 75;
             var name = 'qr-' + '@Solicitud.IdSolicitud';
             var name2 = 'qr2-' + '@Solicitud.IdSolicitud';
 
-        generateQrCode(size, value, name);
-        generateQrCode(size, value, name2);
+            var qrcode = new QRCode(document.getElementById(name), {
+                width: 75,
+                height: 75
+            });
+            var qrcode2 = new QRCode(document.getElementById(name2), {
+                width: 75,
+                height: 75
+            });
+            qrcode.makeCode(value);
+            qrcode2.makeCode(value);
 
         });
     </script>

@@ -5,13 +5,10 @@
 }
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/130527/qrcode.js"></script>
+<script type="text/javascript" src="~/Scripts/qrcode.js"></script>
 
 
-<div class="qr-code-generator">
-
-
-
+<div>
     <div id="qrcode"></div>
     <br />
     <div id="qrcode2"></div>
@@ -22,12 +19,16 @@
 <script>
     $(document).ready(function () {
         var value = '@Model.IdSolicitud';
-        var size = 175;
-        var name = 'qrcode';
-        var name2 = 'qrcode2';
-
-        generateQrCode(size, value, name);
-        generateQrCode(size, value, name2);
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+            width: 75,
+            height: 75
+        });
+        var qrcode2 = new QRCode(document.getElementById("qrcode2"), {
+            width: 75,
+            height: 75
+        });
+        qrcode.makeCode(value);
+        qrcode2.makeCode(value);
 
     });
 </script>

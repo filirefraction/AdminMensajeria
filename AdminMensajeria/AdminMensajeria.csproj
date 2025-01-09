@@ -355,10 +355,13 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\jquery.dataTables.min.css" />
+    <Content Include="Content\bootstrap-select.min.css" />
+    <Content Include="Content\dataTables.semanticui.min.css" />
+    <Content Include="Content\semantic.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\Custom.css" />
     <Content Include="Content\jquery.datetimepicker.css" />
-    <Content Include="Content\qrCodeGenerator-1.0.0.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -382,10 +385,12 @@
     <Content Include="Models\Mensajeria.edmx.diagram">
       <DependentUpon>Mensajeria.edmx</DependentUpon>
     </Content>
+    <Content Include="Scripts\bootstrap-select.min.js" />
+    <Content Include="Scripts\jquery.dataTables.min.js" />
     <Content Include="Scripts\jquery-barcode.js" />
     <Content Include="Scripts\jquery-barcode.min.js" />
     <Content Include="Scripts\jquery.datetimepicker.full.min.js" />
-    <Content Include="Scripts\qrCodeGenerator-1.0.0.js" />
+    <Content Include="Scripts\qrcode.js" />
     <Content Include="Scripts\table2excel.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -531,7 +536,14 @@
     <Content Include="Views\WebApi\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\bootstrap.min.js" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

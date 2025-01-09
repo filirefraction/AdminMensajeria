@@ -343,7 +343,7 @@
                 </div>
                 @if (Advertencia.AplicaConfig)
                 {
-                <div><p><b>A partir de la fecha y hora de recepción del presente sobre me hago responsable del manejo y resguardo del contenido del mismo y me comprometo a reportar a MetLife en un plazo no mayor a 12 horas cualquier irregularidad relativa al contenido del presente paquete.</b></p></div>
+                    <div><p><b>A partir de la fecha y hora de recepción del presente sobre me hago responsable del manejo y resguardo del contenido del mismo y me comprometo a reportar a MetLife en un plazo no mayor a 12 horas cualquier irregularidad relativa al contenido del presente paquete.</b></p></div>
                 }
             </div>
             <div class="form-group" style="border-top: 1px solid; margin-bottom: 0px; margin-right: 0px;">
@@ -588,14 +588,17 @@
             $("#ContentGral").css("margin-top", "0px");
             $("#ContentGral").css("margin-bottom", "0px");
 
-            var value = '@Solicitud.IdSolicitud';
-            var size = 75;
-            var name = 'qrcodeView';
-            var name2 = 'qrcodeView2';
-
-        generateQrCode(size, value, name);
-        generateQrCode(size, value, name2);
-
+            var value = '@Model.IdSolicitud';
+            var qrcode = new QRCode(document.getElementById("qrcodeView"), {
+                width: 75,
+                height: 75
+            });
+            var qrcode2 = new QRCode(document.getElementById("qrcodeView2"), {
+                width: 75,
+                height: 75
+            });
+            qrcode.makeCode(value);
+            qrcode2.makeCode(value);
         });
     </script>
 
